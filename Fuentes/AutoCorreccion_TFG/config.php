@@ -1,8 +1,8 @@
 <?php
 
 //Información LTI
-$GLOBALS['ltiSecret'] = 'Secret';
-$GLOBALS['ltiKey'] = 'Key';
+$GLOBALS['ltiSecret'] = 'secret';
+$GLOBALS['ltiKey'] = 'key';
 
 //Database to connect to at minimum for storing nonces
 /*

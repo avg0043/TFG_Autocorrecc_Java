@@ -1,7 +1,5 @@
 <?php
-
 require_once 'OAuth.php';
-
 // Returns true if this is a Basic LTI message
 // with minimum values to meet the protocol
 function is_basic_lti_request() {
@@ -11,17 +9,14 @@ function is_basic_lti_request() {
    if ($good_message_type and $good_lti_version and isset($resource_link_id) ) return(true);
    return false;
 }
-
 /**
  * A Trivial memory-based store - no support for tokens
  */
 class TrivialOAuthDataStore extends OAuthDataStore {
     private $consumers = array();
-
     function add_consumer($consumer_key, $consumer_secret) {
         $this->consumers[$consumer_key] = $consumer_secret;
     }
-
     function lookup_consumer($consumer_key) {
         if ( strpos($consumer_key, "http://" ) === 0 ) {
             $consumer = new OAuthConsumer($consumer_key,"secret", NULL);
@@ -33,11 +28,9 @@ class TrivialOAuthDataStore extends OAuthDataStore {
         }
         return NULL;
     }
-
     function lookup_token($consumer, $token_type, $token) {
         return new OAuthToken($consumer, "");
     }
-
     // Return NULL if the nonce has not been used
     // Return $nonce if the nonce was previously used
     function lookup_nonce($consumer, $token, $nonce, $timestamp) {
@@ -46,21 +39,16 @@ class TrivialOAuthDataStore extends OAuthDataStore {
 	// that the timestamp will save us
         return NULL;
     }
-
     function new_request_token($consumer) {
         return NULL;
     }
-
     function new_access_token($token, $consumer) {
         return NULL;
     }
 }
-
-
 // Basic LTI Class that does the setup and provides utility
 // functions
 class BLTI {
-
     public $valid = false;
     public $complete = false;
     public $message = false;
@@ -68,9 +56,7 @@ class BLTI {
     public $info = false;
     public $row = false;
     public $context_id = false;  // Override context_id
-
     function __construct($parm=false, $usesession=true, $doredirect=true) {
-
         // If this request is not an LTI Launch, either
         // give up or try to retrieve the context from session
         if ( ! is_basic_lti_request() ) {
@@ -92,14 +78,12 @@ class BLTI {
             $this->message = "Session not available";
             return;
         }
-
         // Insure we have a valid launch
         if ( empty($_REQUEST["oauth_consumer_key"]) ) {
             $this->message = "Missing oauth_consumer_key in request";
             return;
         }
         $oauth_consumer_key = $_REQUEST["oauth_consumer_key"];
-
         // Find the secret - either form the parameter as a string or
         // look it up in a database from parameters we are given
         $secret = false;
@@ -133,19 +117,15 @@ class BLTI {
                 }
             }
         }
-
         // Verify the message signature
         $store = new TrivialOAuthDataStore();
         $store->add_consumer($oauth_consumer_key, $secret);
-
         $server = new OAuthServer($store);
-
         $method = new OAuthSignatureMethod_HMAC_SHA1();
         $server->add_signature_method($method);
         $request = OAuthRequest::from_request();
         
         $this->basestring = $request->get_signature_base_string();
-
         try {
             $server->verify_request($request);
             $this->valid = true;
@@ -153,7 +133,6 @@ class BLTI {
             $this->message = $e->getMessage();
             return;
         }
-
         // Store the launch information in the session for later
         $newinfo = array();
         foreach($_POST as $key => $value ) {
@@ -167,7 +146,6 @@ class BLTI {
                 continue;
             }
         }
-
         $this->info = $newinfo;
         if ( $usesession == true and strlen(session_id()) > 0 ) {
              $_SESSION['_basic_lti_context'] = $this->info;
@@ -176,13 +154,11 @@ class BLTI {
              if ( $this->row ) $_SESSION['_basiclti_lti_row'] = $this->row;
              if ( $this->context_id ) $_SESSION['_basiclti_lti_context_id'] = $this->context_id;
         }
-
         if ( $this->valid && $doredirect ) {
             $this->redirect();
             $this->complete = true;
         }
     }
-
     function addSession($location) {
         if ( ini_get('session.use_cookies') == 0 ) {
             if ( strpos($location,'?') > 0 ) {
@@ -194,7 +170,6 @@ class BLTI {
         }
         return $location;
     }
-
     function isInstructor() {
         $roles = $this->info['roles'];
         $roles = strtolower($roles);
@@ -202,21 +177,17 @@ class BLTI {
         if ( ! ( strpos($roles,"administrator") === false ) ) return true;
         return false;
     }
-
-
     function getResourceKey() {
         $oauth = $this->info['oauth_consumer_key'];
         $id = $this->info['resource_link_id'];
         if ( strlen($id) > 0 and strlen($oauth) > 0 ) return $oauth . ':' . $id;
         return false;
     }
-
     function getResourceTitle() {
         $title = $this->info['resource_link_title'];
         if ( strlen($title) > 0 ) return $title;
         return false;
     }
-
     // TODO: Add javasript version if headers are already sent
     function redirect() {
             $host = $_SERVER['HTTP_HOST'];
@@ -226,7 +197,6 @@ class BLTI {
             $location = $this->addSession($location);
             header("Location: $location");
     }
-
     function dump() { 
         if ( ! $this->valid or $this->info == false ) return "Context not valid\n";
         $ret = "";
@@ -234,7 +204,5 @@ class BLTI {
         $ret .= "getResourceTitle() = ".$this->getResourceTitle()."\n";
         return $ret;
     }
-
 }
-
 ?>
