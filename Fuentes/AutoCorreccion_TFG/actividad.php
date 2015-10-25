@@ -18,6 +18,9 @@ if(isset($ltiObject)){
 	$_SESSION["lti_tituloLink"] = $ltiObject->info["resource_link_title"];
 	$_SESSION["lti_tituloCurso"] = $ltiObject->info["context_title"];
 	
+	// Número de intentos máximo que tienen los alumnos para subir prácticas
+	$_SESSION["num_max_intentos"] = 2;
+	
 	// Acceso a la información del objeto LTI obtenido
 	echo "<a href='Usuario_info.php'>Información del Usuario </a>";
 	
