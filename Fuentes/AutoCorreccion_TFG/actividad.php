@@ -5,7 +5,8 @@ require_once("funciones/Conexion_LTI.php");
 session_start();
 
 // Llamada a connectLTI para hacer una conexión LTI segura
-$ltiObject = connectLTI();
+$consumer_key = $_REQUEST["oauth_consumer_key"];
+$ltiObject = connectLTI($consumer_key);
 
 if(isset($ltiObject)){
 
