@@ -29,11 +29,9 @@ class TareasController extends AppController{
 	
 	public function obtenerIntentosPorId($id){
 		
-		// HACER ESTO PARA LOS INTENTOS
 		$query = $this->Tareas->find('all')
 							  ->where(['id' => $id])
 							  ->toArray();
-		//echo count($query);
 		return $query[0]->num_intentos;
 			
 	}

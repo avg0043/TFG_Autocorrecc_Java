@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controller;
-use Cake\ORM\TableRegistry;
 
 class IntentosController extends AppController{
 
@@ -13,23 +12,23 @@ class IntentosController extends AppController{
 		
 		if ($this->request->is('post')) {
 			
-			$extension = pathinfo($_FILES["ficheroAsubir"]["name"], PATHINFO_EXTENSION);
-			
+			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
+	
 			if($extension != "java"){
-				$this->Flash->error(__('El fichero debe tener extensión .java!'));			
+				
+				$this->Flash->error(__('El fichero debe tener extensión .java!'));	
+				
 			}else{
 				
 				if($tipo_usuario == 'alumno'){
 					
-					// Obtención del número de intentos máximo posibles para subir la práctica (HACERLO SOLO PARA EL ALUMNO,
-					// COMPROBAR LA VARIABLE TIPO_USUARIO)
-					$tareasCon = new TareasController;
-					$numero_maximo_intentos = $tareasCon->obtenerIntentosPorId(18);
+					// Obtención del nº de intentos máximo que pueden subir los alumnos la práctica
+					$tareas_controller = new TareasController;
+					$numero_maximo_intentos = $tareas_controller->obtenerIntentosPorId($_SESSION['lti_idTituloActividad']);
 					
 					$query = $this->Intentos->find('all')
 											->where(['tarea_id' => $_SESSION['lti_idTituloActividad'], 'alumno_id' => $_SESSION['lti_userId']])
-											->toArray();
-											
+											->toArray();									
 					$total_intentos_realizados = count($query);
 					
 				}
@@ -40,19 +39,12 @@ class IntentosController extends AppController{
 					$this->Flash->error(__('No puedes subir más veces la práctica!!'));
 					
 				}else{
-				
-					/*
-					$directorio_destino = "../" . $_SESSION["lti_tituloCurso"] . "/" . $_SESSION["lti_tituloActividad"] . "/"
-								  . $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/" . date("Y-m-d H,i,s") . "/";
-					*/
 					
 					if($tipo_usuario == 'alumno'){
 										
-						$intento_realizado = $total_intentos_realizados + 1;
-						
+						$intento_realizado = $total_intentos_realizados + 1;					
 						$directorio_destino = "../" . $_SESSION["lti_tituloCurso"] . "/" . $_SESSION["lti_tituloActividad"] . "/"
-									  . $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/" . $intento_realizado . "/";
-									  
+									  . $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/" . $intento_realizado . "/";									  
 						mkdir($directorio_destino, 0777, true);
 			
 					}else{
@@ -61,39 +53,36 @@ class IntentosController extends AppController{
 									  . $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";
 						
 						if(!is_dir($directorio_destino)){
+							
 							mkdir($directorio_destino, 0777, true);
+							
 						}
 						
 					}
-			
-					// Creación de la/s carpeta/s
-					//mkdir($directorio_destino, 0777, true);
 					
-					// Se guarda el fichero
+					// Se guarda el fichero subido
 					$path_fichero = $directorio_destino . $_FILES["ficheroAsubir"]["name"];
 					move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], $path_fichero);
 
 					if($tipo_usuario == 'alumno'){
 						
-						// Añadimos el intento realizado a la base de datos
-						$tabla_intentos = TableRegistry::get('Intentos');
-						$nuevo_intento = $tabla_intentos->newEntity();
-
+						// Añadimos el intento realizado de subida de práctica del alumno
+						$nuevo_intento = $this->Intentos->newEntity();
 						$nuevo_intento->tarea_id = $_SESSION['lti_idTituloActividad'];
 						$nuevo_intento->alumno_id = $_SESSION['lti_userId'];
-
-						$tabla_intentos->save($nuevo_intento);
+						$this->Intentos->save($nuevo_intento);
 						
 						$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $intento_realizado));
 						
 					}else{
+						
 						$this->Flash->success(__('Test subido!'));
+						
 					}
 												
 				}
 	
 			}
-			//return $this->redirect(['action' => 'subida']);
 		}
 	}
 	

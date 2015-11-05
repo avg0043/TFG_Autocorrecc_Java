@@ -9,7 +9,7 @@ CREATE TABLE profesores
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	id_moodle INTEGER NULL,
 	nombre_completo VARCHAR(45) NULL,
-	oauth_key VARCHAR(45) NOT NULL,
+	consumer_key VARCHAR(45) NOT NULL,
 	secret VARCHAR(45) NOT NULL,
 	correo VARCHAR(45) NOT NULL,
 	tarea_url VARCHAR(85) NULL,

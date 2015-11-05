@@ -9,8 +9,6 @@ class ProfesoresController extends AppController{
 	
 	public function registrar(){
 		
-		session_start();
-		
 		$nuevo_profesor = $this->Profesores->newEntity();
 		
 		if ($this->request->is('post')) {
@@ -19,15 +17,13 @@ class ProfesoresController extends AppController{
 			$consumer_key = $this->__crearConsumerKey();
 			$consumer_key_encriptada = $this->__encriptar($consumer_key);
 			$secret_encriptada = $this->__encriptar($this->request->data['contraseña']);
-			$nuevo_profesor->oauth_key = $consumer_key_encriptada;
+			$nuevo_profesor->consumer_key = $consumer_key_encriptada;
 			$nuevo_profesor->secret = $secret_encriptada;
-			
-			$_SESSION['datosProfesor'] = $nuevo_profesor;
 			
 			$nuevo_profesor = $this->Profesores->patchEntity($nuevo_profesor, $this->request->data);
 			if ($this->Profesores->save($nuevo_profesor)) {
-				$this->Flash->success(__('El profesor ha sido registrado.'));
-				return $this->redirect(['action' => 'mostrarParametros']);
+				$this->Flash->success(__('Primer acceso. Sus datos han sido actualizados.'));
+				return $this->redirect(['action' => 'mostrarParametros', $this->request->data['correo']]);
 			}
 			$this->Flash->error(__('No ha sido posible registrar al profesor.'));
 		}
@@ -46,16 +42,16 @@ class ProfesoresController extends AppController{
 			
 			$email = $_REQUEST['lis_person_contact_email_primary'];
 			$query = $this->Profesores->find('all');
-			$query->where(['oauth_key' => $consumer_key, 'correo' => $email]);
+			$query->where(['consumer_key' => $consumer_key, 'correo' => $email]);
 			
 		}else{
 			
 			$query = $this->Profesores->find('all');
-			$query->where(['oauth_key' => $consumer_key]);
+			$query->where(['consumer_key' => $consumer_key]);
 			
 		}
 		
-		if(!$query->isEmpty()){		// La consulta tiene éxito
+		if(!$query->isEmpty()){
 			
 			// Obtención de la clave secreta
 			foreach ($query as $q) {
@@ -66,19 +62,15 @@ class ProfesoresController extends AppController{
 			$context = new Ims\BLTI($secret_encriptada, true, false);
 			
 			// Almacenamiento de la información LTI 
-			$_SESSION["lti_tituloActividad"] = $context->info["resource_link_title"];
-			$_SESSION["lti_idTituloActividad"] = $context->info["resource_link_id"];
-			$_SESSION["lti_nombreCompleto"] = $context->info["lis_person_name_full"];
-			$_SESSION["lti_correo"] = $context->info["lis_person_contact_email_primary"];
-			$_SESSION["lti_rol"] = $context->info["roles"];
-			$_SESSION["lti_userId"] = $context->info["user_id"];
-			//$_SESSION["lti_tituloLink"] = $context->info["resource_link_title"];
-			$_SESSION["lti_tituloCurso"] = $context->info["context_title"];
+			$_SESSION['lti_tituloActividad'] = $context->info['resource_link_title'];
+			$_SESSION['lti_idTituloActividad'] = $context->info['resource_link_id'];
+			$_SESSION['lti_nombreCompleto'] = $context->info['lis_person_name_full'];
+			$_SESSION['lti_correo'] = $context->info['lis_person_contact_email_primary'];
+			$_SESSION['lti_rol'] = $context->info['roles'];
+			$_SESSION['lti_userId'] = $context->info['user_id'];
+			$_SESSION['lti_tituloCurso'] = $context->info['context_title'];
 			
-			// Número de intentos máximo que tienen los alumnos para subir prácticas
-			$_SESSION["num_max_intentos"] = 2;
-			
-			if($_REQUEST['roles'] == "Instructor"){
+			if($_REQUEST['roles'] == 'Instructor'){
 			
 				return $this->redirect(['action' => 'guardarDatos']);
 			
@@ -98,11 +90,17 @@ class ProfesoresController extends AppController{
 
 	}
 	
+	/*
+	 * Función que comprueba si el profesor que ha accedido al servicio web
+	 * es la primera vez que lo hace, en cuyo caso se van a guardar sus datos
+	 * de Moodle en la correspondiente tabla "profesores" de la base de datos.
+	 * 
+	 * @return redirect	redirección hacia la acción "mostrarPanel" del controlador actual.
+	 */
 	public function guardarDatos(){
 	
 		session_start();
 	
-		// Se comprueba si el profesor es la primera vez que accede al servicio web, y si es así, se actualizan sus campos de la BD.
 		$query = $this->Profesores->find('all');
 		$query->where(['id_moodle' => $_SESSION['lti_userId']]);
 		
@@ -115,7 +113,6 @@ class ProfesoresController extends AppController{
 							->execute();
 			
 			$this->Flash->success(__('Profesor registrado'));
-			//return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
 			
 		}
 		
@@ -136,8 +133,10 @@ class ProfesoresController extends AppController{
 	}
 	
 	
-	public function mostrarParametros(){
-				
+	public function mostrarParametros($correo){
+		
+		$this->set('parametros', $this->Profesores->find('all')->where(['correo' => $correo]));
+		
 	}
 	
 	private function __encriptar($cadena){

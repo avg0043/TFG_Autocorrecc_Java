@@ -1,13 +1,10 @@
-<h1>Datos Profesor</h1>
-<?php
+<h1>Parámetros LTI Profesor</h1>
 
-session_start();
-
-?>
-
-<ul>
-	<li><b>Consumer key: </b><?= $_SESSION['datosProfesor']->oauth_key ?></li>
-	<li><b>Secret: </b><?= $_SESSION['datosProfesor']->secret ?></li>
-</ul>
+<?php foreach ($parametros as $param): ?>
+	<ul>
+		<li><b>Consumer key: </b><?= $param->consumer_key ?></li>
+		<li><b>Secret: </b><?= $param->secret ?></li>
+	</ul>
+<?php endforeach; ?>
 
 

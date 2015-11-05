@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controller;
-use Cake\ORM\TableRegistry;
 
 class AlumnosController extends AppController{
 	
@@ -16,20 +15,18 @@ class AlumnosController extends AppController{
 		
 		session_start();
 		
-		// Se comprueba si el alumno es la primera vez que accede al servicio web, y si es así, se le registra en BD.
 		$query = $this->Alumnos->find('all');
 		$query->where(['id' => $_SESSION['lti_userId']]);
 		
 		if($query->isEmpty()){
 			
-			$tabla_alumnos = TableRegistry::get('Alumnos');
-			$nuevo_alumno = $tabla_alumnos->newEntity();
+			$nuevo_alumno = $this->Alumnos->newEntity();
 
 			$nuevo_alumno->id = $_SESSION['lti_userId'];
 			$nuevo_alumno->nombre_completo = $_SESSION['lti_nombreCompleto'];
 			$nuevo_alumno->correo = $_SESSION['lti_correo'];
 
-			$tabla_alumnos->save($nuevo_alumno);
+			$this->Alumnos->save($nuevo_alumno);
 			
 			$this->Flash->success(__('Este es tu primer acceso. Has sido registrado'));
 			
