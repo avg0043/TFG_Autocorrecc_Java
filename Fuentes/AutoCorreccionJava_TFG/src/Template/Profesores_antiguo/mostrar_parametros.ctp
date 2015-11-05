@@ -1,1 +1,0 @@
-<h1>Parámetros LTI</h1>
