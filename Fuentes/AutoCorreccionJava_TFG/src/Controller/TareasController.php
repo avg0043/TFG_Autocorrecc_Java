@@ -36,6 +36,15 @@ class TareasController extends AppController{
 			
 	}
 	
+	public function obtenerFechaTopePorId($id){
+	
+		$query = $this->Tareas->find('all')
+							  ->where(['id' => $id])
+							  ->toArray();
+		return $query[0]->fecha_tope;
+			
+	}
+	
 }
 
 ?>

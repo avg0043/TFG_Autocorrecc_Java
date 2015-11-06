@@ -22,7 +22,7 @@ class ProfesoresController extends AppController{
 			
 			$nuevo_profesor = $this->Profesores->patchEntity($nuevo_profesor, $this->request->data);
 			if ($this->Profesores->save($nuevo_profesor)) {
-				$this->Flash->success(__('Primer acceso. Sus datos han sido actualizados.'));
+				$this->Flash->success(__('Has sido registrado'));
 				return $this->redirect(['action' => 'mostrarParametros', $this->request->data['correo']]);
 			}
 			$this->Flash->error(__('No ha sido posible registrar al profesor.'));
@@ -68,7 +68,9 @@ class ProfesoresController extends AppController{
 			$_SESSION['lti_correo'] = $context->info['lis_person_contact_email_primary'];
 			$_SESSION['lti_rol'] = $context->info['roles'];
 			$_SESSION['lti_userId'] = $context->info['user_id'];
-			$_SESSION['lti_tituloCurso'] = $context->info['context_title'];
+			$_SESSION['lti_idCurso'] = $context->info['context_id'];
+			//$_SESSION['lti_tituloCurso'] = $context->info['context_title'];
+			
 			
 			if($_REQUEST['roles'] == 'Instructor'){
 			
@@ -112,7 +114,8 @@ class ProfesoresController extends AppController{
 							->where(['correo' => $_SESSION['lti_correo']])
 							->execute();
 			
-			$this->Flash->success(__('Profesor registrado'));
+			$this->Flash->success(__('Primer acceso. Sus datos han sido actualizados'));
+			return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
 			
 		}
 		

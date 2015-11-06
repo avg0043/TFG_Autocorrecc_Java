@@ -31,25 +31,33 @@ class IntentosController extends AppController{
 											->toArray();									
 					$total_intentos_realizados = count($query);
 					
+					// Obtención de la fecha tope de entrega que tienen los alumnos para enviar prácticas
+					$fecha_tope = $tareas_controller->obtenerFechaTopePorId($_SESSION['lti_idTituloActividad']);
+					$fecha_tope = (new \DateTime($fecha_tope))->format('Y-m-d');
+					$fecha_actual = (new \DateTime(date("Y-m-d H:i:s")))->format('Y-m-d');
+					
 				}
 
-							
-				if($tipo_usuario == 'alumno' and $total_intentos_realizados == $numero_maximo_intentos){
+				if($tipo_usuario == 'alumno' and $fecha_actual > $fecha_tope){
 					
-					$this->Flash->error(__('No puedes subir más veces la práctica!!'));
+					$this->Flash->error(__('La fecha tope de la entrega ha finalizado'));
+					
+				}elseif($tipo_usuario == 'alumno' and $total_intentos_realizados == $numero_maximo_intentos){
+					
+					$this->Flash->error(__('No puedes subir más veces la práctica'));
 					
 				}else{
 					
 					if($tipo_usuario == 'alumno'){
 										
 						$intento_realizado = $total_intentos_realizados + 1;					
-						$directorio_destino = "../" . $_SESSION["lti_tituloCurso"] . "/" . $_SESSION["lti_tituloActividad"] . "/"
+						$directorio_destino = "../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTituloActividad"] . "/"
 									  . $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/" . $intento_realizado . "/";									  
 						mkdir($directorio_destino, 0777, true);
 			
 					}else{
 						
-						$directorio_destino = "../" . $_SESSION["lti_tituloCurso"] . "/" . $_SESSION["lti_tituloActividad"] . "/"
+						$directorio_destino = "../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTituloActividad"] . "/"
 									  . $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";
 						
 						if(!is_dir($directorio_destino)){

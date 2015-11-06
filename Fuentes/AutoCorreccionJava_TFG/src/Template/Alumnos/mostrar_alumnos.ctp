@@ -2,6 +2,10 @@
 
 <?= $this->Html->link('Panel profesor', ['controller' => 'Profesores', 'action' => 'mostrarPanel']) ?>
 
+<?php
+if(!$alumnos->isEmpty()){
+?>
+
 <table>
 	<tr>
 		<th>Id de Moodle</th>
@@ -18,4 +22,13 @@
 	<?php endforeach; ?>
 	
 </table>
+
+<?php
+}else{
+?>
+	<h4>No hay alumnos registrados</h4>
+<?php
+}
+?>
+
 
