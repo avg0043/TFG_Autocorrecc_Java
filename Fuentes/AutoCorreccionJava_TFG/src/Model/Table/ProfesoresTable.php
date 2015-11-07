@@ -8,7 +8,8 @@ use Cake\Validation\Validator;
 class ProfesoresTable extends Table{
 	
 	public function validationDefault(Validator $validator){
-		$validator->notEmpty('correo')
+		$validator->notEmpty('nombre_completo')
+				  ->notEmpty('correo')
 				  ->notEmpty('contraseña')
 				  ->add('confirmar_contraseña',
 						'compareWith', [

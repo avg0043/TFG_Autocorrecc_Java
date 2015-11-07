@@ -7,13 +7,19 @@ use Lib\Ims;
 
 class ProfesoresController extends AppController{
 	
+	/**
+	 * Función que registra al profesor en el servicio web.
+	 * Al registrarse obtendrá los parámetros LTI necesarios
+	 * para poder configurar la tarea de tipo herramienta externa
+	 * desde Moodle.
+	 */
 	public function registrar(){
 		
 		$nuevo_profesor = $this->Profesores->newEntity();
 		
 		if ($this->request->is('post')) {
 			
-			// Datos profesor
+			// Datos profesor (key y secret)
 			$consumer_key = $this->__crearConsumerKey();
 			$consumer_key_encriptada = $this->__encriptar($consumer_key);
 			$secret_encriptada = $this->__encriptar($this->request->data['contraseña']);
@@ -26,11 +32,20 @@ class ProfesoresController extends AppController{
 				return $this->redirect(['action' => 'mostrarParametros', $this->request->data['correo']]);
 			}
 			$this->Flash->error(__('No ha sido posible registrar al profesor.'));
+			
 		}
 		$this->set('nuevo_profesor', $nuevo_profesor);
 		
 	}
 	
+	/**
+	 * Función que establece la conexión entre Moodle y el servicio web
+	 * gracias al plugin LTI.
+	 * Los parámetros LTI son guardados y dependendiendo del rol del usuario
+	 * que ha accedido se le redirigirá a su correspondiente página.
+	 * 
+	 * @throws NotFoundException
+	 */
 	public function establecerConexion(){
 		
 		session_start();
@@ -41,40 +56,46 @@ class ProfesoresController extends AppController{
 		if($_REQUEST['roles'] == "Instructor"){
 			
 			$email = $_REQUEST['lis_person_contact_email_primary'];
-			$query = $this->Profesores->find('all');
-			$query->where(['consumer_key' => $consumer_key, 'correo' => $email]);
+			$query = $this->Profesores->find('all')
+									  ->where(['consumer_key' => $consumer_key, 'correo' => $email]);
 			
 		}else{
 			
-			$query = $this->Profesores->find('all');
-			$query->where(['consumer_key' => $consumer_key]);
+			$query = $this->Profesores->find('all')
+									  ->where(['consumer_key' => $consumer_key]);
 			
 		}
 		
 		if(!$query->isEmpty()){
 			
 			// Obtención de la clave secreta
-			foreach ($query as $q) {
-				$secret_encriptada = $q->secret;
+			foreach ($query as $clave) {
+				$secret_encriptada = $clave->secret;
 			}
 			
 			// Objeto de la conexión LTI
 			$context = new Ims\BLTI($secret_encriptada, true, false);
 			
 			// Almacenamiento de la información LTI 
-			$_SESSION['lti_tituloActividad'] = $context->info['resource_link_title'];
-			$_SESSION['lti_idTituloActividad'] = $context->info['resource_link_id'];
+			$_SESSION['lti_tituloTarea'] = $context->info['resource_link_title'];
+			$_SESSION['lti_idTarea'] = $context->info['resource_link_id'];
 			$_SESSION['lti_nombreCompleto'] = $context->info['lis_person_name_full'];
 			$_SESSION['lti_correo'] = $context->info['lis_person_contact_email_primary'];
 			$_SESSION['lti_rol'] = $context->info['roles'];
 			$_SESSION['lti_userId'] = $context->info['user_id'];
-			$_SESSION['lti_idCurso'] = $context->info['context_id'];
-			//$_SESSION['lti_tituloCurso'] = $context->info['context_title'];
-			
+			$_SESSION['lti_idCurso'] = $context->info['context_id'];			
 			
 			if($_REQUEST['roles'] == 'Instructor'){
 			
-				return $this->redirect(['action' => 'guardarDatos']);
+				// Si la tarea está registrada se redirige al panel del profesor, y sino se registra la tarea
+				$tareas_controller = new TareasController;
+				$registrada = $tareas_controller->comprobarTareaRegistrada($_SESSION['lti_idTarea']);
+				
+				if($registrada){
+					return $this->redirect(['action' => 'mostrarPanel']);
+				}else{
+					return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
+				}
 			
 			}else{
 				
@@ -92,42 +113,15 @@ class ProfesoresController extends AppController{
 
 	}
 	
-	/*
-	 * Función que comprueba si el profesor que ha accedido al servicio web
-	 * es la primera vez que lo hace, en cuyo caso se van a guardar sus datos
-	 * de Moodle en la correspondiente tabla "profesores" de la base de datos.
-	 * 
-	 * @return redirect	redirección hacia la acción "mostrarPanel" del controlador actual.
+	/**
+	 * Función que guarda en una variable los datos del profesor actual para que
+	 * puedan ser mostrados desde su vista asociada.
 	 */
-	public function guardarDatos(){
-	
-		session_start();
-	
-		$query = $this->Profesores->find('all');
-		$query->where(['id_moodle' => $_SESSION['lti_userId']]);
-		
-		if($query->isEmpty()){
-			
-			$query_actualiza = $this->Profesores->query();
-			$query_actualiza->update()
-							->set(['id_moodle' => $_SESSION['lti_userId'], 'nombre_completo' => $_SESSION['lti_nombreCompleto']])
-							->where(['correo' => $_SESSION['lti_correo']])
-							->execute();
-			
-			$this->Flash->success(__('Primer acceso. Sus datos han sido actualizados'));
-			return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
-			
-		}
-		
-		return $this->redirect(['action' => 'mostrarPanel']);
-	
-	}
-	
 	public function mostrarDatos(){
 		
 		session_start();
 		
-		$this->set('profesor', $this->Profesores->find('all')->where(['id_moodle' => $_SESSION['lti_userId']]));
+		$this->set('profesor', $this->Profesores->find('all')->where(['correo' => $_SESSION['lti_correo']]));
 		
 	}
 	
@@ -135,13 +129,23 @@ class ProfesoresController extends AppController{
 		
 	}
 	
-	
+	/**
+	 * Función que guarda en una variable los parámetros LTI del profesor
+	 * para que puedan ser mostrados desde su vista asociada.
+	 * 
+	 * @param string $correo	correo del profesor
+	 */
 	public function mostrarParametros($correo){
 		
 		$this->set('parametros', $this->Profesores->find('all')->where(['correo' => $correo]));
 		
 	}
 	
+	/**
+	 * Función que encripta y devuelve la cadena pasada por parámetro.
+	 * 
+	 * @param string $cadena	cadena a encriptar.
+	 */
 	private function __encriptar($cadena){
 		
 		$key='clave_codificacion';  // Una clave de codificacion, debe usarse la misma para encriptar y desencriptar
@@ -160,6 +164,10 @@ class ProfesoresController extends AppController{
 	}
 	*/
 	
+	/**
+	 * Función que crea un consumer_key aleatoriamente, que se le va a entregar al
+	 * profesor al registrarse.
+	 */
 	private function __crearConsumerKey()
     {
 

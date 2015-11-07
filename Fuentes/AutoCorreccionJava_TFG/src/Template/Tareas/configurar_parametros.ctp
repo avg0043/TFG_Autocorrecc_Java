@@ -1,9 +1,9 @@
-<h1>Configurar parámetros de la práctica</h1>
+<h3>Configuración de los parámetros obligatorios de la práctica</h3>
 
 <?php
 echo $this->Form->create($nueva_tarea);
-echo $this->Form->input('num_intentos');
-echo $this->Form->input('fecha_tope', array('type' => 'date'));
-echo $this->Form->button(__('Configurar'));
+echo $this->Form->input('num_max_intentos');
+echo $this->Form->input('fecha_limite', array('type' => 'date'));
+echo $this->Form->button(__('Guardar configuración'));
 echo $this->Form->end();
 ?>

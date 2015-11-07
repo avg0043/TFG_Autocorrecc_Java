@@ -15,8 +15,8 @@ class AlumnosController extends AppController{
 		
 		session_start();
 		
-		$query = $this->Alumnos->find('all');
-		$query->where(['id' => $_SESSION['lti_userId']]);
+		$query = $this->Alumnos->find('all')
+							   ->where(['id' => $_SESSION['lti_userId']]);
 		
 		if($query->isEmpty()){
 			
@@ -36,6 +36,11 @@ class AlumnosController extends AppController{
 		
 	}
 	
+	/**
+	 * Función que guarda en una variable todos los alumnos que están
+	 * registrados en base de datos, para que puedan ser mostrados
+	 * desde la vista asociada.
+	 */
 	public function mostrarAlumnos(){
 		
 		$this->set('alumnos', $this->Alumnos->find('all'));

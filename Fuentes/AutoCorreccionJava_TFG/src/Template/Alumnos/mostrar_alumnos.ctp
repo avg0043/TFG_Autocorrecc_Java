@@ -1,4 +1,4 @@
-<h1>Alumnos registrados</h1>
+<h3>Alumnos registrados</h3>
 
 <?= $this->Html->link('Panel profesor', ['controller' => 'Profesores', 'action' => 'mostrarPanel']) ?>
 

@@ -8,8 +8,8 @@ use Cake\Validation\Validator;
 class TareasTable extends Table{
 	
 	public function validationDefault(Validator $validator){
-		$validator->notEmpty('num_intentos')
-				  ->notEmpty('fecha_tope');
+		$validator->notEmpty('num_max_intentos')
+				  ->notEmpty('fecha_limite');
 		return $validator;
 	}
 

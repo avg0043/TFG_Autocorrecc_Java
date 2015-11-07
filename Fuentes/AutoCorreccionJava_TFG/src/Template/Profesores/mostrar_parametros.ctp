@@ -1,4 +1,4 @@
-<h1>Parámetros LTI Profesor</h1>
+<h3>Parámetros LTI</h3>
 
 <?php foreach ($parametros as $param): ?>
 	<ul>

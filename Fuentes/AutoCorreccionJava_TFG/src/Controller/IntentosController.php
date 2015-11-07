@@ -4,11 +4,39 @@ namespace App\Controller;
 
 class IntentosController extends AppController{
 
+	/**
+	 * Función que se encarga de manejar los datos introducidos
+	 * en el formulario, el cual pertenece a su vista.
+	 * 
+	 * @param string $tipo_usuario	puede ser profesor o alumno.
+	 */
 	public function subida($tipo_usuario = null){
 		
 		session_start();
 		
 		$this->set('tipo', $tipo_usuario);
+		
+		if($tipo_usuario == 'alumno'){
+		
+			// Número máximo de intentos para subir prácticas
+			$tareas_controller = new TareasController;
+			$numero_maximo_intentos = $tareas_controller->obtenerIntentosMaximo($_SESSION['lti_idTarea']);
+			
+			$query = $this->Intentos->find('all')
+									->where(['tarea_id' => $_SESSION['lti_idTarea'], 'alumno_id' => $_SESSION['lti_userId']])
+									->toArray();									
+			$total_intentos_realizados = count($query);
+			
+			// Fecha límite para la entrega de las prácticas
+			$fecha_limite = $tareas_controller->obtenerFechaLimite($_SESSION['lti_idTarea']);
+			$fecha_limite = (new \DateTime($fecha_limite))->format('Y-m-d');
+			$fecha_actual = (new \DateTime(date("Y-m-d H:i:s")))->format('Y-m-d');
+			
+			$this->set('num_maximo_intentos', $numero_maximo_intentos);
+			$this->set('fecha_limite', $fecha_limite);
+			$this->set('num_intentos_realizados', $total_intentos_realizados);
+			
+		}
 		
 		if ($this->request->is('post')) {
 			
@@ -19,26 +47,8 @@ class IntentosController extends AppController{
 				$this->Flash->error(__('El fichero debe tener extensión .java!'));	
 				
 			}else{
-				
-				if($tipo_usuario == 'alumno'){
-					
-					// Obtención del nº de intentos máximo que pueden subir los alumnos la práctica
-					$tareas_controller = new TareasController;
-					$numero_maximo_intentos = $tareas_controller->obtenerIntentosPorId($_SESSION['lti_idTituloActividad']);
-					
-					$query = $this->Intentos->find('all')
-											->where(['tarea_id' => $_SESSION['lti_idTituloActividad'], 'alumno_id' => $_SESSION['lti_userId']])
-											->toArray();									
-					$total_intentos_realizados = count($query);
-					
-					// Obtención de la fecha tope de entrega que tienen los alumnos para enviar prácticas
-					$fecha_tope = $tareas_controller->obtenerFechaTopePorId($_SESSION['lti_idTituloActividad']);
-					$fecha_tope = (new \DateTime($fecha_tope))->format('Y-m-d');
-					$fecha_actual = (new \DateTime(date("Y-m-d H:i:s")))->format('Y-m-d');
-					
-				}
 
-				if($tipo_usuario == 'alumno' and $fecha_actual > $fecha_tope){
+				if($tipo_usuario == 'alumno' and $fecha_actual > $fecha_limite){
 					
 					$this->Flash->error(__('La fecha tope de la entrega ha finalizado'));
 					
@@ -51,13 +61,13 @@ class IntentosController extends AppController{
 					if($tipo_usuario == 'alumno'){
 										
 						$intento_realizado = $total_intentos_realizados + 1;					
-						$directorio_destino = "../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTituloActividad"] . "/"
+						$directorio_destino = "../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
 									  . $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/" . $intento_realizado . "/";									  
 						mkdir($directorio_destino, 0777, true);
 			
 					}else{
 						
-						$directorio_destino = "../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTituloActividad"] . "/"
+						$directorio_destino = "../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
 									  . $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";
 						
 						if(!is_dir($directorio_destino)){
@@ -76,11 +86,12 @@ class IntentosController extends AppController{
 						
 						// Añadimos el intento realizado de subida de práctica del alumno
 						$nuevo_intento = $this->Intentos->newEntity();
-						$nuevo_intento->tarea_id = $_SESSION['lti_idTituloActividad'];
+						$nuevo_intento->tarea_id = $_SESSION['lti_idTarea'];
 						$nuevo_intento->alumno_id = $_SESSION['lti_userId'];
 						$this->Intentos->save($nuevo_intento);
 						
 						$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $intento_realizado));
+						return $this->redirect(['action' => 'subida', 'alumno']);
 						
 					}else{
 						
