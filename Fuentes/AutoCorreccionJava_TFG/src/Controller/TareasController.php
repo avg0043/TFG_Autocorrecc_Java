@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 class TareasController extends AppController{
-
+	
 	/**
 	 * Función que configura los parámetros que van a estar
 	 * asociados a la tarea.
@@ -19,6 +19,10 @@ class TareasController extends AppController{
 			$nueva_tarea = $this->Tareas->patchEntity($nueva_tarea, $this->request->data);
 			$nueva_tarea->id = $_SESSION['lti_idTarea'];
 			$nueva_tarea->nombre = $_SESSION['lti_tituloTarea'];
+			
+			// Fecha actual
+			date_default_timezone_set("Europe/Madrid");
+			$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s"));
 			
 			// Obtención del id del profesor
 			$profesores_controller = new ProfesoresController;		
@@ -85,6 +89,16 @@ class TareasController extends AppController{
 							  ->toArray();
 		return $query[0]->fecha_limite;
 			
+	}
+	
+	public function obtenerIdProfesor($id){
+		
+		$query = $this->Tareas->find('all')
+							  ->where(['id' => $id])
+							  ->toArray();
+		
+		return $query[0]->profesor_id;
+		
 	}
 	
 }

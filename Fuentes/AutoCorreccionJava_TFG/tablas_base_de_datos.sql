@@ -29,8 +29,8 @@ CREATE TABLE tareas
 	profesor_id INTEGER NOT NULL,
 	nombre VARCHAR(45) NOT NULL,
 	num_max_intentos INTEGER NOT NULL,
-	test TINYINT(1) NULL,
-	fecha_limite DATE NOT NULL,
+	fecha_limite DATETIME NOT NULL,
+	fecha_modificacion DATETIME NULL,
 	CONSTRAINT pk01_tareas PRIMARY KEY(id),
 	CONSTRAINT fk01_tareas FOREIGN KEY(profesor_id)
 		REFERENCES profesores (id)
@@ -41,10 +41,11 @@ CREATE TABLE tests
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	tarea_id INTEGER NOT NULL,
 	nombre VARCHAR(45) NOT NULL,
-	fecha DATE NOT NULL,
+	fecha_subida DATETIME NOT NULL,
 	CONSTRAINT pk01_tests PRIMARY KEY(id),
 	CONSTRAINT fk01_tests FOREIGN KEY(tarea_id)
-		REFERENCES tareas (id)
+		REFERENCES tareas (id),
+	CONSTRAINT uk01_tests UNIQUE KEY(tarea_id, nombre)
 );
 
 CREATE TABLE intentos
@@ -52,8 +53,8 @@ CREATE TABLE intentos
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	tarea_id INTEGER NOT NULL,
 	alumno_id INTEGER NOT NULL,
-	test TINYINT(1) NOT NULL,
-	fecha DATE NOT NULL,
+	resultado TINYINT(1) NOT NULL,
+	fecha_intento DATETIME NOT NULL,
 	CONSTRAINT pk01_intentos PRIMARY KEY(id),
 	CONSTRAINT fk01_intentos FOREIGN KEY
 		(tarea_id) REFERENCES tareas (id),
