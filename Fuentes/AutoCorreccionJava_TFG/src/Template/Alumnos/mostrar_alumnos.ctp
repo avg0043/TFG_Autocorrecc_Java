@@ -1,4 +1,6 @@
-<h3>Alumnos registrados</h3>
+<div class="page-header">
+	<h3>Alumnos registrados</h3>
+</div>
 
 <?= $this->Html->link('Panel profesor', ['controller' => 'Profesores', 'action' => 'mostrarPanel']) ?>
 
@@ -6,7 +8,7 @@
 if(!$alumnos->isEmpty()){
 ?>
 
-<table>
+<table class="table table-striped">
 	<tr>
 		<th>Id de Moodle</th>
 		<th>Nombre completo</th>

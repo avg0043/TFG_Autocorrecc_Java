@@ -1,4 +1,6 @@
-<h3>Panel de opciones del profesor</h3>
+<div class="page-header">
+	<h3>Panel de opciones del profesor</h3>
+</div>
 
 <?php
 echo $this->Html->link('Configurar parámetros de la práctica', ['controller' => 'Tareas', 'action' => 'configurarParametros']);

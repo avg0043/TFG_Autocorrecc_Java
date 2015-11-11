@@ -20,6 +20,10 @@ class TareasController extends AppController{
 			$nueva_tarea->id = $_SESSION['lti_idTarea'];
 			$nueva_tarea->nombre = $_SESSION['lti_tituloTarea'];
 			
+			// Obtención del id del profesor
+			$profesores_controller = new ProfesoresController;		
+			$nueva_tarea->profesor_id = $profesores_controller->obtenerId($_SESSION['lti_correo']);
+			
 			if ($this->Tareas->save($nueva_tarea)) {
 				$this->Flash->success(__('La tarea ha sido configurada.'));
 				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);

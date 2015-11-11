@@ -1,10 +1,23 @@
-<h3>Parámetros LTI</h3>
+<div class="page-header">
+	<h3>Parámetros LTI</h3>
+</div>
 
 <?php foreach ($parametros as $param): ?>
-	<ul>
-		<li><b>Consumer key: </b><?= $param->consumer_key ?></li>
-		<li><b>Secret: </b><?= $param->secret ?></li>
-	</ul>
+
+<div class="bs-example">
+	<div class="list-group">
+		<div class="list-group-item">
+            <span class="glyphicon glyphicon-cog"></span><b>Consumer key: </b><?= $param->consumer_key ?>
+        </div>
+        <div class="list-group-item">
+            <span class="glyphicon glyphicon-cog"></span><b>Secret: </b><?= $param->secret ?>
+        </div>
+        <div class="list-group-item">
+            <span class="glyphicon glyphicon-cog"></span><b>URL: </b>http://localhost/AutoCorreccionJava_TFG/profesores/establecerConexion
+        </div>
+	</div>
+</div>
+	
 <?php endforeach; ?>
 
 

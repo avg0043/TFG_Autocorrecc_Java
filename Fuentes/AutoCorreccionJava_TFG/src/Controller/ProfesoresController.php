@@ -94,6 +94,9 @@ class ProfesoresController extends AppController{
 				if($registrada){
 					return $this->redirect(['action' => 'mostrarPanel']);
 				}else{
+					
+					// Llamar a un método privado que cree la estructura de carpetas de Maven
+					
 					return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
 				}
 			
@@ -111,6 +114,15 @@ class ProfesoresController extends AppController{
 			throw new NotFoundException();
 		}
 
+	}
+	
+	public function obtenerId($correo){
+		
+		$query = $this->Profesores->find('all')
+								  ->where(['correo' => $correo])
+								  ->toArray();
+		return $query[0]->id;
+		
 	}
 	
 	/**

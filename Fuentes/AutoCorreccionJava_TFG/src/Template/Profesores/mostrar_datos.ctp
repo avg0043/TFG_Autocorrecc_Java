@@ -1,4 +1,6 @@
-<h3>Datos del profesor</h3>
+<div class="page-header">
+	<h3>Datos del profesor</h3>
+</div>
 
 <?= $this->Html->link('Panel profesor', ['action' => 'mostrarPanel']) ?>
 
