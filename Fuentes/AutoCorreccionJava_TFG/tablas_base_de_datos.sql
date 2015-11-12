@@ -8,7 +8,8 @@ DROP TABLE IF EXISTS profesores;
 CREATE TABLE profesores
 (
 	id INTEGER NOT NULL AUTO_INCREMENT,
-	nombre_completo VARCHAR(45) NULL,
+	nombre VARCHAR(45) NOT NULL,
+	apellidos VARCHAR(45) NOT NULL,
 	consumer_key VARCHAR(45) NOT NULL,
 	secret VARCHAR(45) NOT NULL,
 	correo VARCHAR(45) NOT NULL,
@@ -18,7 +19,8 @@ CREATE TABLE profesores
 CREATE TABLE alumnos
 (
 	id INTEGER NOT NULL,
-	nombre_completo VARCHAR(45) NOT NULL,
+	nombre VARCHAR(45) NOT NULL,
+	apellidos VARCHAR(45) NOT NULL,
 	correo VARCHAR(45) NOT NULL,
 	CONSTRAINT pk01_alumnos PRIMARY KEY(id)
 );
@@ -30,7 +32,7 @@ CREATE TABLE tareas
 	nombre VARCHAR(45) NOT NULL,
 	num_max_intentos INTEGER NOT NULL,
 	fecha_limite DATETIME NOT NULL,
-	fecha_modificacion DATETIME NULL,
+	fecha_modificacion DATETIME NOT NULL,
 	CONSTRAINT pk01_tareas PRIMARY KEY(id),
 	CONSTRAINT fk01_tareas FOREIGN KEY(profesor_id)
 		REFERENCES profesores (id)

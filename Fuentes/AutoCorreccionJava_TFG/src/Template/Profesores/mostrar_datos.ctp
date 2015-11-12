@@ -6,7 +6,8 @@
 
 <?php foreach ($profesor as $datos): ?>
 	<ul>
-		<li><b>Nombre completo: </b><?= $datos->nombre_completo ?></li>
+		<li><b>Nombre: </b><?= $datos->nombre ?></li>
+		<li><b>Apellidos: </b><?= $datos->apellidos ?></li>
 		<li><b>Correo: </b><?= $datos->correo ?></li>
 	</ul>
 <?php endforeach; ?>

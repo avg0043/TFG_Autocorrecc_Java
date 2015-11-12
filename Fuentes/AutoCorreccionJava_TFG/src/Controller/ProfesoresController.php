@@ -83,37 +83,30 @@ class ProfesoresController extends AppController{
 			$_SESSION['lti_correo'] = $context->info['lis_person_contact_email_primary'];
 			$_SESSION['lti_rol'] = $context->info['roles'];
 			$_SESSION['lti_userId'] = $context->info['user_id'];
-			$_SESSION['lti_idCurso'] = $context->info['context_id'];			
+			$_SESSION['lti_idCurso'] = $context->info['context_id'];
+			$_SESSION['lti_nombre'] = $context->info['lis_person_name_given'];
+			$_SESSION['lti_apellidos'] = $context->info['lis_person_name_family'];
 			
-			if($_REQUEST['roles'] == 'Instructor'){
-			
-				// Si la tarea está registrada se redirige al panel del profesor, y sino se registra la tarea
+			if($_REQUEST['roles'] == 'Instructor'){			
 				$tareas_controller = new TareasController;
-				$registrada = $tareas_controller->comprobarTareaRegistrada($_SESSION['lti_idTarea']);
+				$tarea = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea']);
 				
-				if($registrada){
+				// Tarea registrada
+				if(!empty($tarea)){
 					return $this->redirect(['action' => 'mostrarPanel']);
-				}else{
-					
-					// Llamar a un método privado que cree la estructura de carpetas de Maven
-					
-					return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
 				}
-			
-			}else{
-				
-				return $this->redirect(['controller' => 'Alumnos', 'action' => 'registrar']);
-				
+				else{
+					return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
+				}		
 			}
-
-		}else{
-			
+			else{
+				return $this->redirect(['controller' => 'Alumnos', 'action' => 'registrar']);	
+			}
+		}
+		else{
 			//$this->Flash->error(__('La consumer key no es la correcta!!'));
-			//return $this->redirect(['action' => 'registrar']);
-			//	-------------------------- LANZAR UN THROW EXCEPTION MEJOR? -------------------------------
 			throw new NotFoundException();
 		}
-
 	}
 	
 	public function obtenerId($correo){

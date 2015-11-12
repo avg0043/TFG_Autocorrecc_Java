@@ -39,65 +39,11 @@ class TareasController extends AppController{
 		
 	}
 	
-	/**
-	 * Función que comprueba si el id de la tarea recibida pertenece
-	 * a una tarea registrada o no.
-	 * 
-	 * @param integer $id	id de la tarea.
-	 * @return boolean	si la tarea está registrada o no.
-	 */
-	public function comprobarTareaRegistrada($id){
+	public function obtenerTarea($id){
 		
-		$query = $this->Tareas->find('all')
-					  ->where(['id' => $id]);
-		
-		if(!$query->isEmpty()){
-			return true;
-		}else{
-			return false;
-		}
-					  
-	}
-	
-	/**
-	 * Función que obtiene el número de intentos máximo de la
-	 * tarea recibida por id.
-	 * 
-	 * @param integer $id	id de la tarea.
-	 * @return integer	número máximo de intentos de la tarea.
-	 */
-	public function obtenerIntentosMaximo($id){
-		
-		$query = $this->Tareas->find('all')
-							  ->where(['id' => $id])
-							  ->toArray();
-		return $query[0]->num_max_intentos;
-			
-	}
-	
-	/**
-	 * Función que obtiene la fecha límite de entrega
-	 * de la tarea recibida por id.
-	 * 
-	 * @param integer $id	id de la tarea.
-	 * @return date	fecha límite de la entrega de la tarea.
-	 */
-	public function obtenerFechaLimite($id){
-	
-		$query = $this->Tareas->find('all')
-							  ->where(['id' => $id])
-							  ->toArray();
-		return $query[0]->fecha_limite;
-			
-	}
-	
-	public function obtenerIdProfesor($id){
-		
-		$query = $this->Tareas->find('all')
-							  ->where(['id' => $id])
-							  ->toArray();
-		
-		return $query[0]->profesor_id;
+		return $this->Tareas->find('all')
+							->where(['id' => $id])
+							->toArray();
 		
 	}
 	

@@ -13,7 +13,8 @@
 		<div class="col-md-6 col-md-offset-3">
 			<?php
 			echo $this->Form->create($nuevo_profesor);
-			echo $this->Form->input('nombre_completo', ['type' => 'text', 'label' => 'Nombre y apellido', 'class' => 'form-control']);
+			echo $this->Form->input('nombre', ['type' => 'text', 'label' => 'Nombre', 'class' => 'form-control']);
+			echo $this->Form->input('apellidos', ['type' => 'text', 'label' => 'Apellidos', 'class' => 'form-control']);
 			echo $this->Form->input('correo', ['type' => 'email', 'label' => 'Correo electrónico', 'class' => 'form-control', 'placeholder' => 'Tiene que ser el de Moodle']);
 			echo $this->Form->input('contraseña', ['type' => 'password', 'label' => 'Contraseña', 'class' => 'form-control']);
 			echo $this->Form->input('confirmar_contraseña', ['type' => 'password', 'label' => 'Confirmar contraseña', 'class' => 'form-control', 'placeholder' => 'Asegúrese que sea la misma']);

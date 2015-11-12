@@ -18,14 +18,11 @@ class IntentosController extends AppController{
 	 * 
 	 * @param string $tipo_usuario	puede ser profesor o alumno.
 	 */
-	public function subida($tipo_usuario = null){
+	public function subida(){
 		
-		session_start();	
-		$this->set('tipo', $tipo_usuario);
-		
-		if($tipo_usuario == 'alumno'){		
-			$this->__establecerDatosVista();		
-		}		
+		session_start();
+			
+		$this->__establecerDatosVista();			
 		
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
@@ -34,26 +31,20 @@ class IntentosController extends AppController{
 				$this->Flash->error(__('El fichero debe tener extensión .java!'));				
 			}
 			else{
-				if($tipo_usuario == 'alumno' and $this->fecha_actual > $this->fecha_limite){				
+				if($this->fecha_actual > $this->fecha_limite){				
 					$this->Flash->error(__('La fecha tope de la entrega ha finalizado'));			
 				}
-				elseif($tipo_usuario == 'alumno' and $this->total_intentos_realizados == $this->numero_maximo_intentos){				
+				elseif($this->total_intentos_realizados == $this->numero_maximo_intentos){				
 					$this->Flash->error(__('No puedes subir más veces la práctica'));				
 				}
 				else{				
-					$this->ruta_comun = "../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
+					$this->ruta_comun = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
 										. $_SESSION["lti_rol"] . "/";
 					
 					$tareas_controller = new TareasController();
-					$this->id_profesor = $tareas_controller->obtenerIdProfesor($_SESSION['lti_idTarea']);
-					
-					// FUNCIONALIDADES ALUMNO/PROFESOR
-					if($tipo_usuario == 'alumno'){					
-						$this->__realizarAccionesAlumno();								
-					}
-					else{				
-						$this->__realizarAccionesProfesor();					
-					}											
+					$this->id_profesor = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->profesor_id;
+							
+					$this->__realizarAccionesAlumno();																	
 				}
 			}
 		}
@@ -62,44 +53,20 @@ class IntentosController extends AppController{
 	private function __establecerDatosVista(){
 		
 		$tareas_controller = new TareasController;
-		$this->numero_maximo_intentos = $tareas_controller->obtenerIntentosMaximo($_SESSION['lti_idTarea']);
+		$this->numero_maximo_intentos = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->num_max_intentos;
 			
 		$query = $this->Intentos->find('all')
 				->where(['tarea_id' => $_SESSION['lti_idTarea'], 'alumno_id' => $_SESSION['lti_userId']])
 				->toArray();
 		$this->total_intentos_realizados = count($query);
 			
-		$this->fecha_limite = $tareas_controller->obtenerFechaLimite($_SESSION['lti_idTarea']);
+		$this->fecha_limite = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->fecha_limite;
 		$this->fecha_limite = (new \DateTime($this->fecha_limite))->format('Y-m-d');
 		$this->fecha_actual = (new \DateTime(date("Y-m-d H:i:s")))->format('Y-m-d');
 			
 		$this->set('num_maximo_intentos', $this->numero_maximo_intentos);
 		$this->set('fecha_limite', $this->fecha_limite);
 		$this->set('num_intentos_realizados', $this->total_intentos_realizados);
-		
-	}
-	
-	private function __realizarAccionesProfesor(){
-		
-		$directorio_destino = $this->ruta_comun . $this->id_profesor . "/";
-		
-		// Creación de la estructura de carpetas
-		if(!is_dir($directorio_destino)){				
-			mkdir($directorio_destino, 0777, true);			
-			exec('SET PATH=%JAVA_HOME%\bin;%PATH% 2>&1');
-			exec('cd ' . $directorio_destino . ' && mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false -DgroupId=ubu -DartifactId=arquetipo 2>&1');				
-		}
-		
-		// Guardar test subido en el arquetipo de MAVEN
-		$path_fichero_maven = $directorio_destino . 'arquetipo/src/test/java/ubu/' . $_FILES["ficheroAsubir"]["name"];
-		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], $path_fichero_maven);
-		
-		// Guardar el test subido en base de datos
-		$tests_controller = new TestsController;
-		$nombre_test = $_FILES['ficheroAsubir']['name'];
-		$tests_controller->guardarTest($_SESSION['lti_idTarea'], $nombre_test);
-		
-		$this->Flash->success(__('Test subido!'));
 		
 	}
 	
@@ -110,13 +77,14 @@ class IntentosController extends AppController{
 		$this->__guardarIntento();
 		
 		//$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $intento_realizado));
-		return $this->redirect(['action' => 'subida', 'alumno']);
+		// Actualizar vista
+		return $this->redirect(['action' => 'subida']);
 		
 	}
 	
 	private function __guardarPracticaAlumno(){
 		
-		$ruta_carpeta_id = "..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
+		$ruta_carpeta_id = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
 							. $_SESSION["lti_rol"] . "\\" . $_SESSION["lti_userId"] . "\\";
 		
 		//	Creación de la estructura de carpetas del alumno
@@ -129,7 +97,7 @@ class IntentosController extends AppController{
 		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], $path_fichero);
 		
 		// Copiar el arquetipo maven a la carpeta id alumno
-		$ruta_dir_origen = "..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
+		$ruta_dir_origen = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
 				. "Instructor" . "\\" . $this->id_profesor;
 		$ruta_dir_destino = $ruta_carpeta_id;
 		exec('xcopy ' . $ruta_dir_origen . ' ' . $ruta_dir_destino . ' /s /e 2>&1');

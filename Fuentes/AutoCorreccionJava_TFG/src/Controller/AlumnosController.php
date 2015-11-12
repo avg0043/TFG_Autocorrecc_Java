@@ -23,7 +23,9 @@ class AlumnosController extends AppController{
 			$nuevo_alumno = $this->Alumnos->newEntity();
 
 			$nuevo_alumno->id = $_SESSION['lti_userId'];
-			$nuevo_alumno->nombre_completo = $_SESSION['lti_nombreCompleto'];
+			//$nuevo_alumno->nombre_completo = $_SESSION['lti_nombreCompleto'];
+			$nuevo_alumno->nombre = $_SESSION['lti_nombre'];
+			$nuevo_alumno->apellidos = $_SESSION['lti_apellidos'];
 			$nuevo_alumno->correo = $_SESSION['lti_correo'];
 
 			$this->Alumnos->save($nuevo_alumno);
@@ -32,7 +34,7 @@ class AlumnosController extends AppController{
 			
 		}
 		
-		return $this->redirect(['controller' => 'Intentos', 'action' => 'subida', 'alumno']);
+		return $this->redirect(['controller' => 'Intentos', 'action' => 'subida']);
 		
 	}
 	

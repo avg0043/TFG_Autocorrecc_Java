@@ -1,15 +1,10 @@
 <div class="page-header">
-	<h3>Subida de Prácticas</h3>
+	<h3>Subida de Tests</h3>
 </div>
 
-<div>
-	<ul>
-		<li><b>Número máximo de intentos posibles: </b><?= $num_maximo_intentos ?></li>
-		<li><b>Fecha límite de entrega: </b><?= $fecha_limite ?></li>
-		<li><b>Número de intentos realizados: </b><?= $num_intentos_realizados ?></li>
-		<li><b>Número de intentos restantes: </b><?= ($num_maximo_intentos - $num_intentos_realizados) ?></li>
-	</ul>
-</div>
+<?php
+echo $this->Html->link('Panel profesor', ['controller' => 'Profesores', 'action' => 'mostrarPanel']);
+?>
 
 <div class="container">
 	<div class="row">
