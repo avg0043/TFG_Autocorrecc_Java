@@ -5,6 +5,7 @@ namespace App\Controller;
 class TestsController extends AppController{
 	
 	private $id_profesor;
+	private $ruta_carpeta_id;
 	
 	public function subida(){
 		
@@ -13,39 +14,45 @@ class TestsController extends AppController{
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
 			
-			if($extension != "java"){				
-				$this->Flash->error(__('El fichero debe tener extensión .java!'));				
+			if($extension != "zip"){				
+				$this->Flash->error(__('El fichero debe tener extensión .zip!'));				
 			}
-			else{				
+			else{		
 				$tareas_controller = new TareasController();
 				$this->id_profesor = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->profesor_id;	
-				$this->__realizarAccionesProfesor();									
+				
+				$this->ruta_carpeta_id = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
+						. $_SESSION["lti_rol"] . "/" . $this->id_profesor . "/";
+				
+				$this->__realizarAccionesProfesor();
+				$this->Flash->success(__('Test subido!'));
 			}
 		}
 	}
 	
 	private function __realizarAccionesProfesor(){
-		
-		$ruta = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
-							. $_SESSION["lti_rol"] . "/";
-	
-		$directorio_destino = $ruta . $this->id_profesor . "/";
+			
+		// Obtener nombre del paquete
+		$paquete = "es.ubu";
+		$paquete_ruta = str_replace('.', '/', $paquete);
 	
 		// Creación de la estructura de carpetas y del arquetipo de MAVEN
-		if(!is_dir($directorio_destino)){
-			mkdir($directorio_destino, 0777, true);
+		if(!is_dir($this->ruta_carpeta_id)){
+			mkdir($this->ruta_carpeta_id, 0777, true);
 			exec('SET PATH=%JAVA_HOME%\bin;%PATH% 2>&1');
-			exec('cd ' . $directorio_destino . ' && mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false -DgroupId=ubu -DartifactId=arquetipo 2>&1');
+			exec('cd ' . $this->ruta_carpeta_id . ' && mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false -DgroupId='.$paquete.' -DartifactId=arquetipo 2>&1');
 		}
 	
-		// Guardar test subido en el arquetipo de MAVEN
-		$path_fichero_maven = $directorio_destino . 'arquetipo/src/test/java/ubu/' . $_FILES["ficheroAsubir"]["name"];
-		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], $path_fichero_maven);
-	
-		// Guardar el test subido en base de datos
-		$this->guardarTest($_SESSION['lti_idTarea'], $_FILES['ficheroAsubir']['name']);
-	
-		$this->Flash->success(__('Test subido!'));
+		// Extraer tests dentro de la correspondiente carpeta del arquetipo
+		$zip = new \ZipArchive;
+		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $_FILES["ficheroAsubir"]["name"]);
+		if ($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE) {
+			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/test/java/'.$paquete_ruta.'/');
+			$zip->close();
+		}
+		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
+		
+		$this->guardarTest($_SESSION['lti_idTarea'], $_FILES['ficheroAsubir']['name']);	
 		
 	}
 

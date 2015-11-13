@@ -10,7 +10,8 @@ class IntentosController extends AppController{
 	private $numero_maximo_intentos;
 	private $test_pasado = false;
 	private $id_profesor;
-	private $ruta_comun;  
+	private $ruta_carpeta_id;
+	private $intento_realizado;
 	
 	/**
 	 * Función que se encarga de manejar los datos introducidos
@@ -27,8 +28,8 @@ class IntentosController extends AppController{
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
 			
-			if($extension != "java"){				
-				$this->Flash->error(__('El fichero debe tener extensión .java!'));				
+			if($extension != "zip"){				
+				$this->Flash->error(__('El fichero debe tener extensión .zip!'));				
 			}
 			else{
 				if($this->fecha_actual > $this->fecha_limite){				
@@ -37,14 +38,16 @@ class IntentosController extends AppController{
 				elseif($this->total_intentos_realizados == $this->numero_maximo_intentos){				
 					$this->Flash->error(__('No puedes subir más veces la práctica'));				
 				}
-				else{				
-					$this->ruta_comun = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
-										. $_SESSION["lti_rol"] . "/";
+				else{									
+					$this->ruta_carpeta_id = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
+										. $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";
 					
 					$tareas_controller = new TareasController();
 					$this->id_profesor = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->profesor_id;
 							
-					$this->__realizarAccionesAlumno();																	
+					$this->__realizarAccionesAlumno();
+					$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+					return $this->redirect(['action' => 'subida']);
 				}
 			}
 		}
@@ -73,49 +76,38 @@ class IntentosController extends AppController{
 	private function __realizarAccionesAlumno(){
 		
 		$this->__guardarPracticaAlumno();
+		//$this->__compilarTests();
 		$this->__ejecutarTests();
 		$this->__guardarIntento();
-		
-		//$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $intento_realizado));
-		// Actualizar vista
-		return $this->redirect(['action' => 'subida']);
 		
 	}
 	
 	private function __guardarPracticaAlumno(){
-		
-		$ruta_carpeta_id = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
-							. $_SESSION["lti_rol"] . "\\" . $_SESSION["lti_userId"] . "\\";
-		
+			
 		//	Creación de la estructura de carpetas del alumno
-		$intento_realizado = $this->total_intentos_realizados + 1;
-		$directorio_destino = $this->ruta_comun . $_SESSION["lti_userId"] . "/" . $intento_realizado . "/";
-		mkdir($directorio_destino, 0777, true);
-		
-		// Guardar práctica en la carpeta del intento
-		$path_fichero = $directorio_destino . $_FILES["ficheroAsubir"]["name"];
-		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], $path_fichero);
-		
+		$this->intento_realizado = $this->total_intentos_realizados + 1;
+		mkdir($this->ruta_carpeta_id . $this->intento_realizado . "/", 0777, true);
+				
 		// Copiar el arquetipo maven a la carpeta id alumno
 		$ruta_dir_origen = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
-				. "Instructor" . "\\" . $this->id_profesor;
-		$ruta_dir_destino = $ruta_carpeta_id;
-		exec('xcopy ' . $ruta_dir_origen . ' ' . $ruta_dir_destino . ' /s /e 2>&1');
+							. "Instructor" . "\\" . $this->id_profesor;
+		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e 2>&1');
 		
-		// Copiar práctica al arquetipo maven
-		$nuevo_directorio_origen = $ruta_carpeta_id . $intento_realizado . "\\";
-		$path_fichero = $nuevo_directorio_origen . $_FILES["ficheroAsubir"]["name"];
-		$nuevo_directorio_destino = $ruta_carpeta_id . "arquetipo\\src\\main\\java\\ubu\\";						
-		exec('xcopy ' . $path_fichero . ' ' . $nuevo_directorio_destino . ' 2>&1');
+		// Extraer zip subido en la correspondiente carpeta del arquetipo
+		$zip = new \ZipArchive;
+		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $_FILES["ficheroAsubir"]["name"]);	
+		if ($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE) {
+			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/main/java/');
+			$zip->close();
+		}
+		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
 		
 	}
 	
 	private function __ejecutarTests(){
 		
-		$dest = $this->ruta_comun . $_SESSION["lti_userId"] . "/" . "arquetipo";
-		
 		// Ejecución de los test
-		exec('cd ' . $dest . ' && mvn test', $salida);
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn test', $salida);
 		$salida_string = implode(' ', $salida);
 
 		// Comprobar salida generada
@@ -130,9 +122,9 @@ class IntentosController extends AppController{
 			$this->Flash->error(__('error desconocido'));
 		}
 
-		// Borrar práctica del arquetipo
-		$borrar = $this->ruta_comun . $_SESSION["lti_userId"] . "/arquetipo/src/main/java/ubu/" . $_FILES["ficheroAsubir"]["name"];
-		unlink($borrar);
+		// BORRAR LA ESTRUCTURA UNA VEZ PASADO EL TEST? HACE FALTA O SE SOBREESCRIBE LA PRÓXIMA VEZ
+		//$borrar = $this->ruta_comun . $_SESSION["lti_userId"] . "/arquetipo/src/main/java/ubu/" . $_FILES["ficheroAsubir"]["name"];
+		//unlink($borrar);
 		
 	}
 	
