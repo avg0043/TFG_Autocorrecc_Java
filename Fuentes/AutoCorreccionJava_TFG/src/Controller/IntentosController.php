@@ -44,9 +44,8 @@ class IntentosController extends AppController{
 					
 					$tareas_controller = new TareasController();
 					$this->id_profesor = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->profesor_id;
-							
-					$this->__realizarAccionesAlumno();
-					$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+										
+					$this->__guardarPracticaAlumno();
 					return $this->redirect(['action' => 'subida']);
 				}
 			}
@@ -73,25 +72,17 @@ class IntentosController extends AppController{
 		
 	}
 	
-	private function __realizarAccionesAlumno(){
-		
-		$this->__guardarPracticaAlumno();
-		//$this->__compilarTests();
-		$this->__ejecutarTests();
-		$this->__guardarIntento();
-		
-	}
-	
 	private function __guardarPracticaAlumno(){
 			
-		//	Creación de la estructura de carpetas del alumno
-		$this->intento_realizado = $this->total_intentos_realizados + 1;
-		mkdir($this->ruta_carpeta_id . $this->intento_realizado . "/", 0777, true);
+		//	Creación de la estructura de carpetas del alumno (si no lo está)
+		if(!is_dir($this->ruta_carpeta_id)){
+			mkdir($this->ruta_carpeta_id . "/", 0777, true);
+		}
 				
 		// Copiar el arquetipo maven a la carpeta id alumno
 		$ruta_dir_origen = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
 							. "Instructor" . "\\" . $this->id_profesor;
-		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e 2>&1');
+		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e');
 		
 		// Extraer zip subido en la correspondiente carpeta del arquetipo
 		$zip = new \ZipArchive;
@@ -101,6 +92,28 @@ class IntentosController extends AppController{
 			$zip->close();
 		}
 		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
+		
+		$this->__comprobarCompilacion();
+		
+	}
+	
+	private function __comprobarCompilacion(){
+		
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn compile', $salida);
+		$salida_string = implode(' ', $salida);
+		
+		if(strpos($salida_string, 'BUILD SUCCESS')){	// Compilación correcta
+			// Creación carpeta intento
+			$this->intento_realizado = $this->total_intentos_realizados + 1;
+			mkdir($this->ruta_carpeta_id . $this->intento_realizado . "/", 0777, true);
+			
+			$this->__ejecutarTests();
+		}
+		else{
+			// Borrar estructura main>java del arquetipo
+			exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
+			$this->Flash->error(__('La práctica tiene errores de compilación!'));
+		}
 		
 	}
 	
@@ -121,10 +134,11 @@ class IntentosController extends AppController{
 		else{
 			$this->Flash->error(__('error desconocido'));
 		}
-
-		// BORRAR LA ESTRUCTURA UNA VEZ PASADO EL TEST? HACE FALTA O SE SOBREESCRIBE LA PRÓXIMA VEZ
-		//$borrar = $this->ruta_comun . $_SESSION["lti_userId"] . "/arquetipo/src/main/java/ubu/" . $_FILES["ficheroAsubir"]["name"];
-		//unlink($borrar);
+		
+		// Borrar estructura main>java del arquetipo
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
+		
+		$this->__guardarIntento();
 		
 	}
 	
@@ -141,6 +155,7 @@ class IntentosController extends AppController{
 		
 		// Hacer un if(!..?? )
 		$this->Intentos->save($nuevo_intento);
+		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
 		
 	}
 	
