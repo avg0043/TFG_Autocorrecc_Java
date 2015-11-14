@@ -17,22 +17,19 @@ class ProfesoresController extends AppController{
 		
 		$nuevo_profesor = $this->Profesores->newEntity();
 		
-		if ($this->request->is('post')) {
-			
-			// Datos profesor (key y secret)
+		if ($this->request->is('post')) {				
 			$consumer_key = $this->__crearConsumerKey();
 			$consumer_key_encriptada = $this->__encriptar($consumer_key);
 			$secret_encriptada = $this->__encriptar($this->request->data['contraseña']);
 			$nuevo_profesor->consumer_key = $consumer_key_encriptada;
-			$nuevo_profesor->secret = $secret_encriptada;
-			
+			$nuevo_profesor->secret = $secret_encriptada;		
 			$nuevo_profesor = $this->Profesores->patchEntity($nuevo_profesor, $this->request->data);
+			
 			if ($this->Profesores->save($nuevo_profesor)) {
 				$this->Flash->success(__('Has sido registrado'));
 				return $this->redirect(['action' => 'mostrarParametros', $this->request->data['correo']]);
 			}
-			$this->Flash->error(__('No ha sido posible registrar al profesor.'));
-			
+			$this->Flash->error(__('No ha sido posible registrar al profesor.'));		
 		}
 		$this->set('nuevo_profesor', $nuevo_profesor);
 		
@@ -48,30 +45,29 @@ class ProfesoresController extends AppController{
 	 */
 	public function establecerConexion(){
 		
-		session_start();
-		
+		session_start();		
 		$consumer_key = $_REQUEST['oauth_consumer_key'];
 		
-		// Comprobación de si el consumer_key es el correcto
-		if($_REQUEST['roles'] == "Instructor"){
-			
+		// Comprobar consumer_key correcto
+		if($_REQUEST['roles'] == "Instructor"){			
 			$email = $_REQUEST['lis_person_contact_email_primary'];
 			$query = $this->Profesores->find('all')
-									  ->where(['consumer_key' => $consumer_key, 'correo' => $email]);
-			
-		}else{
-			
+									  ->where(['consumer_key' => $consumer_key, 'correo' => $email])
+									  ->toArray();		
+		}
+		else{		
 			$query = $this->Profesores->find('all')
-									  ->where(['consumer_key' => $consumer_key]);
-			
+									  ->where(['consumer_key' => $consumer_key])
+									  ->toArray();			
 		}
 		
-		if(!$query->isEmpty()){
-			
+		if(!empty($query)){			
 			// Obtención de la clave secreta
-			foreach ($query as $clave) {
-				$secret_encriptada = $clave->secret;
-			}
+			//foreach ($query as $clave) {
+			//	$secret_encriptada = $clave->secret;
+			//}
+			
+			$secret_encriptada = $query[0]->secret;
 			
 			// Objeto de la conexión LTI
 			$context = new Ims\BLTI($secret_encriptada, true, false);

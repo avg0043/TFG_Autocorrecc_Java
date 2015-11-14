@@ -10,14 +10,13 @@ class TareasController extends AppController{
 	 */
 	public function configurarParametros(){
 		
-		session_start();
-		
+		session_start();		
 		$nueva_tarea = $this->Tareas->newEntity();
 		
-		if ($this->request->is('post')) {
-			
+		if ($this->request->is('post')) {			
 			$nueva_tarea = $this->Tareas->patchEntity($nueva_tarea, $this->request->data);
 			$nueva_tarea->id = $_SESSION['lti_idTarea'];
+			$nueva_tarea->curso_id = $_SESSION['lti_idCurso'];
 			$nueva_tarea->nombre = $_SESSION['lti_tituloTarea'];
 			
 			// Fecha actual

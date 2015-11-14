@@ -32,10 +32,11 @@ class TestsController extends AppController{
 	
 	private function __realizarAccionesProfesor(){
 			
-		// Obtener nombre del paquete
-		$paquete = "es.ubu";
+		// Obtención del nombre del paquete
+		$tareas_controller = new TareasController();
+		$paquete = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->paquete;
 		$paquete_ruta = str_replace('.', '/', $paquete);
-	
+		
 		// Creación de la estructura de carpetas y del arquetipo de MAVEN
 		if(!is_dir($this->ruta_carpeta_id)){
 			mkdir($this->ruta_carpeta_id, 0777, true);

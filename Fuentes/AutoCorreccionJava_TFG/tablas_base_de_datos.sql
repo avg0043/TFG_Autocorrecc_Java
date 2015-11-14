@@ -19,6 +19,7 @@ CREATE TABLE profesores
 CREATE TABLE alumnos
 (
 	id INTEGER NOT NULL,
+	curso_id INTEGER NOT NULL,
 	nombre VARCHAR(45) NOT NULL,
 	apellidos VARCHAR(45) NOT NULL,
 	correo VARCHAR(45) NOT NULL,
@@ -28,12 +29,14 @@ CREATE TABLE alumnos
 CREATE TABLE tareas
 (
 	id INTEGER NOT NULL,
+	curso_id INTEGER NOT NULL,
 	profesor_id INTEGER NOT NULL,
 	nombre VARCHAR(45) NOT NULL,
 	num_max_intentos INTEGER NOT NULL,
+	paquete VARCHAR(45) NOT NULL,
 	fecha_limite DATETIME NOT NULL,
 	fecha_modificacion DATETIME NOT NULL,
-	CONSTRAINT pk01_tareas PRIMARY KEY(id),
+	CONSTRAINT pk01_tareas PRIMARY KEY(id, curso_id),
 	CONSTRAINT fk01_tareas FOREIGN KEY(profesor_id)
 		REFERENCES profesores (id)
 );
