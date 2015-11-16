@@ -25,7 +25,7 @@ class TareasController extends AppController{
 			
 			// Obtención del id del profesor
 			$profesores_controller = new ProfesoresController;		
-			$nueva_tarea->profesor_id = $profesores_controller->obtenerId($_SESSION['lti_correo']);
+			$nueva_tarea->profesor_id = $profesores_controller->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
 			
 			if ($this->Tareas->save($nueva_tarea)) {
 				$this->Flash->success(__('La tarea ha sido configurada.'));
@@ -38,7 +38,7 @@ class TareasController extends AppController{
 		
 	}
 	
-	public function obtenerTarea($id){
+	public function obtenerTareaPorId($id){
 		
 		return $this->Tareas->find('all')
 							->where(['id' => $id])

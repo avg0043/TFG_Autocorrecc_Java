@@ -13,21 +13,17 @@ class AlumnosController extends AppController{
 	 */
 	public function registrar(){
 		
-		session_start();	
-		$query = $this->Alumnos->find('all')
-							   ->where(['id' => $_SESSION['lti_userId']]);
+		session_start();
+	
+		$nuevo_alumno = $this->Alumnos->newEntity();
+		$nuevo_alumno->id = $_SESSION['lti_userId'];
+		$nuevo_alumno->curso_id = $_SESSION['lti_idCurso'];
+		$nuevo_alumno->nombre = $_SESSION['lti_nombre'];
+		$nuevo_alumno->apellidos = $_SESSION['lti_apellidos'];
+		$nuevo_alumno->correo = $_SESSION['lti_correo'];
+		$this->Alumnos->save($nuevo_alumno);
 		
-		if($query->isEmpty()){		
-			$nuevo_alumno = $this->Alumnos->newEntity();
-			$nuevo_alumno->id = $_SESSION['lti_userId'];
-			$nuevo_alumno->curso_id = $_SESSION['lti_idCurso'];
-			$nuevo_alumno->nombre = $_SESSION['lti_nombre'];
-			$nuevo_alumno->apellidos = $_SESSION['lti_apellidos'];
-			$nuevo_alumno->correo = $_SESSION['lti_correo'];
-			$this->Alumnos->save($nuevo_alumno);
-			
-			$this->Flash->success(__('Este es tu primer acceso. Has sido registrado'));			
-		}	
+		$this->Flash->success(__('Este es tu primer acceso. Has sido registrado'));
 		return $this->redirect(['controller' => 'Intentos', 'action' => 'subida']);
 		
 	}
@@ -40,6 +36,14 @@ class AlumnosController extends AppController{
 	public function mostrarAlumnos(){
 		
 		$this->set('alumnos', $this->Alumnos->find('all'));
+		
+	}
+	
+	public function obtenerAlumnoPorId($id){
+		
+		return $this->Alumnos->find('all')
+							 ->where(['id' => $id])
+							 ->toArray();
 		
 	}
 	

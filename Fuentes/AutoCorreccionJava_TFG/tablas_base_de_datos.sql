@@ -36,7 +36,7 @@ CREATE TABLE tareas
 	paquete VARCHAR(45) NOT NULL,
 	fecha_limite DATETIME NOT NULL,
 	fecha_modificacion DATETIME NOT NULL,
-	CONSTRAINT pk01_tareas PRIMARY KEY(id, curso_id),
+	CONSTRAINT pk01_tareas PRIMARY KEY(id),
 	CONSTRAINT fk01_tareas FOREIGN KEY(profesor_id)
 		REFERENCES profesores (id)
 );
@@ -58,6 +58,7 @@ CREATE TABLE intentos
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	tarea_id INTEGER NOT NULL,
 	alumno_id INTEGER NOT NULL,
+	numero_intento INTEGER NOT NULL,
 	resultado TINYINT(1) NOT NULL,
 	fecha_intento DATETIME NOT NULL,
 	CONSTRAINT pk01_intentos PRIMARY KEY(id),

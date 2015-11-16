@@ -43,7 +43,7 @@ class IntentosController extends AppController{
 										. $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";
 					
 					$tareas_controller = new TareasController();
-					$this->id_profesor = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->profesor_id;
+					$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;
 										
 					$this->__guardarPracticaAlumno();
 					return $this->redirect(['action' => 'subida']);
@@ -55,14 +55,14 @@ class IntentosController extends AppController{
 	private function __establecerDatosVista(){
 		
 		$tareas_controller = new TareasController;
-		$this->numero_maximo_intentos = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->num_max_intentos;
+		$this->numero_maximo_intentos = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->num_max_intentos;
 			
 		$query = $this->Intentos->find('all')
 				->where(['tarea_id' => $_SESSION['lti_idTarea'], 'alumno_id' => $_SESSION['lti_userId']])
 				->toArray();
 		$this->total_intentos_realizados = count($query);
 			
-		$this->fecha_limite = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->fecha_limite;
+		$this->fecha_limite = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->fecha_limite;
 		$this->fecha_limite = (new \DateTime($this->fecha_limite))->format('Y-m-d');
 		$this->fecha_actual = (new \DateTime(date("Y-m-d H:i:s")))->format('Y-m-d');
 			
@@ -148,6 +148,7 @@ class IntentosController extends AppController{
 		$nuevo_intento = $this->Intentos->newEntity();
 		$nuevo_intento->tarea_id = $_SESSION['lti_idTarea'];
 		$nuevo_intento->alumno_id = $_SESSION['lti_userId'];
+		$nuevo_intento->numero_intento = $this->intento_realizado;
 		$nuevo_intento->resultado = $this->test_pasado;		
 
 		date_default_timezone_set("Europe/Madrid");

@@ -2,9 +2,6 @@
 
 namespace App\Controller;
 
-require('/../../vendor/ims/blti.php');
-use Lib\Ims;
-
 class ProfesoresController extends AppController{
 	
 	/**
@@ -35,82 +32,27 @@ class ProfesoresController extends AppController{
 		
 	}
 	
-	/**
-	 * Función que establece la conexión entre Moodle y el servicio web
-	 * gracias al plugin LTI.
-	 * Los parámetros LTI son guardados y dependendiendo del rol del usuario
-	 * que ha accedido se le redirigirá a su correspondiente página.
-	 * 
-	 * @throws NotFoundException
-	 */
-	public function establecerConexion(){
+	public function obtenerProfesorPorKeyCorreo($consumer_key, $correo){
 		
-		session_start();		
-		$consumer_key = $_REQUEST['oauth_consumer_key'];
+		return $this->Profesores->find('all')
+					            ->where(['consumer_key' => $consumer_key, 'correo' => $correo])
+								->toArray();
 		
-		// Comprobar consumer_key correcto
-		if($_REQUEST['roles'] == "Instructor"){			
-			$email = $_REQUEST['lis_person_contact_email_primary'];
-			$query = $this->Profesores->find('all')
-									  ->where(['consumer_key' => $consumer_key, 'correo' => $email])
-									  ->toArray();		
-		}
-		else{		
-			$query = $this->Profesores->find('all')
-									  ->where(['consumer_key' => $consumer_key])
-									  ->toArray();			
-		}
-		
-		if(!empty($query)){			
-			// Obtención de la clave secreta
-			//foreach ($query as $clave) {
-			//	$secret_encriptada = $clave->secret;
-			//}
-			
-			$secret_encriptada = $query[0]->secret;
-			
-			// Objeto de la conexión LTI
-			$context = new Ims\BLTI($secret_encriptada, true, false);
-			
-			// Almacenamiento de la información LTI 
-			$_SESSION['lti_tituloTarea'] = $context->info['resource_link_title'];
-			$_SESSION['lti_idTarea'] = $context->info['resource_link_id'];
-			$_SESSION['lti_nombreCompleto'] = $context->info['lis_person_name_full'];
-			$_SESSION['lti_correo'] = $context->info['lis_person_contact_email_primary'];
-			$_SESSION['lti_rol'] = $context->info['roles'];
-			$_SESSION['lti_userId'] = $context->info['user_id'];
-			$_SESSION['lti_idCurso'] = $context->info['context_id'];
-			$_SESSION['lti_nombre'] = $context->info['lis_person_name_given'];
-			$_SESSION['lti_apellidos'] = $context->info['lis_person_name_family'];
-			
-			if($_REQUEST['roles'] == 'Instructor'){			
-				$tareas_controller = new TareasController;
-				$tarea = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea']);
-				
-				// Tarea registrada
-				if(!empty($tarea)){
-					return $this->redirect(['action' => 'mostrarPanel']);
-				}
-				else{
-					return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
-				}		
-			}
-			else{
-				return $this->redirect(['controller' => 'Alumnos', 'action' => 'registrar']);	
-			}
-		}
-		else{
-			//$this->Flash->error(__('La consumer key no es la correcta!!'));
-			throw new NotFoundException();
-		}
 	}
 	
-	public function obtenerId($correo){
+	public function obtenerProfesorPorKey($consumer_key){
 		
-		$query = $this->Profesores->find('all')
-								  ->where(['correo' => $correo])
-								  ->toArray();
-		return $query[0]->id;
+		return $this->Profesores->find('all')
+								->where(['consumer_key' => $consumer_key])
+								->toArray();
+		
+	}
+	
+	public function obtenerProfesorPorCorreo($correo){
+		
+		return $this->Profesores->find('all')
+								->where(['correo' => $correo])
+								->toArray();
 		
 	}
 	
@@ -169,20 +111,16 @@ class ProfesoresController extends AppController{
 	 * Función que crea un consumer_key aleatoriamente, que se le va a entregar al
 	 * profesor al registrarse.
 	 */
-	private function __crearConsumerKey()
-    {
+	private function __crearConsumerKey(){
 
         $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
         $pass = array();
         $alphaLength = strlen($alphabet) - 1;
 
-        for ($i = 0; $i < 7; $i++) {
-
+        for ($i = 0; $i < 7; $i++){
             $n = rand(0, $alphaLength);
             $pass[] = $alphabet[$n];
-
         }
-
         return implode($pass);
     }
 	

@@ -19,7 +19,7 @@ class TestsController extends AppController{
 			}
 			else{		
 				$tareas_controller = new TareasController();
-				$this->id_profesor = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->profesor_id;	
+				$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;	
 				
 				$this->ruta_carpeta_id = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
 						. $_SESSION["lti_rol"] . "/" . $this->id_profesor . "/";
@@ -34,7 +34,7 @@ class TestsController extends AppController{
 			
 		// Obtención del nombre del paquete
 		$tareas_controller = new TareasController();
-		$paquete = $tareas_controller->obtenerTarea($_SESSION['lti_idTarea'])[0]->paquete;
+		$paquete = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
 		$paquete_ruta = str_replace('.', '/', $paquete);
 		
 		// Creación de la estructura de carpetas y del arquetipo de MAVEN
@@ -50,9 +50,15 @@ class TestsController extends AppController{
 		if ($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE) {
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/test/java/'.$paquete_ruta.'/');
 			$zip->close();
+			
+			// Editar pom.xml para añadir codificación
+			$pom_xml = simplexml_load_file($this->ruta_carpeta_id . 'arquetipo/pom.xml');
+			$properties = $pom_xml->addChild('properties');
+			$properties->addChild("project.build.sourceEncoding", "UTF-8");
+			$pom_xml->asXml($this->ruta_carpeta_id . 'arquetipo/pom.xml');	
 		}
-		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
 		
+		unlink('./' . $_FILES["ficheroAsubir"]["name"]);	
 		$this->guardarTest($_SESSION['lti_idTarea'], $_FILES['ficheroAsubir']['name']);	
 		
 	}
