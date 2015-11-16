@@ -35,7 +35,7 @@ class ConexionesController extends AppController{
 			$this->__guardarDatosMoodle($secret_encriptada);
 			
 			if($_REQUEST['roles'] == 'Instructor'){			
-				$tareas_controller = new TareasController;
+				$tareas_controller = new TareasController();
 				$tarea = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea']);
 				
 				if(!empty($tarea)){	// Tarea registrada

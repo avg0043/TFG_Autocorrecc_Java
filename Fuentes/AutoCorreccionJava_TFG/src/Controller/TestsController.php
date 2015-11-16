@@ -45,21 +45,48 @@ class TestsController extends AppController{
 		}
 	
 		// Extraer tests dentro de la correspondiente carpeta del arquetipo
-		$zip = new \ZipArchive;
+		$zip = new \ZipArchive();
 		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $_FILES["ficheroAsubir"]["name"]);
 		if ($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE) {
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/test/java/'.$paquete_ruta.'/');
 			$zip->close();
 			
+			$this->__editarPOM();
+			
+			/*
 			// Editar pom.xml para añadir codificación
 			$pom_xml = simplexml_load_file($this->ruta_carpeta_id . 'arquetipo/pom.xml');
 			$properties = $pom_xml->addChild('properties');
 			$properties->addChild("project.build.sourceEncoding", "UTF-8");
-			$pom_xml->asXml($this->ruta_carpeta_id . 'arquetipo/pom.xml');	
+			$pom_xml->asXml($this->ruta_carpeta_id . 'arquetipo/pom.xml');
+			*/
 		}
 		
 		unlink('./' . $_FILES["ficheroAsubir"]["name"]);	
 		$this->guardarTest($_SESSION['lti_idTarea'], $_FILES['ficheroAsubir']['name']);	
+		
+	}
+	
+	private function __editarPOM(){
+		
+		$pom_xml = simplexml_load_file($this->ruta_carpeta_id . 'arquetipo/pom.xml');
+		
+		// Codificación
+		$properties = $pom_xml->addChild('properties');
+		$properties->addChild("project.build.sourceEncoding", "UTF-8");
+		
+		// Plugin PMD
+		$reporting = $pom_xml->addChild('reporting');
+		$plugins = $reporting->addChild("plugins");
+		$plugin = $plugins->addChild("plugin");
+		$plugin->addChild("groupId", "org.apache.maven.plugins");
+		$plugin->addChild("artifactId", "maven-pmd-plugin");
+		$configuration = $plugin->addChild("configuration");
+		$configuration->addChild("linkXref", "true");
+		$configuration->addChild("sourceEncoding", "utf-8");
+		$configuration->addChild("minimumTokens", "5");
+		
+		$pom_xml->asXml($this->ruta_carpeta_id . 'arquetipo/pom.xml');	
 		
 	}
 
@@ -76,6 +103,14 @@ class TestsController extends AppController{
 		if (!$this->Tests->save($nuevo_test)) {
 			$this->Flash->error(__('No ha sido posible registrar el test'));
 		}
+		
+	}
+	
+	public function obtenerTestPorIdTarea($id_tarea){
+	
+		return $this->Tests->find('all')
+						   ->where(['tarea_id' => $id_tarea])
+						   ->toArray();
 		
 	}
 	

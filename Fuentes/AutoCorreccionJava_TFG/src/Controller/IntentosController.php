@@ -19,12 +19,25 @@ class IntentosController extends AppController{
 	 * 
 	 * @param string $tipo_usuario	puede ser profesor o alumno.
 	 */
-	public function subida(){
+	public function subida($intento_realizado = null){
 		
-		session_start();
-			
-		$this->__establecerDatosVista();			
+		session_start();			
+		$this->set("intento", $intento_realizado);
+	
+		// Comprobar si el profesor ha subido test
+		$tests_controller = new TestsController();
+		$query = $tests_controller->obtenerTestPorIdTarea($_SESSION['lti_idTarea']);
+		$test_subido = true;
 		
+		if(empty($query)){
+			$test_subido = false;
+		}
+		else{
+			$this->__establecerDatosVista();
+		}
+		$this->set('test_subido', $test_subido);		
+		
+		// Recepción de la práctica subida del formulario
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
 			
@@ -46,7 +59,7 @@ class IntentosController extends AppController{
 					$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;
 										
 					$this->__guardarPracticaAlumno();
-					return $this->redirect(['action' => 'subida']);
+					return $this->redirect(['action' => 'subida', $this->intento_realizado]);
 				}
 			}
 		}
@@ -54,7 +67,7 @@ class IntentosController extends AppController{
 	
 	private function __establecerDatosVista(){
 		
-		$tareas_controller = new TareasController;
+		$tareas_controller = new TareasController();
 		$this->numero_maximo_intentos = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->num_max_intentos;
 			
 		$query = $this->Intentos->find('all')
@@ -85,7 +98,7 @@ class IntentosController extends AppController{
 		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e');
 		
 		// Extraer zip subido en la correspondiente carpeta del arquetipo
-		$zip = new \ZipArchive;
+		$zip = new \ZipArchive();
 		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $_FILES["ficheroAsubir"]["name"]);	
 		if ($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE) {
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/main/java/');
@@ -135,10 +148,31 @@ class IntentosController extends AppController{
 			$this->Flash->error(__('error desconocido'));
 		}
 		
+		// Generar reporte PMD
+		$this->__generarReportePMD();
+		
 		// Borrar estructura main>java del arquetipo
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
 		
 		$this->__guardarIntento();
+		
+	}
+	
+	private function __generarReportePMD(){
+		
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn jxr:jxr site');
+		
+		// Copiar target a la carpeta del intento
+		exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' . 
+						str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
+		
+		// Borrar target
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && rmdir target /s /q');
+		
+		// HABRÍA QUE COMPROBAR SI SE HA GENERADO EL REPORTE PMD
+		//$this->set("pmd_generado", true);
+		//$this->pmd_generado = true;
+		// SI NO SE HA GENERADO EL PMD, ESTABLECER LA VARIABLE INTENTO_REALIZADO A NULL
 		
 	}
 	

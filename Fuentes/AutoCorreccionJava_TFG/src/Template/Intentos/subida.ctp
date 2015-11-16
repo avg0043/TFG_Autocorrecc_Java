@@ -2,6 +2,15 @@
 	<h3>Subida de Prácticas</h3>
 </div>
 
+<?php
+if(!$test_subido){
+?>
+	<h4>Todavía no puede subir la práctica porque el profesor no ha subido test</h4>
+<?php
+}
+else{
+?>
+
 <div>
 	<ul>
 		<li><b>Número máximo de intentos posibles: </b><?= $num_maximo_intentos ?></li>
@@ -26,4 +35,15 @@
 		</div>
 	</div>
 </div>
+
+<?php
+if($intento != null){
+	$ruta = "http://localhost/".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
+			"/".$_SESSION['lti_userId']."/".$intento."/site/pmd.html";
+	echo $this->Html->link('Reporte PMD', $ruta);
+}
+?>
+<?php
+}
+?>
 

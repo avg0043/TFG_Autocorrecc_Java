@@ -24,7 +24,7 @@ class TareasController extends AppController{
 			$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s"));
 			
 			// Obtención del id del profesor
-			$profesores_controller = new ProfesoresController;		
+			$profesores_controller = new ProfesoresController();		
 			$nueva_tarea->profesor_id = $profesores_controller->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
 			
 			if ($this->Tareas->save($nueva_tarea)) {

@@ -11,14 +11,16 @@ if(!$alumnos->isEmpty()){
 <table class="table table-striped">
 	<tr>
 		<th>Id de Moodle</th>
-		<th>Nombre completo</th>
+		<th>Nombre</th>
+		<th>Apellidos</th>
 		<th>Correo electrónico</th>
 	</tr>
 	
 	<?php foreach ($alumnos as $alumno): ?>
 	<tr>
 		<td><?= $alumno->id ?></td>
-		<td><?= $alumno->nombre_completo ?></td>
+		<td><?= $alumno->nombre ?></td>
+		<td><?= $alumno->apellidos ?></td>
 		<td><?= $alumno->correo ?></td>
 	</tr>
 	<?php endforeach; ?>
