@@ -138,7 +138,7 @@ class IntentosController extends AppController{
 
 		// Comprobar salida generada
 		if(strpos($salida_string, 'BUILD SUCCESS')){
-			$this->Flash->error(__('La práctica ha pasado los test'));
+			//$this->Flash->error(__('La práctica ha pasado los test'));
 			$this->test_pasado = true;
 		}
 		elseif(strpos($salida_string, 'BUILD FAILURE')){
@@ -147,50 +147,48 @@ class IntentosController extends AppController{
 		else{
 			$this->Flash->error(__('error desconocido'));
 		}
-		
-		// Generar reporte PMD
+			
+		$this->__guardarIntento();
 		$this->__generarReportePMD();
 		
 		// Borrar estructura main>java del arquetipo
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
-		
-		$this->__guardarIntento();
-		
+			
+	}
+	
+	private function __guardarIntento(){
+	
+		// Añadir intento realizado a la base de datos
+		$nuevo_intento = $this->Intentos->newEntity();
+		$nuevo_intento->tarea_id = $_SESSION['lti_idTarea'];
+		$nuevo_intento->alumno_id = $_SESSION['lti_userId'];
+		$nuevo_intento->numero_intento = $this->intento_realizado;
+		$nuevo_intento->resultado = $this->test_pasado;
+	
+		date_default_timezone_set("Europe/Madrid");
+		$nuevo_intento->fecha_intento = new \DateTime(date("Y-m-d H:i:s"));
+	
+		// Hacer un if(!..?? )
+		$this->Intentos->save($nuevo_intento);
+		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+	
 	}
 	
 	private function __generarReportePMD(){
 		
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn jxr:jxr site');
 		
-		// Copiar target a la carpeta del intento
-		exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' . 
-						str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
+		if(file_exists($this->ruta_carpeta_id."/arquetipo/target/site/pmd.html")){
 		
-		// Borrar target
-		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && rmdir target /s /q');
+			// Copiar target generado a la carpeta del intento
+			exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' . 
+							str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
 		
-		// HABRÍA QUE COMPROBAR SI SE HA GENERADO EL REPORTE PMD
-		//$this->set("pmd_generado", true);
-		//$this->pmd_generado = true;
-		// SI NO SE HA GENERADO EL PMD, ESTABLECER LA VARIABLE INTENTO_REALIZADO A NULL
-		
-	}
-	
-	private function __guardarIntento(){
-		
-		// Añadir intento realizado a la base de datos
-		$nuevo_intento = $this->Intentos->newEntity();
-		$nuevo_intento->tarea_id = $_SESSION['lti_idTarea'];
-		$nuevo_intento->alumno_id = $_SESSION['lti_userId'];
-		$nuevo_intento->numero_intento = $this->intento_realizado;
-		$nuevo_intento->resultado = $this->test_pasado;		
-
-		date_default_timezone_set("Europe/Madrid");
-		$nuevo_intento->fecha_intento = new \DateTime(date("Y-m-d H:i:s"));
-		
-		// Hacer un if(!..?? )
-		$this->Intentos->save($nuevo_intento);
-		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+		}
+		else{
+			$this->intento_realizado = null;	// reporte PMD no generado
+		}
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && rmdir target /s /q');	// borrar target			
 		
 	}
 	

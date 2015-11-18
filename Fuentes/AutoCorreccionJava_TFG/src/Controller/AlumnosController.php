@@ -23,7 +23,7 @@ class AlumnosController extends AppController{
 		$nuevo_alumno->correo = $_SESSION['lti_correo'];
 		$this->Alumnos->save($nuevo_alumno);
 		
-		$this->Flash->success(__('Este es tu primer acceso. Has sido registrado'));
+		$this->Flash->success(__('Primer acceso, ha sido registrado'));
 		return $this->redirect(['controller' => 'Intentos', 'action' => 'subida']);
 		
 	}

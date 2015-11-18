@@ -28,7 +28,7 @@ class TareasController extends AppController{
 			$nueva_tarea->profesor_id = $profesores_controller->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
 			
 			if ($this->Tareas->save($nueva_tarea)) {
-				$this->Flash->success(__('La tarea ha sido configurada.'));
+				$this->Flash->success(__('La tarea ha sido configurada correctamente'));
 				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
 			}
 			$this->Flash->error(__('No ha sido posible registrar la tarea.'));

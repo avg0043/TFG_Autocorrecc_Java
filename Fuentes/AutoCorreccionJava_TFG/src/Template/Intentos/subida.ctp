@@ -40,10 +40,12 @@ else{
 if($intento != null){
 	$ruta = "http://localhost/".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
 			"/".$_SESSION['lti_userId']."/".$intento."/site/pmd.html";
-	echo $this->Html->link('Reporte PMD', $ruta);
-}
+	//echo $this->Html->link('Reporte PMD', $ruta);
 ?>
+	<h4 class="page-header">Reporte PMD</h4>
+	<a href=<?= $ruta ?> class="btn btn-default btn-lg" role="button">Enlace</a>
 <?php
+}
 }
 ?>
 

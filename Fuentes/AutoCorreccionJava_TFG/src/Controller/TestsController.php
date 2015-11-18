@@ -25,7 +25,7 @@ class TestsController extends AppController{
 						. $_SESSION["lti_rol"] . "/" . $this->id_profesor . "/";
 				
 				$this->__realizarAccionesProfesor();
-				$this->Flash->success(__('Test subido!'));
+				$this->Flash->success(__('Test subido correctamente'));
 			}
 		}
 	}

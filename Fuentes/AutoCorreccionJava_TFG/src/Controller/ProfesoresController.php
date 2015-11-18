@@ -23,7 +23,7 @@ class ProfesoresController extends AppController{
 			$nuevo_profesor = $this->Profesores->patchEntity($nuevo_profesor, $this->request->data);
 			
 			if ($this->Profesores->save($nuevo_profesor)) {
-				$this->Flash->success(__('Has sido registrado'));
+				
 				return $this->redirect(['action' => 'mostrarParametros', $this->request->data['correo']]);
 			}
 			$this->Flash->error(__('No ha sido posible registrar al profesor.'));		
