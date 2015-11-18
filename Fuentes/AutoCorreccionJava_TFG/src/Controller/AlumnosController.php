@@ -11,7 +11,7 @@ class AlumnosController extends AppController{
 	 *
 	 * @return $this->redirect	redirección a la vista del formulario de subida de ficheros.
 	 */
-	public function registrar(){
+	public function registrarAlumno(){
 		
 		session_start();
 	
@@ -24,7 +24,7 @@ class AlumnosController extends AppController{
 		$this->Alumnos->save($nuevo_alumno);
 		
 		$this->Flash->success(__('Primer acceso, ha sido registrado'));
-		return $this->redirect(['controller' => 'Intentos', 'action' => 'subida']);
+		return $this->redirect(['controller' => 'Intentos', 'action' => 'subirPractica']);
 		
 	}
 	

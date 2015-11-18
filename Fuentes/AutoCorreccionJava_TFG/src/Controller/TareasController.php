@@ -8,7 +8,7 @@ class TareasController extends AppController{
 	 * Función que configura los parámetros que van a estar
 	 * asociados a la tarea.
 	 */
-	public function configurarParametros(){
+	public function configurarParametrosTarea(){
 		
 		session_start();		
 		$nueva_tarea = $this->Tareas->newEntity();
@@ -18,10 +18,8 @@ class TareasController extends AppController{
 			$nueva_tarea->id = $_SESSION['lti_idTarea'];
 			$nueva_tarea->curso_id = $_SESSION['lti_idCurso'];
 			$nueva_tarea->nombre = $_SESSION['lti_tituloTarea'];
-			
-			// Fecha actual
 			date_default_timezone_set("Europe/Madrid");
-			$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s"));
+			$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s")); // fecha actual
 			
 			// Obtención del id del profesor
 			$profesores_controller = new ProfesoresController();		
@@ -31,6 +29,7 @@ class TareasController extends AppController{
 				$this->Flash->success(__('La tarea ha sido configurada correctamente'));
 				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
 			}
+			
 			$this->Flash->error(__('No ha sido posible registrar la tarea.'));
 			
 		}

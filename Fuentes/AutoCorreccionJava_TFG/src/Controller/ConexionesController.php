@@ -21,7 +21,7 @@ class ConexionesController extends AppController{
 		$consumer_key = $_REQUEST['oauth_consumer_key'];
 		$profesores_controller = new ProfesoresController();
 		
-		// Comprobar consumer_key correcto
+		// Comprobar consumer_key
 		if($_REQUEST['roles'] == "Instructor"){
 			$correo = $_REQUEST['lis_person_contact_email_primary'];
 			$query = $profesores_controller->obtenerProfesorPorKeyCorreo($consumer_key, $correo);
@@ -30,32 +30,10 @@ class ConexionesController extends AppController{
 			$query = $profesores_controller->obtenerProfesorPorKey($consumer_key);
 		}
 		
-		if(!empty($query)){			
+		if(!empty($query)){	// consumer_key correcto		
 			$secret_encriptada = $query[0]->secret;
 			$this->__guardarDatosMoodle($secret_encriptada);
-			
-			if($_REQUEST['roles'] == 'Instructor'){			
-				$tareas_controller = new TareasController();
-				$tarea = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea']);
-				
-				if(!empty($tarea)){	// Tarea registrada
-					return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
-				}
-				else{
-					return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametros']);
-				}		
-			}
-			else{
-				$alumnos_controller = new AlumnosController();			
-				$query = $alumnos_controller->obtenerAlumnoPorId($_SESSION['lti_userId']);
-				
-				if(!empty($query)){	// Alumno registrado
-					return $this->redirect(['controller' => 'Intentos', 'action' => 'subida']);
-				}
-				else{
-					return $this->redirect(['controller' => 'Alumnos', 'action' => 'registrar']);
-				}
-			}
+			$this->__redirigirPaginaUsuario();
 		}
 		else{
 			//$this->Flash->error(__('La consumer key no es la correcta!!'));
@@ -64,7 +42,7 @@ class ConexionesController extends AppController{
 	}
 	
 	private function __guardarDatosMoodle($secret_encriptada){
-		
+	
 		$context = new Ims\BLTI($secret_encriptada, true, false);	// Objeto conexión LTI
 			
 		$_SESSION['lti_tituloTarea'] = $context->info['resource_link_title'];
@@ -76,6 +54,33 @@ class ConexionesController extends AppController{
 		$_SESSION['lti_idCurso'] = $context->info['context_id'];
 		$_SESSION['lti_nombre'] = $context->info['lis_person_name_given'];
 		$_SESSION['lti_apellidos'] = $context->info['lis_person_name_family'];
+	
+	}
+	
+	private function __redirigirPaginaUsuario(){
+		
+		if($_REQUEST['roles'] == 'Instructor'){
+			$tareas_controller = new TareasController();
+			$tarea = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea']);
+		
+			if(!empty($tarea)){	// Tarea registrada
+				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
+			}
+			else{
+				return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametrosTarea']);
+			}
+		}
+		else{
+			$alumnos_controller = new AlumnosController();
+			$query = $alumnos_controller->obtenerAlumnoPorId($_SESSION['lti_userId']);
+		
+			if(!empty($query)){	// Alumno registrado
+				return $this->redirect(['controller' => 'Intentos', 'action' => 'subirPractica']);
+			}
+			else{
+				return $this->redirect(['controller' => 'Alumnos', 'action' => 'registrarAlumno']);
+			}
+		}
 		
 	}
 	
