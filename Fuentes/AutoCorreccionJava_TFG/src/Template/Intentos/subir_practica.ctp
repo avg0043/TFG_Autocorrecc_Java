@@ -39,12 +39,18 @@ else{
 <?php
 if($intento != null){
 	$ruta = "http://localhost/".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
-			"/".$_SESSION['lti_userId']."/".$intento."/site/pmd.html";
+			"/".$_SESSION['lti_userId']."/".$intento."/site/";
 	//echo $this->Html->link('Reporte PMD', $ruta);
 ?>
-	<h4 class="page-header">Reporte PMD</h4>
-	<a href=<?= $ruta ?> class="btn btn-default btn-lg" role="button">Enlace</a>
-<?php
+	<h4 class="page-header">Reportes Generados</h4>
+	<a href=<?= $ruta."/javancss.html" ?> class="btn btn-default btn-lg" role="button">JAVANCSS</a>
+	<a href=<?= $ruta."/jdepend-report.html" ?> class="btn btn-default btn-lg" role="button">JDEPEND</a>
+	<?php if($_SESSION["pmd_generado"]){ ?>
+			<a href=<?= $ruta."/pmd.html" ?> class="btn btn-default btn-lg" role="button">PMD</a>
+	<?php } ?>
+	<?php if($_SESSION["findbugs_generado"]){ ?>
+			<a href=<?= $ruta."/findbugs.html" ?> class="btn btn-default btn-lg" role="button">FINDBUGS</a>
+	<?php } 
 }
 }
 ?>

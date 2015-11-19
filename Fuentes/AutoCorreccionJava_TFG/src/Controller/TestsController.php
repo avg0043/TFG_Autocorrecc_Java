@@ -71,16 +71,29 @@ class TestsController extends AppController{
 		$properties = $pom_xml->addChild('properties');
 		$properties->addChild("project.build.sourceEncoding", "UTF-8");
 		
-		// Plugin PMD
+		// Plugins
 		$reporting = $pom_xml->addChild('reporting');
 		$plugins = $reporting->addChild("plugins");
-		$plugin = $plugins->addChild("plugin");
-		$plugin->addChild("groupId", "org.apache.maven.plugins");
-		$plugin->addChild("artifactId", "maven-pmd-plugin");
-		$configuration = $plugin->addChild("configuration");
-		$configuration->addChild("linkXref", "true");
-		$configuration->addChild("sourceEncoding", "utf-8");
-		$configuration->addChild("minimumTokens", "5");
+		
+		// Plugin JavaNCSS
+		$plugin_javancss = $plugins->addChild("plugin");
+		$plugin_javancss->addChild("groupId", "org.codehaus.mojo");
+		$plugin_javancss->addChild("artifactId", "javancss-maven-plugin");
+		
+		// Plugin JDepend
+		$plugin_jdepend = $plugins->addChild("plugin");
+		$plugin_jdepend->addChild("groupId", "org.codehaus.mojo");
+		$plugin_jdepend->addChild("artifactId", "jdepend-maven-plugin");
+		
+		// Plugin PMD
+		$plugin_pmd = $plugins->addChild("plugin");
+		$plugin_pmd->addChild("groupId", "org.apache.maven.plugins");
+		$plugin_pmd->addChild("artifactId", "maven-pmd-plugin");
+		
+		// Plugin FindBugs
+		$plugin_findbugs = $plugins->addChild("plugin");
+		$plugin_findbugs->addChild("groupId", "org.codehaus.mojo");
+		$plugin_findbugs->addChild("artifactId", "findbugs-maven-plugin");
 		
 		$pom_xml->asXml($this->ruta_carpeta_id . 'arquetipo/pom.xml');	
 		

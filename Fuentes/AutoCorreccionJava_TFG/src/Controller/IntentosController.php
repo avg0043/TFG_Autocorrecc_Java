@@ -100,7 +100,7 @@ class IntentosController extends AppController{
 	}
 	
 	private function __extraerPractica(){
-		
+	
 		$zip = new \ZipArchive();
 		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $_FILES["ficheroAsubir"]["name"]);
 		
@@ -132,6 +132,9 @@ class IntentosController extends AppController{
 		// Borrar estructura main>java del arquetipo
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
 		
+		// Borrar target
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && rmdir target /s /q');	// borrar target
+		
 	}
 	
 	private function __ejecutarTests(){
@@ -151,10 +154,30 @@ class IntentosController extends AppController{
 		else{
 			$this->Flash->error(__('error desconocido'));
 		}
-			
+		
+		$this->__generarReportes();
 		$this->__guardarIntento();
-		$this->__generarReportePMD();
 					
+	}
+	
+	private function __generarReportes(){
+	
+		$_SESSION["pmd_generado"] = false;
+		$_SESSION["findbugs_generado"] = false;
+	
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn jxr:jxr site');
+	
+		if(file_exists($this->ruta_carpeta_id."/arquetipo/target/site/pmd.html")){
+			$_SESSION["pmd_generado"] = true;
+		}
+		if(file_exists($this->ruta_carpeta_id."/arquetipo/target/site/findbugs.html")){
+			$_SESSION["findbugs_generado"] = true;
+		}
+	
+		// Copiar target generado a la carpeta del intento
+		exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' .
+						str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
+	
 	}
 	
 	private function __guardarIntento(){
@@ -172,23 +195,6 @@ class IntentosController extends AppController{
 		$this->Intentos->save($nuevo_intento);
 		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
 	
-	}
-	
-	private function __generarReportePMD(){
-		
-		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn jxr:jxr site');
-		
-		if(file_exists($this->ruta_carpeta_id."/arquetipo/target/site/pmd.html")){	
-			// Copiar target generado a la carpeta del intento
-			exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' . 
-							str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');	
-		}
-		else{
-			$this->intento_realizado = null;	// reporte PMD no generado
-		}
-		
-		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && rmdir target /s /q');	// borrar target			
-		
 	}
 	
 }
