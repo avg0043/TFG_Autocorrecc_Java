@@ -194,7 +194,40 @@ class IntentosController extends AppController{
 		// Hacer un if(!..?? )
 		$this->Intentos->save($nuevo_intento);
 		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+		
+		if($_SESSION["pmd_generado"] || $_SESSION["findbugs_generado"]){
+			$this->__guardarDatosXML();
+		}
 	
+	}
+	
+	private function __guardarDatosXML(){
+		
+		$violaciones_controller = new ViolacionesController();
+		
+		if($_SESSION["pmd_generado"]){
+			$xml_pmd = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/pmd.xml");
+				
+			foreach($xml_pmd->children() as $files){
+				foreach($files->children() as $violations){
+					$violaciones_controller->guardarViolacion($this->intento_realizado, $violations["class"].".java",
+															  $violations["rule"], $violations,
+															  $violations["beginline"], $violations["endline"]);
+				}
+			}
+		}
+		
+		if($_SESSION["findbugs_generado"]){
+			$xml_findbugs = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/findbugsXml.xml");
+			
+			foreach($xml_findbugs->children()->BugInstance as $bug_instances){
+				$violaciones_controller->guardarViolacion($this->intento_realizado, $bug_instances->Class->SourceLine["sourcefile"],
+														  $bug_instances["type"], $bug_instances->LongMessage,
+														  $bug_instances->Class->SourceLine["start"], 
+														  $bug_instances->Class->SourceLine["end"]);
+			}
+		}
+		
 	}
 	
 }
