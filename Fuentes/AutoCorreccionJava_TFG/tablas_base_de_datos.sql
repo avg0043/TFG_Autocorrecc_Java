@@ -74,11 +74,11 @@ CREATE TABLE violaciones
 (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	intento_id INTEGER NOT NULL,
-	nombre_fichero VARCHAR(120) NOT NULL,
+	nombre_fichero VARCHAR(45) NOT NULL,
 	tipo VARCHAR(45) NOT NULL,
 	descripcion VARCHAR(120) NOT NULL,
-	linea_inicio INTEGER NOT NULL,
-	linea_fin INTEGER NOT NULL,
+	linea_inicio INTEGER NULL,
+	linea_fin INTEGER NULL,
 	CONSTRAINT pk01_violaciones PRIMARY KEY(id),
 	CONSTRAINT fk01_violaciones FOREIGN KEY(intento_id)
 		REFERENCES intentos (id)

@@ -12,6 +12,7 @@ class IntentosController extends AppController{
 	private $id_profesor;
 	private $ruta_carpeta_id;
 	private $intento_realizado;
+	private $paquete;
 	
 	/**
 	 * Función que se encarga de manejar los datos introducidos
@@ -70,6 +71,7 @@ class IntentosController extends AppController{
 	private function __establecerDatosVista(){
 		
 		$tareas_controller = new TareasController();
+		$this->paquete = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;	
 		$this->numero_maximo_intentos = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->num_max_intentos;			
 		$query = $this->Intentos->find('all')
 								->where(['tarea_id' => $_SESSION['lti_idTarea'], 'alumno_id' => $_SESSION['lti_userId']])
@@ -78,7 +80,8 @@ class IntentosController extends AppController{
 		$this->fecha_limite = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->fecha_limite;
 		$this->fecha_limite = (new \DateTime($this->fecha_limite))->format('Y-m-d');
 		$this->fecha_actual = (new \DateTime(date("Y-m-d H:i:s")))->format('Y-m-d');
-			
+		
+		$this->set('paquete', $this->paquete);
 		$this->set('num_maximo_intentos', $this->numero_maximo_intentos);
 		$this->set('fecha_limite', $this->fecha_limite);
 		$this->set('num_intentos_realizados', $this->total_intentos_realizados);
@@ -104,13 +107,28 @@ class IntentosController extends AppController{
 		$zip = new \ZipArchive();
 		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $_FILES["ficheroAsubir"]["name"]);
 		
-		if ($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE) {
+		if($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE){
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/main/java/');
 			$zip->close();
+		}		
+		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
+		
+		// Obtención del nombre del paquete de la tarea
+		//$tareas_controller = new TareasController();
+		//$paquete = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
+		$paquete_ruta = str_replace('.', '/', $this->paquete);
+		
+		// Comprobar si la estructura de carpetas subida en el zip es la correcta
+		if(is_dir($this->ruta_carpeta_id . "arquetipo/src/main/java/" . $paquete_ruta)){
+			$this->__compilarPractica();
+		}
+		else{
+			// Borrar estructura main>java del arquetipo
+			exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
+			$this->Flash->error(__("El zip no contiene la estructura de carpetas correcta"));
 		}
 		
-		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
-		$this->__compilarPractica();
+		//$this->__compilarPractica();
 		
 	}
 	
@@ -218,13 +236,21 @@ class IntentosController extends AppController{
 		}
 		
 		if($_SESSION["findbugs_generado"]){
+			$_SESSION["findbugs_generado"] = false;
 			$xml_findbugs = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/findbugsXml.xml");
 			
 			foreach($xml_findbugs->children()->BugInstance as $bug_instances){
-				$violaciones_controller->guardarViolacion($this->intento_realizado, $bug_instances->Class->SourceLine["sourcefile"],
-														  $bug_instances["type"], $bug_instances->LongMessage,
-														  $bug_instances->Class->SourceLine["start"], 
-														  $bug_instances->Class->SourceLine["end"]);
+				$_SESSION["findbugs_generado"] = true;
+				if($bug_instances->SourceLine["start"] != null && $bug_instances->SourceLine["end"] != null){
+					$violaciones_controller->guardarViolacion($this->intento_realizado, $bug_instances->Class->SourceLine["sourcefile"],
+															  $bug_instances["type"], $bug_instances->LongMessage,
+															  $bug_instances->SourceLine["start"], 
+															  $bug_instances->SourceLine["end"]);
+				}
+				else{
+					$violaciones_controller->guardarViolacion($this->intento_realizado, $bug_instances->Class->SourceLine["sourcefile"],
+															  $bug_instances["type"], $bug_instances->LongMessage);
+				}
 			}
 		}
 		
