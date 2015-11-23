@@ -13,7 +13,7 @@ else{
 
 <div>
 	<ul>
-		<li><b>Nombre del paquete</b> </b><?= $paquete ?></li>
+		<li><b>Nombre del paquete: </b><?= $paquete ?></li>
 		<li><b>Número máximo de intentos posibles: </b><?= $num_maximo_intentos ?></li>
 		<li><b>Fecha límite de entrega: </b><?= $fecha_limite ?></li>
 		<li><b>Número de intentos realizados: </b><?= $num_intentos_realizados ?></li>

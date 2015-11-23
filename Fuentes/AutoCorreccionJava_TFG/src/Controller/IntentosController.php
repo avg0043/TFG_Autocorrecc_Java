@@ -96,7 +96,7 @@ class IntentosController extends AppController{
 		
 		// Copiar el arquetipo maven a la carpeta id alumno
 		$ruta_dir_origen = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
-				. "Instructor" . "\\" . $this->id_profesor;
+							. "Instructor" . "\\" . $this->id_profesor;
 		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e');
 		$this->__extraerPractica();
 		
@@ -110,12 +110,9 @@ class IntentosController extends AppController{
 		if($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE){
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/main/java/');
 			$zip->close();
-		}		
-		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
+		}	
 		
-		// Obtención del nombre del paquete de la tarea
-		//$tareas_controller = new TareasController();
-		//$paquete = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
+		unlink('./' . $_FILES["ficheroAsubir"]["name"]);	
 		$paquete_ruta = str_replace('.', '/', $this->paquete);
 		
 		// Comprobar si la estructura de carpetas subida en el zip es la correcta
@@ -128,8 +125,6 @@ class IntentosController extends AppController{
 			$this->Flash->error(__("El zip no contiene la estructura de carpetas correcta"));
 		}
 		
-		//$this->__compilarPractica();
-		
 	}
 	
 	private function __compilarPractica(){
@@ -140,42 +135,30 @@ class IntentosController extends AppController{
 		if(strpos($salida_string, 'BUILD SUCCESS')){	// Compilación correcta
 			// Creación carpeta intento
 			$this->intento_realizado = $this->total_intentos_realizados + 1;
-			mkdir($this->ruta_carpeta_id . $this->intento_realizado . "/", 0777, true);		
-			$this->__ejecutarTests();
+			mkdir($this->ruta_carpeta_id . $this->intento_realizado . "/", 0777, true);
+			$this->__guardarIntento();
 		}
 		else{
 			$this->Flash->error(__('La práctica tiene errores de compilación!'));
 		}
 		
-		// Borrar estructura main>java del arquetipo
-		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
-		
-		// Borrar target
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java'); // borrar main/java
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && rmdir target /s /q');	// borrar target
 		
 	}
 	
-	private function __ejecutarTests(){
-		
-		// Ejecución de los test
-		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn test', $salida);
-		$salida_string = implode(' ', $salida);
-
-		// Comprobar salida generada
-		if(strpos($salida_string, 'BUILD SUCCESS')){
-			$this->Flash->success(__('La práctica ha pasado los test'));
-			$this->test_pasado = true;
-		}
-		elseif(strpos($salida_string, 'BUILD FAILURE')){
-			$this->Flash->error(__('La práctica NO ha pasado los test'));
-		}
-		else{
-			$this->Flash->error(__('error desconocido'));
-		}
+	private function __guardarIntento(){
+	
+		$nuevo_intento = $this->Intentos->newEntity();
+		$nuevo_intento->tarea_id = $_SESSION['lti_idTarea'];
+		$nuevo_intento->alumno_id = $_SESSION['lti_userId'];
+		$nuevo_intento->numero_intento = $this->intento_realizado;
+		date_default_timezone_set("Europe/Madrid");
+		$nuevo_intento->fecha_intento = new \DateTime(date("Y-m-d H:i:s"));	// fecha actual
+		$this->Intentos->save($nuevo_intento);
 		
 		$this->__generarReportes();
-		$this->__guardarIntento();
-					
+	
 	}
 	
 	private function __generarReportes(){
@@ -194,65 +177,93 @@ class IntentosController extends AppController{
 	
 		// Copiar target generado a la carpeta del intento
 		exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' .
-						str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
-	
-	}
-	
-	private function __guardarIntento(){
-	
-		// Añadir intento realizado a la base de datos
-		$nuevo_intento = $this->Intentos->newEntity();
-		$nuevo_intento->tarea_id = $_SESSION['lti_idTarea'];
-		$nuevo_intento->alumno_id = $_SESSION['lti_userId'];
-		$nuevo_intento->numero_intento = $this->intento_realizado;
-		$nuevo_intento->resultado = $this->test_pasado;
-		date_default_timezone_set("Europe/Madrid");
-		$nuevo_intento->fecha_intento = new \DateTime(date("Y-m-d H:i:s"));	// fecha actual
-	
-		// Hacer un if(!..?? )
-		$this->Intentos->save($nuevo_intento);
-		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+				str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
 		
 		if($_SESSION["pmd_generado"] || $_SESSION["findbugs_generado"]){
 			$this->__guardarDatosXML();
+		}
+		else{
+			$this->__ejecutarTests();
 		}
 	
 	}
 	
 	private function __guardarDatosXML(){
-		
+	
 		$violaciones_controller = new ViolacionesController();
-		
+	
 		if($_SESSION["pmd_generado"]){
 			$xml_pmd = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/pmd.xml");
-				
+	
 			foreach($xml_pmd->children() as $files){
 				foreach($files->children() as $violations){
 					$violaciones_controller->guardarViolacion($this->intento_realizado, $violations["class"].".java",
-															  $violations["rule"], $violations,
-															  $violations["beginline"], $violations["endline"]);
+							$violations["rule"], $violations,
+							$violations["beginline"], $violations["endline"]);
 				}
 			}
 		}
-		
+	
 		if($_SESSION["findbugs_generado"]){
 			$_SESSION["findbugs_generado"] = false;
 			$xml_findbugs = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/findbugsXml.xml");
-			
+				
 			foreach($xml_findbugs->children()->BugInstance as $bug_instances){
 				$_SESSION["findbugs_generado"] = true;
 				if($bug_instances->SourceLine["start"] != null && $bug_instances->SourceLine["end"] != null){
 					$violaciones_controller->guardarViolacion($this->intento_realizado, $bug_instances->Class->SourceLine["sourcefile"],
-															  $bug_instances["type"], $bug_instances->LongMessage,
-															  $bug_instances->SourceLine["start"], 
-															  $bug_instances->SourceLine["end"]);
+							$bug_instances["type"], $bug_instances->LongMessage,
+							$bug_instances->SourceLine["start"],
+							$bug_instances->SourceLine["end"]);
 				}
 				else{
 					$violaciones_controller->guardarViolacion($this->intento_realizado, $bug_instances->Class->SourceLine["sourcefile"],
-															  $bug_instances["type"], $bug_instances->LongMessage);
+							$bug_instances["type"], $bug_instances->LongMessage);
 				}
 			}
 		}
+		
+		
+		if(empty($violaciones_controller->obtenerViolacionPorIntentoTipo($this->intento_realizado, "IL_INFINITE_LOOP"))){
+			$this->__ejecutarTests();
+		}
+		else{	// Violación de bucle infinito
+			$this->Flash->error(__('Hay bucles infinitos. Test no ejecutado.'));
+		}
+		
+		$this->__actualizarResultadoIntento($this->intento_realizado, $this->test_pasado);
+	
+	}
+	
+	private function __ejecutarTests(){
+		
+		// Ejecución test
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn test', $salida);
+		$salida_string = implode(' ', $salida);
+
+		// Salida test
+		if(strpos($salida_string, 'BUILD SUCCESS')){
+			$this->Flash->success(__('La práctica ha pasado los test'));
+			$this->test_pasado = true;
+		}
+		elseif(strpos($salida_string, 'BUILD FAILURE')){
+			$this->Flash->error(__('La práctica NO ha pasado los test'));
+		}
+		else{
+			$this->Flash->error(__('error desconocido'));
+		}
+							
+	}
+		
+	private function __actualizarResultadoIntento($id_intento, $resultado){
+		
+		$this->Intentos->query()
+					   ->update()
+					   ->set(['resultado' => $resultado])
+					   ->where(['id' => $id_intento])
+					   ->execute();
+		
+		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
 		
 	}
 	
