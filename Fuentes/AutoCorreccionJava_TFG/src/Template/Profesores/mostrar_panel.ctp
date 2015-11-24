@@ -10,4 +10,6 @@ echo "<br>";
 echo $this->Html->link('Subida de Tests', ['controller' => 'Tests', 'action' => 'subirTest']);
 echo "<br>";
 echo $this->Html->link('Ver alumnos registrados', ['controller' => 'Alumnos', 'action' => 'mostrarAlumnos']);
+echo "<br>";
+echo $this->Html->link('Comprobar plagios de prácticas', ['action' => 'generarReportePlagiosPracticas']);
 ?>

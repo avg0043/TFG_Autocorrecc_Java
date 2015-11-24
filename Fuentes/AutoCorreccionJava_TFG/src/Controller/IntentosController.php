@@ -13,6 +13,7 @@ class IntentosController extends AppController{
 	private $ruta_carpeta_id;
 	private $intento_realizado;
 	private $paquete;
+	private $nombre_practica_zip;
 	
 	/**
 	 * Función que se encarga de manejar los datos introducidos
@@ -105,6 +106,7 @@ class IntentosController extends AppController{
 	private function __extraerPractica(){
 	
 		$zip = new \ZipArchive();
+		$this->nombre_practica_zip = $_FILES["ficheroAsubir"]["name"];
 		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $_FILES["ficheroAsubir"]["name"]);
 		
 		if($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE){
@@ -112,7 +114,6 @@ class IntentosController extends AppController{
 			$zip->close();
 		}	
 		
-		unlink('./' . $_FILES["ficheroAsubir"]["name"]);	
 		$paquete_ruta = str_replace('.', '/', $this->paquete);
 		
 		// Comprobar si la estructura de carpetas subida en el zip es la correcta
@@ -136,6 +137,12 @@ class IntentosController extends AppController{
 			// Creación carpeta intento
 			$this->intento_realizado = $this->total_intentos_realizados + 1;
 			mkdir($this->ruta_carpeta_id . $this->intento_realizado . "/", 0777, true);
+			// Copiar practica subida a la carpeta del intento
+			exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\src\\main\\java" . ' ' .
+							str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
+			// Copiar zip practica a la carpeta del intento
+			exec('xcopy ' . $this->nombre_practica_zip . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado);
+			unlink('./' . $this->nombre_practica_zip);
 			$this->__guardarIntento();
 		}
 		else{
@@ -152,7 +159,9 @@ class IntentosController extends AppController{
 		$nuevo_intento = $this->Intentos->newEntity();
 		$nuevo_intento->tarea_id = $_SESSION['lti_idTarea'];
 		$nuevo_intento->alumno_id = $_SESSION['lti_userId'];
+		$nuevo_intento->nombre = $this->nombre_practica_zip;
 		$nuevo_intento->numero_intento = $this->intento_realizado;
+		$nuevo_intento->ruta = $this->ruta_carpeta_id . $this->intento_realizado . "/";
 		date_default_timezone_set("Europe/Madrid");
 		$nuevo_intento->fecha_intento = new \DateTime(date("Y-m-d H:i:s"));	// fecha actual
 		$this->Intentos->save($nuevo_intento);
@@ -191,13 +200,16 @@ class IntentosController extends AppController{
 	private function __guardarDatosXML(){
 	
 		$violaciones_controller = new ViolacionesController();
+		$id_intento = $this->__obtenerIntentoPorTareaAlumnoNumIntento($_SESSION["lti_idTarea"],
+																	  $_SESSION["lti_userId"],
+																	  $this->intento_realizado)[0]->id;
 	
 		if($_SESSION["pmd_generado"]){
 			$xml_pmd = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/pmd.xml");
 	
 			foreach($xml_pmd->children() as $files){
 				foreach($files->children() as $violations){
-					$violaciones_controller->guardarViolacion($this->intento_realizado, $violations["class"].".java",
+					$violaciones_controller->guardarViolacion($id_intento, $violations["class"].".java",
 							$violations["rule"], $violations,
 							$violations["beginline"], $violations["endline"]);
 				}
@@ -211,13 +223,13 @@ class IntentosController extends AppController{
 			foreach($xml_findbugs->children()->BugInstance as $bug_instances){
 				$_SESSION["findbugs_generado"] = true;
 				if($bug_instances->SourceLine["start"] != null && $bug_instances->SourceLine["end"] != null){
-					$violaciones_controller->guardarViolacion($this->intento_realizado, $bug_instances->Class->SourceLine["sourcefile"],
+					$violaciones_controller->guardarViolacion($id_intento, $bug_instances->Class->SourceLine["sourcefile"],
 							$bug_instances["type"], $bug_instances->LongMessage,
 							$bug_instances->SourceLine["start"],
 							$bug_instances->SourceLine["end"]);
 				}
 				else{
-					$violaciones_controller->guardarViolacion($this->intento_realizado, $bug_instances->Class->SourceLine["sourcefile"],
+					$violaciones_controller->guardarViolacion($id_intento, $bug_instances->Class->SourceLine["sourcefile"],
 							$bug_instances["type"], $bug_instances->LongMessage);
 				}
 			}
@@ -231,8 +243,8 @@ class IntentosController extends AppController{
 			$this->Flash->error(__('Hay bucles infinitos. Test no ejecutado.'));
 		}
 		
-		$this->__actualizarResultadoIntento($this->intento_realizado, $this->test_pasado);
-	
+		$this->__actualizarResultadoIntento($id_intento, $this->test_pasado);
+		
 	}
 	
 	private function __ejecutarTests(){
@@ -254,6 +266,14 @@ class IntentosController extends AppController{
 		}
 							
 	}
+	
+	private function __obtenerIntentoPorTareaAlumnoNumIntento($id_tarea, $id_alumno, $num_intento){
+		
+		return $this->Intentos->find('all')
+							  ->where(['tarea_id' => $id_tarea, 'alumno_id' => $id_alumno, 'numero_intento' => $num_intento])
+							  ->toArray();
+	
+	}
 		
 	private function __actualizarResultadoIntento($id_intento, $resultado){
 		
@@ -264,6 +284,15 @@ class IntentosController extends AppController{
 					   ->execute();
 		
 		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+		
+	}
+	
+	public function obtenerUltimoIntentoPorIdAlumno($id_alumno){
+		
+		return $this->Intentos->find('all')
+							  ->where(['alumno_id' => $id_alumno])
+							  ->last()
+							  ->toArray();
 		
 	}
 	

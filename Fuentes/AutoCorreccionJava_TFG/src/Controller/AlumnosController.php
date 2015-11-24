@@ -35,7 +35,13 @@ class AlumnosController extends AppController{
 	 */
 	public function mostrarAlumnos(){
 		
-		$this->set('alumnos', $this->Alumnos->find('all'));
+		$this->set('alumnos', $this->obtenerAlumnos());
+		
+	}
+	
+	public function obtenerAlumnos(){
+		
+		return $this->Alumnos->find('all');
 		
 	}
 	
