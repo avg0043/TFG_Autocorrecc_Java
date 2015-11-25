@@ -9,6 +9,16 @@
 <?php
 if($reporte_generado){
 ?>
+	<ul>
+		<li>La comprobación de plagios se ha realizado entre <?= $numero_practicas_subidas ?> prácticas</li>
+		<li>Las prácticas pertenecen a los siguientes Alumnos:
+			<ul>
+			<?php foreach($alumnos_con_practicas as $alumno):?>
+			<li><?= $alumno ?></li>
+			<?php endforeach;?>
+			</ul>
+		</li>
+	</ul>
 	<a href="../../plagios/reporte/index.html" class="btn btn-default btn-lg" role="button">Reporte Plagios</a>
 <?php
 }else{

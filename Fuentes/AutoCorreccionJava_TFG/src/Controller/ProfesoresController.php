@@ -116,9 +116,11 @@ class ProfesoresController extends AppController{
 		}
 		mkdir("../../plagios/practicas", 0777, true);
 		
+		$alumnos_con_practicas = [];
 		foreach ($alumnos as $alumno):
 			$ultimo_intento = $intentos_controller->obtenerUltimoIntentoPorIdAlumno($alumno->id);
 			if(!empty($ultimo_intento)){
+				array_push($alumnos_con_practicas, $alumno->nombre." ".$alumno->apellidos);
 				$numero_practicas_subidas++;
 				mkdir("../../plagios/practicas/".utf8_decode($alumno->nombre.$alumno->apellidos), 0777, true);
 				exec('xcopy ' . str_replace('/', '\\', $ruta_carpeta_tarea)."Learner\\"
@@ -135,8 +137,18 @@ class ProfesoresController extends AppController{
 			$this->Flash->error(__('No ha sido posible generar el reporte de los plagios'));
 		}
 		
+		$this->set('alumnos_con_practicas', $alumnos_con_practicas);
 		$this->set('numero_practicas_subidas', $numero_practicas_subidas);
 		$this->set('reporte_generado', $reporte_jplag_generado);
+		
+	}
+	
+	public function descargarPracticasAlumnos(){
+		
+		$alumnos_controller = new AlumnosController();
+		$intentos_controller = new IntentosController();
+		$this->set('alumnos', $alumnos_controller->obtenerAlumnos());
+		$this->set('intentos', $intentos_controller->obtenerIntentos());
 		
 	}
 	

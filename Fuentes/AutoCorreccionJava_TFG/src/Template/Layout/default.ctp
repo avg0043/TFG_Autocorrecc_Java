@@ -37,7 +37,6 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 </head>
 <body>
 	
-	
 	<nav class="navbar navbar-inverse">
 	  ...
 	</nav>

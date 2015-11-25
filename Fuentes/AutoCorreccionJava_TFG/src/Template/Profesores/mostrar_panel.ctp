@@ -12,4 +12,6 @@ echo "<br>";
 echo $this->Html->link('Ver alumnos registrados', ['controller' => 'Alumnos', 'action' => 'mostrarAlumnos']);
 echo "<br>";
 echo $this->Html->link('Comprobar plagios de prácticas', ['action' => 'generarReportePlagiosPracticas']);
+echo "<br>";
+echo $this->Html->link('Descargar prácticas subidas por los alumnos', ['action' => 'descargarPracticasAlumnos']);
 ?>

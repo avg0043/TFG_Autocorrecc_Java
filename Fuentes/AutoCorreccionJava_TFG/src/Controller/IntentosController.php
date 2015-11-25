@@ -99,6 +99,8 @@ class IntentosController extends AppController{
 		$ruta_dir_origen = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
 							. "Instructor" . "\\" . $this->id_profesor;
 		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e');
+		// Borrar estructura main>java del arquetipo
+		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
 		$this->__extraerPractica();
 		
 	}
@@ -107,22 +109,22 @@ class IntentosController extends AppController{
 	
 		$zip = new \ZipArchive();
 		$this->nombre_practica_zip = $_FILES["ficheroAsubir"]["name"];
-		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $_FILES["ficheroAsubir"]["name"]);
+		move_uploaded_file($_FILES["ficheroAsubir"]["tmp_name"], './' . $this->nombre_practica_zip);
 		
-		if($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE){
+		if($zip->open($this->nombre_practica_zip) === TRUE){
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/main/java/');
 			$zip->close();
 		}	
 		
-		$paquete_ruta = str_replace('.', '/', $this->paquete);
-		
-		// Comprobar si la estructura de carpetas subida en el zip es la correcta
+		$paquete_ruta = str_replace('.', '/', $this->paquete);	
+		// Comprobar si la estructura de carpetas subida en el zip es la correcta (----MOVER A OTRA FUNCION---)
 		if(is_dir($this->ruta_carpeta_id . "arquetipo/src/main/java/" . $paquete_ruta)){
 			$this->__compilarPractica();
 		}
 		else{
 			// Borrar estructura main>java del arquetipo
 			exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
+			unlink('./' . $this->nombre_practica_zip);
 			$this->Flash->error(__("El zip no contiene la estructura de carpetas correcta"));
 		}
 		
@@ -141,14 +143,14 @@ class IntentosController extends AppController{
 			exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\src\\main\\java" . ' ' .
 							str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
 			// Copiar zip practica a la carpeta del intento
-			exec('xcopy ' . $this->nombre_practica_zip . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado);
-			unlink('./' . $this->nombre_practica_zip);
+			exec('xcopy ' . $this->nombre_practica_zip . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado);		
 			$this->__guardarIntento();
 		}
 		else{
 			$this->Flash->error(__('La práctica tiene errores de compilación!'));
 		}
 		
+		unlink('./' . $this->nombre_practica_zip);
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java'); // borrar main/java
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && rmdir target /s /q');	// borrar target
 		
@@ -234,9 +236,8 @@ class IntentosController extends AppController{
 				}
 			}
 		}
-		
-		
-		if(empty($violaciones_controller->obtenerViolacionPorIntentoTipo($this->intento_realizado, "IL_INFINITE_LOOP"))){
+			
+		if(empty($violaciones_controller->obtenerViolacionPorIntentoTipo($id_intento, "IL_INFINITE_LOOP"))){
 			$this->__ejecutarTests();
 		}
 		else{	// Violación de bucle infinito
@@ -259,7 +260,7 @@ class IntentosController extends AppController{
 			$this->test_pasado = true;
 		}
 		elseif(strpos($salida_string, 'BUILD FAILURE')){
-			$this->Flash->error(__('La práctica NO ha pasado los test'));
+			$this->Flash->error(__('La práctica no ha pasado los test'));
 		}
 		else{
 			$this->Flash->error(__('error desconocido'));
@@ -294,6 +295,19 @@ class IntentosController extends AppController{
 							  ->last()
 							  ->toArray();
 		
+	}
+	
+	public function obtenerIntentosPorIdAlumno($id_alumno){
+		
+		return $this->Intentos->find('all')
+							  ->where(['alumno_id' => $id_alumno]);
+		
+	}
+	
+	public function obtenerIntentos(){
+	
+		return $this->Intentos->find('all');
+	
 	}
 	
 }
