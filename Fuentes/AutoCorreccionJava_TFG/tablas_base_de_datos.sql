@@ -78,6 +78,7 @@ CREATE TABLE violaciones
 	nombre_fichero VARCHAR(45) NOT NULL,
 	tipo VARCHAR(45) NOT NULL,
 	descripcion VARCHAR(120) NOT NULL,
+	prioridad INTEGER NOT NULL,
 	linea_inicio INTEGER NULL,
 	linea_fin INTEGER NULL,
 	CONSTRAINT pk01_violaciones PRIMARY KEY(id),

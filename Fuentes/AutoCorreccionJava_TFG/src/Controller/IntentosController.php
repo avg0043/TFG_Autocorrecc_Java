@@ -116,8 +116,14 @@ class IntentosController extends AppController{
 			$zip->close();
 		}	
 		
-		$paquete_ruta = str_replace('.', '/', $this->paquete);	
-		// Comprobar si la estructura de carpetas subida en el zip es la correcta (----MOVER A OTRA FUNCION---)
+		$this->__comprobarEstructuraCarpetasPractica();
+		
+	}
+	
+	private function __comprobarEstructuraCarpetasPractica(){
+		
+		$paquete_ruta = str_replace('.', '/', $this->paquete);
+		
 		if(is_dir($this->ruta_carpeta_id . "arquetipo/src/main/java/" . $paquete_ruta)){
 			$this->__compilarPractica();
 		}
@@ -212,7 +218,7 @@ class IntentosController extends AppController{
 			foreach($xml_pmd->children() as $files){
 				foreach($files->children() as $violations){
 					$violaciones_controller->guardarViolacion($id_intento, $violations["class"].".java",
-							$violations["rule"], $violations,
+							$violations["rule"], $violations, $violations["priority"],
 							$violations["beginline"], $violations["endline"]);
 				}
 			}
@@ -226,13 +232,12 @@ class IntentosController extends AppController{
 				$_SESSION["findbugs_generado"] = true;
 				if($bug_instances->SourceLine["start"] != null && $bug_instances->SourceLine["end"] != null){
 					$violaciones_controller->guardarViolacion($id_intento, $bug_instances->Class->SourceLine["sourcefile"],
-							$bug_instances["type"], $bug_instances->LongMessage,
-							$bug_instances->SourceLine["start"],
-							$bug_instances->SourceLine["end"]);
+							$bug_instances["type"], $bug_instances->LongMessage, $bug_instances["priority"],
+							$bug_instances->SourceLine["start"], $bug_instances->SourceLine["end"]);
 				}
 				else{
 					$violaciones_controller->guardarViolacion($id_intento, $bug_instances->Class->SourceLine["sourcefile"],
-							$bug_instances["type"], $bug_instances->LongMessage);
+							$bug_instances["type"], $bug_instances->LongMessage, $bug_instances["priority"]);
 				}
 			}
 		}
@@ -250,11 +255,9 @@ class IntentosController extends AppController{
 	
 	private function __ejecutarTests(){
 		
-		// Ejecución test
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn test', $salida);
 		$salida_string = implode(' ', $salida);
 
-		// Salida test
 		if(strpos($salida_string, 'BUILD SUCCESS')){
 			$this->Flash->success(__('La práctica ha pasado los test'));
 			$this->test_pasado = true;
