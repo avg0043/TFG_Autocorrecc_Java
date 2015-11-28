@@ -11,6 +11,7 @@ class TestsController extends AppController{
 	public function subirTest(){
 		
 		session_start();
+		$this->comprobarSesion();
 		
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);

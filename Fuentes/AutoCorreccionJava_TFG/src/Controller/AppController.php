@@ -59,4 +59,20 @@ class AppController extends Controller
             $this->set('_serialize', true);
         }
     }
+    
+    /**
+     * Comprueba si la sesión está vacía, mirando el id del usuario.
+     * Garantiza que únicamente se pueda acceder a la aplicación
+     * desde las tareas de Moodle, y nunca desde local.
+     * 
+     * @throws NotFoundException excepción.
+     */
+    public function comprobarSesion(){
+    
+    	if(!isset($_SESSION["lti_userId"])){
+    		throw new NotFoundException();
+    	}
+    
+    }
+    
 }

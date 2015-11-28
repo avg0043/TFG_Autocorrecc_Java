@@ -35,6 +35,9 @@ class AlumnosController extends AppController{
 	 */
 	public function mostrarAlumnos(){
 		
+		session_start();
+		$this->comprobarSesion();
+		
 		$this->set('alumnos', $this->obtenerAlumnos());
 		
 	}

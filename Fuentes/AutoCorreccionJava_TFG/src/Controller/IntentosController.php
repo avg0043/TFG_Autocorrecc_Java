@@ -23,7 +23,9 @@ class IntentosController extends AppController{
 	 */
 	public function subirPractica($intento_realizado = null){
 		
-		session_start();			
+		session_start();
+		$this->comprobarSesion();
+		
 		$this->set("intento", $intento_realizado);		
 		$this->__comprobarTestSubido();
 			

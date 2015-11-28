@@ -90,17 +90,24 @@ class ProfesoresController extends AppController{
 	public function mostrarDatosProfesor(){
 	
 		session_start();
+		$this->comprobarSesion();
+		
 		$this->set('profesor', $this->Profesores->find('all')->where(['correo' => $_SESSION['lti_correo']]));
 	
 	}
 	
 	public function mostrarPanel(){
 	
+		session_start();
+		$this->comprobarSesion();
+		
 	}
 	
 	public function generarReportePlagiosPracticas(){
 		
 		session_start();
+		$this->comprobarSesion();
+		
 		$alumnos_controller = new AlumnosController();
 		$intentos_controller = new IntentosController();
 		$tareas_controller = new TareasController();
@@ -144,6 +151,9 @@ class ProfesoresController extends AppController{
 	}
 	
 	public function descargarPracticasAlumnos(){
+		
+		session_start();
+		$this->comprobarSesion();
 		
 		$alumnos_controller = new AlumnosController();
 		$intentos_controller = new IntentosController();

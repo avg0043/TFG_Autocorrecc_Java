@@ -10,7 +10,9 @@ class TareasController extends AppController{
 	 */
 	public function configurarParametrosTarea(){
 		
-		session_start();		
+		session_start();
+		$this->comprobarSesion();
+		
 		$nueva_tarea = $this->Tareas->newEntity();
 		
 		if ($this->request->is('post')) {			
