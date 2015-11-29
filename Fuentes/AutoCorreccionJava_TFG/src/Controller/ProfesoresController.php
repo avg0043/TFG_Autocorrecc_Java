@@ -158,7 +158,7 @@ class ProfesoresController extends AppController{
 		$alumnos_controller = new AlumnosController();
 		$intentos_controller = new IntentosController();
 		$this->set('alumnos', $alumnos_controller->obtenerAlumnos());
-		$this->set('intentos', $intentos_controller->obtenerIntentos());
+		$this->set('intentos', $intentos_controller->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));
 		
 	}
 	

@@ -52,6 +52,9 @@ if($intento != null){
 	<?php if($_SESSION["findbugs_generado"]){ ?>
 			<a href=<?= $ruta."/findbugs.html" ?> class="btn btn-default btn-lg" role="button">FINDBUGS</a>
 	<?php } 
+		  if($_SESSION["errores_unitarios"]){ ?>
+		  	<a href=<?= $ruta."/surefire-report.html" ?> class="btn btn-default btn-lg" role="button">ERRORES UNITARIOS</a>
+	<?php }
 }
 }
 ?>

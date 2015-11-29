@@ -76,6 +76,11 @@ class TestsController extends AppController{
 		$reporting = $pom_xml->addChild('reporting');
 		$plugins = $reporting->addChild("plugins");
 		
+		// Plugin Surfire
+		$plugin_surfire = $plugins->addChild("plugin");
+		$plugin_surfire->addChild("groupId", "org.apache.maven.plugins");
+		$plugin_surfire->addChild("artifactId", "maven-surefire-report-plugin");
+		
 		// Plugin JavaNCSS
 		$plugin_javancss = $plugins->addChild("plugin");
 		$plugin_javancss->addChild("groupId", "org.codehaus.mojo");

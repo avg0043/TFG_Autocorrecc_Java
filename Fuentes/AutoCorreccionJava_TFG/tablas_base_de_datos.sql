@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS errores;
 DROP TABLE IF EXISTS violaciones;
 DROP TABLE IF EXISTS intentos;
 DROP TABLE IF EXISTS tests;
@@ -83,6 +84,18 @@ CREATE TABLE violaciones
 	linea_fin INTEGER NULL,
 	CONSTRAINT pk01_violaciones PRIMARY KEY(id),
 	CONSTRAINT fk01_violaciones FOREIGN KEY(intento_id)
+		REFERENCES intentos (id)
+);
+
+CREATE TABLE errores
+(
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	intento_id INTEGER NOT NULL,
+	nombre_clase VARCHAR(45) NOT NULL,
+	nombre_test VARCHAR(45) NOT NULL,
+	tipo VARCHAR(45) NOT NULL,
+	CONSTRAINT pk01_errores PRIMARY KEY(id),
+	CONSTRAINT fk01_errores FOREIGN KEY(intento_id)
 		REFERENCES intentos (id)
 );
 

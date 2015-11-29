@@ -14,6 +14,7 @@ class IntentosController extends AppController{
 	private $intento_realizado;
 	private $paquete;
 	private $nombre_practica_zip;
+	private $id_intento;
 	
 	/**
 	 * Función que se encarga de manejar los datos introducidos
@@ -184,6 +185,7 @@ class IntentosController extends AppController{
 	
 		$_SESSION["pmd_generado"] = false;
 		$_SESSION["findbugs_generado"] = false;
+		$_SESSION["errores_unitarios"] = false;
 	
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn jxr:jxr site');
 	
@@ -210,7 +212,7 @@ class IntentosController extends AppController{
 	private function __guardarDatosXML(){
 	
 		$violaciones_controller = new ViolacionesController();
-		$id_intento = $this->__obtenerIntentoPorTareaAlumnoNumIntento($_SESSION["lti_idTarea"],
+		$this->id_intento = $this->__obtenerIntentoPorTareaAlumnoNumIntento($_SESSION["lti_idTarea"],
 																	  $_SESSION["lti_userId"],
 																	  $this->intento_realizado)[0]->id;
 	
@@ -219,7 +221,7 @@ class IntentosController extends AppController{
 	
 			foreach($xml_pmd->children() as $files){
 				foreach($files->children() as $violations){
-					$violaciones_controller->guardarViolacion($id_intento, $violations["class"].".java",
+					$violaciones_controller->guardarViolacion($this->id_intento, $violations["class"].".java",
 							$violations["rule"], $violations, $violations["priority"],
 							$violations["beginline"], $violations["endline"]);
 				}
@@ -233,25 +235,25 @@ class IntentosController extends AppController{
 			foreach($xml_findbugs->children()->BugInstance as $bug_instances){
 				$_SESSION["findbugs_generado"] = true;
 				if($bug_instances->SourceLine["start"] != null && $bug_instances->SourceLine["end"] != null){
-					$violaciones_controller->guardarViolacion($id_intento, $bug_instances->Class->SourceLine["sourcefile"],
+					$violaciones_controller->guardarViolacion($this->id_intento, $bug_instances->Class->SourceLine["sourcefile"],
 							$bug_instances["type"], $bug_instances->LongMessage, $bug_instances["priority"],
 							$bug_instances->SourceLine["start"], $bug_instances->SourceLine["end"]);
 				}
 				else{
-					$violaciones_controller->guardarViolacion($id_intento, $bug_instances->Class->SourceLine["sourcefile"],
+					$violaciones_controller->guardarViolacion($this->id_intento, $bug_instances->Class->SourceLine["sourcefile"],
 							$bug_instances["type"], $bug_instances->LongMessage, $bug_instances["priority"]);
 				}
 			}
 		}
 			
-		if(empty($violaciones_controller->obtenerViolacionPorIntentoTipo($id_intento, "IL_INFINITE_LOOP"))){
+		if(empty($violaciones_controller->obtenerViolacionPorIntentoTipo($this->id_intento, "IL_INFINITE_LOOP"))){
 			$this->__ejecutarTests();
 		}
 		else{	// Violación de bucle infinito
 			$this->Flash->error(__('Hay bucles infinitos. Test no ejecutado.'));
 		}
 		
-		$this->__actualizarResultadoIntento($id_intento, $this->test_pasado);
+		$this->__actualizarResultadoIntento($this->id_intento, $this->test_pasado);
 		
 	}
 	
@@ -265,12 +267,33 @@ class IntentosController extends AppController{
 			$this->test_pasado = true;
 		}
 		elseif(strpos($salida_string, 'BUILD FAILURE')){
+			$_SESSION["errores_unitarios"] = true;
 			$this->Flash->error(__('La práctica no ha pasado los test'));
+			$this->__guardarDatosErrorXML();
 		}
 		else{
 			$this->Flash->error(__('error desconocido'));
 		}
 							
+	}
+	
+	private function __guardarDatosErrorXML(){
+		
+		$errores_controller = new ErroresController();
+		$ficheros_xml = glob($this->ruta_carpeta_id . $this->intento_realizado . "/surefire-reports/*xml");
+		
+		foreach($ficheros_xml as $fichero) {
+			$xml = simplexml_load_file($fichero);
+			$fallos = (int) $xml["failures"];
+			
+			if($fallos > 0){	// test que falla
+				foreach($xml->children()->testcase as $test_case){
+					$errores_controller->guardarError($this->id_intento, $test_case["classname"], $test_case["name"], 
+													  $test_case->failure["type"], $test_case->failure);
+				}
+			}
+		}
+		
 	}
 	
 	private function __obtenerIntentoPorTareaAlumnoNumIntento($id_tarea, $id_alumno, $num_intento){
@@ -309,9 +332,10 @@ class IntentosController extends AppController{
 		
 	}
 	
-	public function obtenerIntentos(){
+	public function obtenerIntentosPorIdTarea($id_tarea){
 	
-		return $this->Intentos->find('all');
+		return $this->Intentos->find('all')
+							  ->where(['tarea_id' => $id_tarea]);
 	
 	}
 	
