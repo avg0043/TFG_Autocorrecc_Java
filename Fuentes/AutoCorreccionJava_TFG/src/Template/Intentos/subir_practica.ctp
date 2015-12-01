@@ -37,6 +37,11 @@ else{
 	</div>
 </div>
 
+<?php if($_SESSION["grafica_generada"]){?>
+<h4 class="page-header">Gráfica</h4>
+<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/demo1.png" style="border: 1px solid gray;"/>
+<?php }?>
+
 <?php
 if($intento != null){
 	$ruta = "http://localhost/".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
@@ -58,4 +63,6 @@ if($intento != null){
 }
 }
 ?>
+
+
 

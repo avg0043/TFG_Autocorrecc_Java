@@ -48,7 +48,12 @@ class IntentosController extends AppController{
 										. $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";				
 					$tareas_controller = new TareasController();
 					$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;									
-					$this->__copiarArquetipoMaven();
+					//$this->__copiarArquetipoMaven();
+					
+					///
+					$this->__generarGraficas();
+					///
+					
 					return $this->redirect(['action' => 'subirPractica', $this->intento_realizado]);
 				}
 			}
@@ -313,6 +318,38 @@ class IntentosController extends AppController{
 					   ->execute();
 		
 		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+		
+	}
+	
+	private function __generarGraficas(){
+		
+		include('/../../vendor/libchart/libchart/classes/libchart.php');
+		
+		// INNER JOIN
+		$query = $this->Intentos->find('all')
+								->contain(['Violaciones'])
+								->where(['alumno_id' => $_SESSION["lti_userId"]]);
+		
+		$_SESSION["grafica_generada"] = false;
+		$total_intentos = 0;
+		$total_violaciones = 0;
+		$chart = new \VerticalBarChart(600, 350);
+		$dataSet = new \XYDataSet();
+		
+		foreach ($query as $intento) {
+			$numero_violaciones = count($intento->violaciones);
+			$dataSet->addPoint(new \Point("Intento: ".$intento->numero_intento, $numero_violaciones));
+			$total_intentos++;
+			$total_violaciones += $numero_violaciones;
+		}
+		
+		if($total_violaciones > 0){
+			$_SESSION["grafica_generada"] = true;		
+			$dataSet->addPoint(new \Point("Media", $total_violaciones/$total_intentos));
+			$chart->setDataSet($dataSet);
+			$chart->setTitle("Número de violaciones de código cometidas");
+			$chart->render("img/demo1.png");		
+		}
 		
 	}
 	
