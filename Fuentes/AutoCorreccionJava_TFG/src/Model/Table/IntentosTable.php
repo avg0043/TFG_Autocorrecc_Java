@@ -14,6 +14,12 @@ class IntentosTable extends Table{
             'joinType' => 'INNER',
         ]);
         
+        $this->hasMany('Errores', [
+        		'className' => 'Errores',
+        		'foreignKey' => 'intento_id',
+        		'joinType' => 'INNER',
+        ]);
+        
     }
 
 }

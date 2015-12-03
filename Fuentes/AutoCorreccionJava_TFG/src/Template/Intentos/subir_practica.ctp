@@ -37,12 +37,18 @@ else{
 	</div>
 </div>
 
-<?php if($_SESSION["grafica_generada"]){?>
-<h4 class="page-header">Gráfica</h4>
-<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/demo1.png" style="border: 1px solid gray;"/>
-<?php }?>
+<?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){?>
+		<h4 class="page-header">Gráfica Violaciones</h4>
+		<?php $nombre_grafica_violaciones = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
+		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica_violaciones ?>" style="border: 1px solid gray;"/>
+<?php }
+	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){ ?>
+	  	<h4 class="page-header">Gráfica Errores Unitarios</h4>
+	  	<?php $nombre_grafica_errores_unit = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png"; ?>
+		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica_errores_unit ?>" style="border: 1px solid gray;"/>
+<?php }
 
-<?php
+
 if($intento != null){
 	$ruta = "http://localhost/".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
 			"/".$_SESSION['lti_userId']."/".$intento."/site/";

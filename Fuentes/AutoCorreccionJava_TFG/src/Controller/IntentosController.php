@@ -48,12 +48,7 @@ class IntentosController extends AppController{
 										. $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";				
 					$tareas_controller = new TareasController();
 					$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;									
-					//$this->__copiarArquetipoMaven();
-					
-					///
-					$this->__generarGraficas();
-					///
-					
+					$this->__copiarArquetipoMaven();
 					return $this->redirect(['action' => 'subirPractica', $this->intento_realizado]);
 				}
 			}
@@ -159,6 +154,10 @@ class IntentosController extends AppController{
 			// Copiar zip practica a la carpeta del intento
 			exec('xcopy ' . $this->nombre_practica_zip . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado);		
 			$this->__guardarIntento();
+			
+			// Generar gráficas
+			$this->__generarGraficasViolaciones();
+			$this->__generarGraficasErroresUnitarios();
 		}
 		else{
 			$this->Flash->error(__('La práctica tiene errores de compilación!'));
@@ -321,16 +320,22 @@ class IntentosController extends AppController{
 		
 	}
 	
-	private function __generarGraficas(){
+	private function __generarGraficasViolaciones(){
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
+		
+		//if($_SESSION["practica_compilada"]){
+		
+		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){ 
+			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"); 
+		}
 		
 		// INNER JOIN
 		$query = $this->Intentos->find('all')
 								->contain(['Violaciones'])
 								->where(['alumno_id' => $_SESSION["lti_userId"]]);
 		
-		$_SESSION["grafica_generada"] = false;
+		//$_SESSION["grafica_generada"] = false;
 		$total_intentos = 0;
 		$total_violaciones = 0;
 		$chart = new \VerticalBarChart(600, 350);
@@ -344,11 +349,46 @@ class IntentosController extends AppController{
 		}
 		
 		if($total_violaciones > 0){
-			$_SESSION["grafica_generada"] = true;		
+			//$_SESSION["grafica_generada"] = true;		
 			$dataSet->addPoint(new \Point("Media", $total_violaciones/$total_intentos));
 			$chart->setDataSet($dataSet);
 			$chart->setTitle("Número de violaciones de código cometidas");
-			$chart->render("img/demo1.png");		
+			$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png");		
+		}
+		
+	}
+	
+	private function __generarGraficasErroresUnitarios(){
+		
+		include('/../../vendor/libchart/libchart/classes/libchart.php');
+		
+		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){
+			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
+		}
+		
+		// INNER JOIN
+		$query = $this->Intentos->find('all')
+								->contain(['Errores'])
+								->where(['alumno_id' => $_SESSION["lti_userId"]]);
+		
+		$total_intentos = 0;
+		$total_errores = 0;
+		$chart = new \VerticalBarChart(600, 350);
+		$dataSet = new \XYDataSet();
+		
+		foreach ($query as $intento) {
+			$numero_errores = count($intento->errores);
+			$dataSet->addPoint(new \Point("Intento: ".$intento->numero_intento, $numero_errores));
+			$total_intentos++;
+			$total_errores += $numero_errores;
+		}
+		
+		if($total_errores > 0){
+			//$_SESSION["grafica_generada"] = true;
+			$dataSet->addPoint(new \Point("Media", $total_errores/$total_intentos));
+			$chart->setDataSet($dataSet);
+			$chart->setTitle("Número de errores unitarios cometidos");
+			$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
 		}
 		
 	}
