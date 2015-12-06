@@ -29,6 +29,14 @@ class ViolacionesController extends AppController{
 		
 	}
 	
+	public function obtenerViolacionesPorIdIntento($id_intento){
+		
+		return $this->Violaciones->find('all')
+								 ->where(['intento_id' => $id_intento])
+								 ->toArray();
+		
+	}
+	
 }
 
 ?>

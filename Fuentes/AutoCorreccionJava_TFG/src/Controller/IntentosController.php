@@ -204,23 +204,32 @@ class IntentosController extends AppController{
 		exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' .
 				str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
 		
+		/*
 		if($_SESSION["pmd_generado"] || $_SESSION["findbugs_generado"]){
 			$this->__guardarDatosXML();
 		}
 		else{
 			$this->__ejecutarTests();
 		}
+		*/
+		
+		//--- SIEMPRE SE GENERA EL FINDBUGS.html, AUNQUE NO HAYA FALLOS
+		$this->__guardarDatosXML();
 	
 	}
 	
 	private function __guardarDatosXML(){
 	
-		$violaciones_controller = new ViolacionesController();
+		//$violaciones_controller = new ViolacionesController();
+		$ficherosXml_controller = new FicherosXmlController();
 		$this->id_intento = $this->__obtenerIntentoPorTareaAlumnoNumIntento($_SESSION["lti_idTarea"],
 																	  $_SESSION["lti_userId"],
 																	  $this->intento_realizado)[0]->id;
-	
+																	  
 		if($_SESSION["pmd_generado"]){
+			$ficherosXml_controller->guardarDatosXmlPluginPmd($this->ruta_carpeta_id, $this->id_intento, 
+															  						  $this->intento_realizado);
+			/*
 			$xml_pmd = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/pmd.xml");
 	
 			foreach($xml_pmd->children() as $files){
@@ -230,10 +239,14 @@ class IntentosController extends AppController{
 							$violations["beginline"], $violations["endline"]);
 				}
 			}
+			*/
 		}
 	
 		if($_SESSION["findbugs_generado"]){
 			$_SESSION["findbugs_generado"] = false;
+			$ficherosXml_controller->guardarDatosXmlPluginFindbugs($this->ruta_carpeta_id, $this->id_intento, 
+																						   $this->intento_realizado);
+			/*
 			$xml_findbugs = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/findbugsXml.xml");
 				
 			foreach($xml_findbugs->children()->BugInstance as $bug_instances){
@@ -248,8 +261,11 @@ class IntentosController extends AppController{
 							$bug_instances["type"], $bug_instances->LongMessage, $bug_instances["priority"]);
 				}
 			}
+			*/
 		}
-			
+		
+		$violaciones_controller = new ViolacionesController();
+		
 		if(empty($violaciones_controller->obtenerViolacionPorIntentoTipo($this->id_intento, "IL_INFINITE_LOOP"))){
 			$this->__ejecutarTests();
 		}
@@ -273,7 +289,12 @@ class IntentosController extends AppController{
 		elseif(strpos($salida_string, 'BUILD FAILURE')){
 			$_SESSION["errores_unitarios"] = true;
 			$this->Flash->error(__('La práctica no ha pasado los test'));
-			$this->__guardarDatosErrorXML();
+			// ---- MODIFICACIÓN
+			//$this->__guardarDatosErrorXML();
+			$ficherosXml_controller = new FicherosXmlController();
+			$ficherosXml_controller->guardarDatosXmlErroresUnitarios($this->ruta_carpeta_id, $this->id_intento, 
+																							 $this->intento_realizado);
+			
 		}
 		else{
 			$this->Flash->error(__('error desconocido'));
@@ -281,6 +302,7 @@ class IntentosController extends AppController{
 							
 	}
 	
+	/*
 	private function __guardarDatosErrorXML(){
 		
 		$errores_controller = new ErroresController();
@@ -299,6 +321,7 @@ class IntentosController extends AppController{
 		}
 		
 	}
+	*/
 	
 	private function __obtenerIntentoPorTareaAlumnoNumIntento($id_tarea, $id_alumno, $num_intento){
 		
@@ -326,9 +349,11 @@ class IntentosController extends AppController{
 		
 		//if($_SESSION["practica_compilada"]){
 		
+		/*	NO ES NECESARIO CREO
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){ 
 			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"); 
 		}
+		*/
 		
 		// INNER JOIN
 		$query = $this->Intentos->find('all')
@@ -362,9 +387,11 @@ class IntentosController extends AppController{
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
 		
+		/*	NO ES NECESARIO CREO
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){
 			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
 		}
+		*/
 		
 		// INNER JOIN
 		$query = $this->Intentos->find('all')
@@ -414,6 +441,20 @@ class IntentosController extends AppController{
 		return $this->Intentos->find('all')
 							  ->where(['tarea_id' => $id_tarea]);
 	
+	}
+	
+	public function obtenerIntentosTestPasados($id_tarea, $id_alumno){
+		
+		return $this->Intentos->find('all')
+							  ->where(['tarea_id' => $id_tarea, 'alumno_id' => $id_alumno, 'resultado' => 1]);
+		
+	}
+	
+	public function obtenerIntentosPorIdTareaAlumno($id_tarea, $id_alumno){
+		
+		return $this->Intentos->find('all')
+							  ->where(['tarea_id' => $id_tarea, 'alumno_id' => $id_alumno]);
+		
 	}
 	
 }

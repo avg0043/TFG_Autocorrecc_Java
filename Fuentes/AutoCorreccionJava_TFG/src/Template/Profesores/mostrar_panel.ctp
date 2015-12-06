@@ -14,4 +14,6 @@ echo "<br>";
 echo $this->Html->link('Comprobar plagios de prácticas', ['action' => 'generarReportePlagiosPracticas']);
 echo "<br>";
 echo $this->Html->link('Descargar prácticas subidas por los alumnos', ['action' => 'descargarPracticasAlumnos']);
+echo "<br>";
+echo $this->Html->link('Mostrar gráficas', ['action' => 'generarGraficas']);
 ?>

@@ -162,6 +162,137 @@ class ProfesoresController extends AppController{
 		
 	}
 	
+	public function generarGraficas(){
+		
+		include('/../../vendor/libchart/libchart/classes/libchart.php');
+		session_start();
+		
+		$this->__generarGraficaAlumnosTest();
+		$this->__generarGraficaAlumnosIntentos();
+		$this->__generarGraficaAlumnosViolacionesCometidas();
+		
+	}
+	
+	private function __generarGraficaAlumnosTest(){
+		
+		$alumnos_controller = new AlumnosController();
+		$intentos_controller = new IntentosController();
+		$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos_registrados = false;
+		$alumnos_pasan_test = 0;
+		$alumnos_no_pasan_test = 0;
+		
+		foreach($alumnos as $alumno){
+			$alumnos_registrados = true;
+			$intentos_pasan_test = $intentos_controller->obtenerIntentosTestPasados($_SESSION["lti_idTarea"], $alumno->id);
+			if($intentos_pasan_test->isEmpty()){
+				$alumnos_no_pasan_test++;
+			}
+			else{
+				$alumnos_pasan_test++;
+			}
+		}
+		
+		if($alumnos_registrados){	// hay alumnos
+			$chart = new \PieChart(600, 350);
+			$dataSet = new \XYDataSet();
+			$dataSet->addPoint(new \Point("Alumnos que pasan los test", $alumnos_pasan_test));
+			$dataSet->addPoint(new \Point("Alumnos que no pasan los test", $alumnos_no_pasan_test));
+			$chart->setDataSet($dataSet);
+			$chart->setTitle("Porcentaje de alumnos que pasan y no pasan los test");
+			$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-alumnos_test.png");
+		}
+		$this->set("alumnos_registrados", $alumnos_registrados);
+		
+	}
+	
+	private function __generarGraficaAlumnosIntentos(){
+		
+		$alumnos_controller = new AlumnosController();
+		$intentos_controller = new IntentosController();
+		$alumnos = $alumnos_controller->obtenerAlumnos();
+		$intentos_pasa_test = false;
+		$intentos_no_pasa_test = false;
+		$num_alumnos_pasan_test = 0;
+		$num_alumnos_no_pasan_test = 0;
+		$total_intentos_pasan_test = 0;
+		$total_intentos_no_pasan_test = 0;
+		$chart_pasa_test = new \VerticalBarChart(600, 350);
+		$dataSet_pasa_test = new \XYDataSet();
+		$chart_no_pasa_test = new \VerticalBarChart(600, 350);
+		$dataSet_no_pasa_test = new \XYDataSet();
+		
+		foreach($alumnos as $alumno){
+			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			if(!$intentos_alumno->isEmpty()){
+				$num_intentos_realizados = 0;
+				$test_pasados = false;
+				foreach($intentos_alumno as $intento){
+					$num_intentos_realizados++;
+					if($intento->resultado == 1){	// Test pasados
+						$intentos_pasa_test = true;
+						$test_pasados = true;
+						$dataSet_pasa_test->addPoint(new \Point($alumno->apellidos, $num_intentos_realizados));
+						$num_alumnos_pasan_test++;
+						$total_intentos_pasan_test += $num_intentos_realizados;
+						break;
+					}
+				}
+				if(!$test_pasados){		// Test no pasados
+					$intentos_no_pasa_test = true;
+					$dataSet_no_pasa_test->addPoint(new \Point($alumno->apellidos, $num_intentos_realizados));
+					$num_alumnos_no_pasan_test++;
+					$total_intentos_no_pasan_test += $num_intentos_realizados;
+				}
+			}
+		}
+		
+		if($intentos_pasa_test){
+			$dataSet_pasa_test->addPoint(new \Point("Media", $total_intentos_pasan_test/$num_alumnos_pasan_test));
+			$chart_pasa_test->setDataSet($dataSet_pasa_test);
+			$chart_pasa_test->setTitle("Número de intentos mínimo realizados para pasar los test");
+			$chart_pasa_test->render("img/".$_SESSION["lti_idTarea"]."-prof-intentos_pasaTest.png");		
+		}
+		if($intentos_no_pasa_test){
+			$dataSet_no_pasa_test->addPoint(new \Point("Media", $total_intentos_no_pasan_test/$num_alumnos_no_pasan_test));
+			$chart_no_pasa_test->setDataSet($dataSet_no_pasa_test);
+			$chart_no_pasa_test->setTitle("Número de intentos realizados sin conseguir pasar los test");
+			$chart_no_pasa_test->render("img/".$_SESSION["lti_idTarea"]."-prof-intentos_noPasaTest.png");
+		}
+		
+	}
+	
+	private function __generarGraficaAlumnosViolacionesCometidas(){
+		
+		$alumnos_controller = new AlumnosController();
+		$intentos_controller = new IntentosController();
+		$violaciones_controller = new ViolacionesController();
+		$alumnos = $alumnos_controller->obtenerAlumnos();
+		$intentos_realizados = false;
+		$chart = new \VerticalBarChart(600, 350);
+		$dataSet = new \XYDataSet();
+		
+		foreach($alumnos as $alumno){
+			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			if(!$intentos_alumno->isEmpty()){
+				$intentos_realizados = true;
+				$total_violaciones = 0;
+				foreach($intentos_alumno as $intento){
+					$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($intento->id);
+					$total_violaciones += count($violaciones);	
+				}
+				$dataSet->addPoint(new \Point($alumno->apellidos, $total_violaciones));
+			}
+		}
+		
+		if($intentos_realizados){
+			$chart->setDataSet($dataSet);
+			$chart->setTitle("Número de violaciones de código cometidas");
+			$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-violaciones_alumnos.png");
+		}
+		
+	}
+	
 	public function obtenerProfesorPorKeyCorreo($consumer_key, $correo){
 		
 		return $this->Profesores->find('all')

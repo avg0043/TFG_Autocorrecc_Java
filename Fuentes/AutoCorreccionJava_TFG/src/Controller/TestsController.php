@@ -55,8 +55,13 @@ class TestsController extends AppController{
 		
 		if ($zip->open($_FILES["ficheroAsubir"]["name"]) === TRUE) {
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/test/java/'.$this->paquete_ruta.'/');
-			$zip->close();			
-			$this->__editarPOM();
+			$zip->close();
+			
+			//	 ---- MODIFICACIÓN -----
+			//$this->__editarPOM();
+			$ficherosXml_controller = new FicherosXmlController();
+			$ficherosXml_controller->editarPomArquetipoMaven($this->ruta_carpeta_id);
+			//	--------- 
 		}
 		
 		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
@@ -64,6 +69,7 @@ class TestsController extends AppController{
 		
 	}
 	
+	/*
 	private function __editarPOM(){
 		
 		$pom_xml = simplexml_load_file($this->ruta_carpeta_id . 'arquetipo/pom.xml');
@@ -104,6 +110,7 @@ class TestsController extends AppController{
 		$pom_xml->asXml($this->ruta_carpeta_id . 'arquetipo/pom.xml');	
 		
 	}
+	*/
 
 	public function guardarTest($id_tarea, $nombre_test){
 		
