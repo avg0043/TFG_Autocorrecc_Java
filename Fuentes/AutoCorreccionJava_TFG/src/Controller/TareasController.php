@@ -13,6 +13,7 @@ class TareasController extends AppController{
 		session_start();
 		$this->comprobarSesion();
 		
+		$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));	
 		$nueva_tarea = $this->Tareas->newEntity();
 		
 		if ($this->request->is('post')) {			

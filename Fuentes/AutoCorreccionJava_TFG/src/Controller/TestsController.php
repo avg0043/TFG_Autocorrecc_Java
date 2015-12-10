@@ -41,6 +41,9 @@ class TestsController extends AppController{
 			mkdir($this->ruta_carpeta_id, 0777, true);
 			exec('SET PATH=%JAVA_HOME%\bin;%PATH% 2>&1');
 			exec('cd ' . $this->ruta_carpeta_id . ' && mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false -DgroupId='.$paquete.' -DartifactId=arquetipo 2>&1');
+			// Borrar App.java y AppTest.java
+			unlink($this->ruta_carpeta_id . 'arquetipo/src/main/java/' . $this->paquete_ruta . '/App.java');
+			unlink($this->ruta_carpeta_id . 'arquetipo/src/test/java/' . $this->paquete_ruta . '/AppTest.java');
 		}
 		
 		$this->__extraerTest();
@@ -57,60 +60,14 @@ class TestsController extends AppController{
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/test/java/'.$this->paquete_ruta.'/');
 			$zip->close();
 			
-			//	 ---- MODIFICACIÓN -----
-			//$this->__editarPOM();
 			$ficherosXml_controller = new FicherosXmlController();
 			$ficherosXml_controller->editarPomArquetipoMaven($this->ruta_carpeta_id);
-			//	--------- 
 		}
 		
 		unlink('./' . $_FILES["ficheroAsubir"]["name"]);
 		$this->guardarTest($_SESSION['lti_idTarea'], $_FILES['ficheroAsubir']['name']);
 		
 	}
-	
-	/*
-	private function __editarPOM(){
-		
-		$pom_xml = simplexml_load_file($this->ruta_carpeta_id . 'arquetipo/pom.xml');
-		
-		// Codificación
-		$properties = $pom_xml->addChild('properties');
-		$properties->addChild("project.build.sourceEncoding", "UTF-8");
-		
-		// Plugins
-		$reporting = $pom_xml->addChild('reporting');
-		$plugins = $reporting->addChild("plugins");
-		
-		// Plugin Surfire
-		$plugin_surfire = $plugins->addChild("plugin");
-		$plugin_surfire->addChild("groupId", "org.apache.maven.plugins");
-		$plugin_surfire->addChild("artifactId", "maven-surefire-report-plugin");
-		
-		// Plugin JavaNCSS
-		$plugin_javancss = $plugins->addChild("plugin");
-		$plugin_javancss->addChild("groupId", "org.codehaus.mojo");
-		$plugin_javancss->addChild("artifactId", "javancss-maven-plugin");
-		
-		// Plugin JDepend
-		$plugin_jdepend = $plugins->addChild("plugin");
-		$plugin_jdepend->addChild("groupId", "org.codehaus.mojo");
-		$plugin_jdepend->addChild("artifactId", "jdepend-maven-plugin");
-		
-		// Plugin PMD
-		$plugin_pmd = $plugins->addChild("plugin");
-		$plugin_pmd->addChild("groupId", "org.apache.maven.plugins");
-		$plugin_pmd->addChild("artifactId", "maven-pmd-plugin");
-		
-		// Plugin FindBugs
-		$plugin_findbugs = $plugins->addChild("plugin");
-		$plugin_findbugs->addChild("groupId", "org.codehaus.mojo");
-		$plugin_findbugs->addChild("artifactId", "findbugs-maven-plugin");
-		
-		$pom_xml->asXml($this->ruta_carpeta_id . 'arquetipo/pom.xml');	
-		
-	}
-	*/
 
 	public function guardarTest($id_tarea, $nombre_test){
 		

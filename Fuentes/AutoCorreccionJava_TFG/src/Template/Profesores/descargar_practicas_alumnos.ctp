@@ -21,7 +21,8 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 	</tr>
 	<?php 
 	foreach ($alumnos as $alumno):
-		$intentos_alumno = $intentos_controller->obtenerIntentosPorIdAlumno($alumno->id);
+		//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdAlumno($alumno->id);
+		$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 		if(!$intentos_alumno->isEmpty()){
 	?>
 		<tr>

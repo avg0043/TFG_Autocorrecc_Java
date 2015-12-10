@@ -87,8 +87,7 @@ class FicherosXmlController extends AppController{
 		
 		foreach($ficheros_xml as $fichero) {
 			$xml = simplexml_load_file($fichero);
-			$fallos = (int) $xml["failures"];
-				
+			$fallos = (int) $xml["failures"];			
 			if($fallos > 0){	// test que falla
 				foreach($xml->children()->testcase as $test_case){
 					$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],

@@ -6,7 +6,10 @@
 			<?php
 			echo $this->Form->create($nueva_tarea);
 			echo $this->Form->input('num_max_intentos', ['label' => 'Número máximo de intentos', 'class' => 'form-control']);
-			echo $this->Form->input('paquete', ['placeholder' => 'Separado por puntos en caso de ser varios', 'class' => 'form-control']);
+			if(empty($tarea_actual))
+				echo $this->Form->input('paquete', ['placeholder' => 'Separado por puntos en caso de ser varios', 'class' => 'form-control']);
+			else
+				echo $this->Form->input('paquete', ['placeholder' => $tarea_actual[0]->paquete, 'class' => 'form-control', 'disabled' => 'disabled']);
 			echo $this->Form->input('fecha_limite', ['type' => 'date', 'class' => 'form-control']);
 			//echo $this->Form->button(__('Guardar configuración'));
 			?>

@@ -156,8 +156,8 @@ class IntentosController extends AppController{
 			$this->__guardarIntento();
 			
 			// Generar gráficas
-			$this->__generarGraficasViolaciones();
 			$this->__generarGraficasErroresUnitarios();
+			$this->__generarGraficasViolaciones();
 		}
 		else{
 			$this->Flash->error(__('La práctica tiene errores de compilación!'));
@@ -204,15 +204,6 @@ class IntentosController extends AppController{
 		exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' .
 				str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
 		
-		/*
-		if($_SESSION["pmd_generado"] || $_SESSION["findbugs_generado"]){
-			$this->__guardarDatosXML();
-		}
-		else{
-			$this->__ejecutarTests();
-		}
-		*/
-		
 		//--- SIEMPRE SE GENERA EL FINDBUGS.html, AUNQUE NO HAYA FALLOS
 		$this->__guardarDatosXML();
 	
@@ -220,48 +211,20 @@ class IntentosController extends AppController{
 	
 	private function __guardarDatosXML(){
 	
-		//$violaciones_controller = new ViolacionesController();
 		$ficherosXml_controller = new FicherosXmlController();
 		$this->id_intento = $this->__obtenerIntentoPorTareaAlumnoNumIntento($_SESSION["lti_idTarea"],
-																	  $_SESSION["lti_userId"],
-																	  $this->intento_realizado)[0]->id;
+																		    $_SESSION["lti_userId"],
+																		    $this->intento_realizado)[0]->id;
 																	  
 		if($_SESSION["pmd_generado"]){
 			$ficherosXml_controller->guardarDatosXmlPluginPmd($this->ruta_carpeta_id, $this->id_intento, 
 															  						  $this->intento_realizado);
-			/*
-			$xml_pmd = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/pmd.xml");
-	
-			foreach($xml_pmd->children() as $files){
-				foreach($files->children() as $violations){
-					$violaciones_controller->guardarViolacion($this->id_intento, $violations["class"].".java",
-							$violations["rule"], $violations, $violations["priority"],
-							$violations["beginline"], $violations["endline"]);
-				}
-			}
-			*/
 		}
 	
 		if($_SESSION["findbugs_generado"]){
 			$_SESSION["findbugs_generado"] = false;
 			$ficherosXml_controller->guardarDatosXmlPluginFindbugs($this->ruta_carpeta_id, $this->id_intento, 
 																						   $this->intento_realizado);
-			/*
-			$xml_findbugs = simplexml_load_file($this->ruta_carpeta_id. $this->intento_realizado . "/findbugsXml.xml");
-				
-			foreach($xml_findbugs->children()->BugInstance as $bug_instances){
-				$_SESSION["findbugs_generado"] = true;
-				if($bug_instances->SourceLine["start"] != null && $bug_instances->SourceLine["end"] != null){
-					$violaciones_controller->guardarViolacion($this->id_intento, $bug_instances->Class->SourceLine["sourcefile"],
-							$bug_instances["type"], $bug_instances->LongMessage, $bug_instances["priority"],
-							$bug_instances->SourceLine["start"], $bug_instances->SourceLine["end"]);
-				}
-				else{
-					$violaciones_controller->guardarViolacion($this->id_intento, $bug_instances->Class->SourceLine["sourcefile"],
-							$bug_instances["type"], $bug_instances->LongMessage, $bug_instances["priority"]);
-				}
-			}
-			*/
 		}
 		
 		$violaciones_controller = new ViolacionesController();
@@ -289,39 +252,15 @@ class IntentosController extends AppController{
 		elseif(strpos($salida_string, 'BUILD FAILURE')){
 			$_SESSION["errores_unitarios"] = true;
 			$this->Flash->error(__('La práctica no ha pasado los test'));
-			// ---- MODIFICACIÓN
-			//$this->__guardarDatosErrorXML();
 			$ficherosXml_controller = new FicherosXmlController();
 			$ficherosXml_controller->guardarDatosXmlErroresUnitarios($this->ruta_carpeta_id, $this->id_intento, 
 																							 $this->intento_realizado);
-			
 		}
 		else{
 			$this->Flash->error(__('error desconocido'));
 		}
 							
 	}
-	
-	/*
-	private function __guardarDatosErrorXML(){
-		
-		$errores_controller = new ErroresController();
-		$ficheros_xml = glob($this->ruta_carpeta_id . $this->intento_realizado . "/surefire-reports/*xml");
-		
-		foreach($ficheros_xml as $fichero) {
-			$xml = simplexml_load_file($fichero);
-			$fallos = (int) $xml["failures"];
-			
-			if($fallos > 0){	// test que falla
-				foreach($xml->children()->testcase as $test_case){
-					$errores_controller->guardarError($this->id_intento, $test_case["classname"], $test_case["name"], 
-													  $test_case->failure["type"], $test_case->failure);
-				}
-			}
-		}
-		
-	}
-	*/
 	
 	private function __obtenerIntentoPorTareaAlumnoNumIntento($id_tarea, $id_alumno, $num_intento){
 		
@@ -347,20 +286,11 @@ class IntentosController extends AppController{
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
 		
-		//if($_SESSION["practica_compilada"]){
-		
-		/*	NO ES NECESARIO CREO
-		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){ 
-			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"); 
-		}
-		*/
-		
 		// INNER JOIN
 		$query = $this->Intentos->find('all')
 								->contain(['Violaciones'])
 								->where(['alumno_id' => $_SESSION["lti_userId"]]);
 		
-		//$_SESSION["grafica_generada"] = false;
 		$total_intentos = 0;
 		$total_violaciones = 0;
 		$chart = new \VerticalBarChart(600, 350);
@@ -372,26 +302,17 @@ class IntentosController extends AppController{
 			$total_intentos++;
 			$total_violaciones += $numero_violaciones;
 		}
-		
-		if($total_violaciones > 0){
-			//$_SESSION["grafica_generada"] = true;		
-			$dataSet->addPoint(new \Point("Media", $total_violaciones/$total_intentos));
-			$chart->setDataSet($dataSet);
-			$chart->setTitle("Número de violaciones de código cometidas");
-			$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png");		
-		}
+			
+		$dataSet->addPoint(new \Point("Media", $total_violaciones/$total_intentos));
+		$chart->setDataSet($dataSet);
+		$chart->setTitle("Número de violaciones de código cometidas");
+		$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png");
 		
 	}
 	
 	private function __generarGraficasErroresUnitarios(){
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
-		
-		/*	NO ES NECESARIO CREO
-		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){
-			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
-		}
-		*/
 		
 		// INNER JOIN
 		$query = $this->Intentos->find('all')
@@ -410,13 +331,10 @@ class IntentosController extends AppController{
 			$total_errores += $numero_errores;
 		}
 		
-		if($total_errores > 0){
-			//$_SESSION["grafica_generada"] = true;
-			$dataSet->addPoint(new \Point("Media", $total_errores/$total_intentos));
-			$chart->setDataSet($dataSet);
-			$chart->setTitle("Número de errores unitarios cometidos");
-			$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
-		}
+		$dataSet->addPoint(new \Point("Media", $total_errores/$total_intentos));
+		$chart->setDataSet($dataSet);
+		$chart->setTitle("Número de errores unitarios cometidos");
+		$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
 		
 	}
 	
@@ -429,12 +347,14 @@ class IntentosController extends AppController{
 		
 	}
 	
+	/*
 	public function obtenerIntentosPorIdAlumno($id_alumno){
 		
 		return $this->Intentos->find('all')
 							  ->where(['alumno_id' => $id_alumno]);
 		
 	}
+	*/
 	
 	public function obtenerIntentosPorIdTarea($id_tarea){
 	

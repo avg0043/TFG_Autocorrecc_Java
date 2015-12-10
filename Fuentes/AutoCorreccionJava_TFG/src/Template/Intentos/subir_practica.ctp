@@ -37,15 +37,15 @@ else{
 	</div>
 </div>
 
-<?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){?>
-		<h4 class="page-header">Gráfica Violaciones</h4>
-		<?php $nombre_grafica_violaciones = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
-		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica_violaciones ?>" style="border: 1px solid gray;"/>
-<?php }
-	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){ ?>
+<?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){ ?>
 	  	<h4 class="page-header">Gráfica Errores Unitarios</h4>
 	  	<?php $nombre_grafica_errores_unit = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png"; ?>
 		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica_errores_unit ?>" style="border: 1px solid gray;"/>
+<?php }
+	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){?>
+		<h4 class="page-header">Gráfica Violaciones</h4>
+		<?php $nombre_grafica_violaciones = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
+		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica_violaciones ?>" style="border: 1px solid gray;"/>
 <?php }
 
 
@@ -55,16 +55,16 @@ if($intento != null){
 	//echo $this->Html->link('Reporte PMD', $ruta);
 ?>
 	<h4 class="page-header">Reportes Generados</h4>
-	<a href=<?= $ruta."/javancss.html" ?> class="btn btn-default btn-lg" role="button">JAVANCSS</a>
-	<a href=<?= $ruta."/jdepend-report.html" ?> class="btn btn-default btn-lg" role="button">JDEPEND</a>
+	<a href=<?= $ruta."javancss.html" ?> class="btn btn-default btn-lg" role="button">JAVANCSS</a>
+	<a href=<?= $ruta."jdepend-report.html" ?> class="btn btn-default btn-lg" role="button">JDEPEND</a>
 	<?php if($_SESSION["pmd_generado"]){ ?>
-			<a href=<?= $ruta."/pmd.html" ?> class="btn btn-default btn-lg" role="button">PMD</a>
+			<a href=<?= $ruta."pmd.html" ?> class="btn btn-default btn-lg" role="button">PMD</a>
 	<?php } ?>
 	<?php if($_SESSION["findbugs_generado"]){ ?>
-			<a href=<?= $ruta."/findbugs.html" ?> class="btn btn-default btn-lg" role="button">FINDBUGS</a>
+			<a href=<?= $ruta."findbugs.html" ?> class="btn btn-default btn-lg" role="button">FINDBUGS</a>
 	<?php } 
 		  if($_SESSION["errores_unitarios"]){ ?>
-		  	<a href=<?= $ruta."/surefire-report.html" ?> class="btn btn-default btn-lg" role="button">ERRORES UNITARIOS</a>
+		  	<a href=<?= $ruta."surefire-report.html" ?> class="btn btn-default btn-lg" role="button">ERRORES UNITARIOS</a>
 	<?php }
 }
 }

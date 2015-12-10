@@ -166,6 +166,7 @@ class ProfesoresController extends AppController{
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
 		session_start();
+		$this->comprobarSesion();
 		
 		$this->__generarGraficaAlumnosTest();
 		$this->__generarGraficaAlumnosIntentos();
@@ -221,6 +222,10 @@ class ProfesoresController extends AppController{
 		$dataSet_pasa_test = new \XYDataSet();
 		$chart_no_pasa_test = new \VerticalBarChart(600, 350);
 		$dataSet_no_pasa_test = new \XYDataSet();
+		
+		if(file_exists("img/".$_SESSION["lti_idTarea"]."-prof-intentos_noPasaTest.png")){
+			unlink("img/".$_SESSION["lti_idTarea"]."-prof-intentos_noPasaTest.png");
+		}
 		
 		foreach($alumnos as $alumno){
 			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
