@@ -70,7 +70,8 @@ class AppController extends Controller
     public function comprobarSesion(){
     
     	if(!isset($_SESSION["lti_userId"])){
-    		throw new NotFoundException();
+    		//throw new NotFoundException();
+    		return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
     	}
     
     }

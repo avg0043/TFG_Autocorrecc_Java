@@ -105,8 +105,11 @@ class ProfesoresController extends AppController{
 	
 	public function generarReportePlagiosPracticas(){
 		
-		session_start();
-		$this->comprobarSesion();
+		session_start();	
+		if(!isset($_SESSION["lti_userId"])){
+			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
+		}
+		//$this->__comprobarSesion();
 		
 		$alumnos_controller = new AlumnosController();
 		$intentos_controller = new IntentosController();
@@ -153,7 +156,10 @@ class ProfesoresController extends AppController{
 	public function descargarPracticasAlumnos(){
 		
 		session_start();
-		$this->comprobarSesion();
+		if(!isset($_SESSION["lti_userId"])){
+			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
+		}
+		//$this->comprobarSesion();
 		
 		$alumnos_controller = new AlumnosController();
 		$intentos_controller = new IntentosController();
@@ -166,7 +172,10 @@ class ProfesoresController extends AppController{
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
 		session_start();
-		$this->comprobarSesion();
+		if(!isset($_SESSION["lti_userId"])){
+			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
+		}
+		//$this->comprobarSesion();
 		
 		$this->__generarGraficaAlumnosTest();
 		$this->__generarGraficaAlumnosIntentos();

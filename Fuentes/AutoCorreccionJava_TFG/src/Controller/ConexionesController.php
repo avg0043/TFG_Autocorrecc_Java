@@ -37,7 +37,8 @@ class ConexionesController extends AppController{
 		}
 		else{
 			//$this->Flash->error(__('La consumer key no es la correcta!!'));
-			throw new NotFoundException();
+			//throw new NotFoundException();
+			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorConsumerKey', $consumer_key]);
 		}
 	}
 	
