@@ -37,9 +37,11 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 </head>
 <body>
 	
+	<!--  
 	<nav class="navbar navbar-inverse">
 	  ...
 	</nav>
+	-->
 	
     <?= $this->Flash->render() ?>
     <section class="container clearfix">

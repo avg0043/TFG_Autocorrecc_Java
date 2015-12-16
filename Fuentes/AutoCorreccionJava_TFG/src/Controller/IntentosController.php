@@ -158,6 +158,7 @@ class IntentosController extends AppController{
 			// Generar gráficas
 			$this->__generarGraficasErroresUnitarios();
 			$this->__generarGraficasViolaciones();
+			$this->__generarGraficaPrioridadesViolaciones();
 		}
 		else{
 			$this->Flash->error(__('La práctica tiene errores de compilación!'));
@@ -294,6 +295,7 @@ class IntentosController extends AppController{
 		$total_intentos = 0;
 		$total_violaciones = 0;
 		$chart = new \VerticalBarChart(600, 350);
+		$chart_line = new \LineChart(600, 350);
 		$dataSet = new \XYDataSet();
 		
 		foreach ($query as $intento) {
@@ -302,12 +304,55 @@ class IntentosController extends AppController{
 			$total_intentos++;
 			$total_violaciones += $numero_violaciones;
 		}
-			
-		$dataSet->addPoint(new \Point("Media", $total_violaciones/$total_intentos));
+		
+		// Gráfico de líneas
+		$chart_line->setDataSet($dataSet);
+		$chart_line->setTitle("Número de violaciones de código cometidas");
+		$chart_line->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones_linea.png");
+		
+		// Gráfico de barras
+		$dataSet->addPoint(new \Point("Media", round($total_violaciones/$total_intentos, 2)));
 		$chart->setDataSet($dataSet);
 		$chart->setTitle("Número de violaciones de código cometidas");
 		$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png");
 		
+	}
+	
+	private function __generarGraficaPrioridadesViolaciones(){
+		
+		include('/../../vendor/libchart/libchart/classes/libchart.php');
+		
+		$violaciones_existen = false;
+		
+		// INNER JOIN
+		$query = $this->Intentos->find('all')
+								->contain(['Violaciones'])
+								->where(['alumno_id' => $_SESSION["lti_userId"]]);
+		
+		$chart = new \PieChart(600, 350);
+		$dataSet = new \XYDataSet();
+		
+		foreach ($query as $intento){
+			if(count($intento->violaciones) > 0){
+				$violaciones_existen = true;
+				foreach ($intento->violaciones as $violacion){
+					$prioridad = $violacion->prioridad;
+					$point = $dataSet->getPointWithX("Prioridad ".$prioridad);
+					if($point == null){
+						$dataSet->addPoint(new \Point("Prioridad ".$prioridad, 1));
+					}else{
+						$point->setY($point->getY() + 1);
+					}
+				}
+			}
+		}
+		
+		if($violaciones_existen){
+			$chart->setDataSet($dataSet);
+			$chart->setTitle("Porcentaje de las prioridades de las violaciones de código cometidas");
+			$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones.png");
+		}
+								
 	}
 	
 	private function __generarGraficasErroresUnitarios(){
@@ -322,6 +367,7 @@ class IntentosController extends AppController{
 		$total_intentos = 0;
 		$total_errores = 0;
 		$chart = new \VerticalBarChart(600, 350);
+		$chart_line = new \LineChart(600, 350);
 		$dataSet = new \XYDataSet();
 		
 		foreach ($query as $intento) {
@@ -331,7 +377,13 @@ class IntentosController extends AppController{
 			$total_errores += $numero_errores;
 		}
 		
-		$dataSet->addPoint(new \Point("Media", $total_errores/$total_intentos));
+		// Gráfico de líneas
+		$chart_line->setDataSet($dataSet);
+		$chart_line->setTitle("Número de errores unitarios cometidos");
+		$chart_line->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios_linea.png");
+		
+		// Gráfico de barras
+		$dataSet->addPoint(new \Point("Media", round($total_errores/$total_intentos, 2)));
 		$chart->setDataSet($dataSet);
 		$chart->setTitle("Número de errores unitarios cometidos");
 		$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");

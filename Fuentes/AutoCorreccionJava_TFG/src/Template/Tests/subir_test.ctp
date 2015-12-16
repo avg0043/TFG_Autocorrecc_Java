@@ -1,5 +1,13 @@
+<!-- 
 <div class="page-header">
 	<h3>Subida de Tests</h3>
+</div>
+ -->
+
+<div class="jumbotron">
+  <h3>Subida de Tests</h3>
+  <p>Se deberá de subir un único fichero .zip que contenga los ficheros test con extensión .java. Es importante que los test
+     pertenezcan al paquete establecido previamente en la configuración de parámetros.</p>
 </div>
 
 <?php

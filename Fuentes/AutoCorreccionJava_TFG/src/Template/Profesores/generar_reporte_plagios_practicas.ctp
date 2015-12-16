@@ -1,5 +1,13 @@
+<!--  
 <div class="page-header">
 	<h3>Plagios</h3>
+</div>
+-->
+
+<div class="jumbotron">
+  <h3>Plagios</h3>
+  <p>Selecciona el botón <i>Reporte Plagios</i> para comprobar los posibles plagios existentes u observe la lista de razones
+  	 posibles por las que no ha podido generarse el reporte.</p>
 </div>
 
 <div>

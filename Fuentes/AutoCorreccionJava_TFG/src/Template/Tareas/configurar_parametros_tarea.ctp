@@ -1,4 +1,12 @@
+<!-- 
 <h3 class='page-header'>Configuración de los parámetros obligatorios de la práctica</h3>
+ -->
+ 
+<div class="jumbotron">
+  <h3>Configuración de los parámetros</h3>
+  <p>El <i>número máximo de intentos</i> debe de estar comprendido entre 1 y 20. El <i>paquete</i> únicamente podrá ser
+  	 configurado la primera vez.</p>
+</div>
 
 <div class="container">
 	<div class="row">
