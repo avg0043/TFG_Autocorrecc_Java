@@ -16,6 +16,14 @@ class ErroresController extends AppController{
 		
 	}
 	
+	public function obtenerErroresPorIdIntento($id_intento){
+	
+		return $this->Errores->find('all')
+							 ->where(['intento_id' => $id_intento])
+							 ->toArray();
+	
+	}
+	
 }
 
 ?>

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use PhpParser\Node\Expr\Cast\Int_;
 class ProfesoresController extends AppController{
 	
 	/**
@@ -178,12 +179,153 @@ class ProfesoresController extends AppController{
 		}
 		//$this->comprobarSesion();
 		
+		$alumnos_controler = new AlumnosController();
+		$intentos_controller = new IntentosController();
+		$alumnos = $alumnos_controler->obtenerAlumnos();
+		$alumnos_intentos = array();
+		foreach ($alumnos as $alumno){
+			$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			if(!$intentos->isEmpty()){
+				$alumnos_intentos[$alumno->id] = $alumno->nombre." ".$alumno->apellidos;
+			}
+		}
+		$this->set("alumnos_intentos", $alumnos_intentos);
+		
+		$_SESSION["grafica_medias_globales"] = false;
+		$_SESSION["grafica_promedio_errores_violaciones"] = false;
+		$_SESSION["grafica_alumnos_violaciones"] = false;
+		$_SESSION["grafica_alumnos_intentos"] = false;
+		$_SESSION["grafica_alumnos_test"] = false;
+		$_SESSION["dropdown"] = false;
+		
+		if ($this->request->is('post')) {
+			if($this->request->data["MediasGlobales"]){
+				$_SESSION["grafica_medias_globales"] = true;
+				$this->__generarGraficaHorizontalAlumnosIntentos();
+				$this->__generarGraficaHorizontalAlumnosViolacionesCometidas();
+				$this->__generarGraficaMedias();
+			}
+			if($this->request->data["MediaViolacionesErrores"]){
+				$_SESSION["grafica_promedio_errores_violaciones"] = true;
+				$this->__generarGraficaLineaPromedioErroresUnitariosViolaciones();
+			}
+			if($this->request->data["AlumnosViolaciones"]){
+				$_SESSION["grafica_alumnos_violaciones"] = true;
+				$this->__generarGraficaVerticalAlumnosViolacionesCometidas();			
+			}
+			/*
+			elseif($this->request->data["AlumnosErrores"]){
+				echo "siue";
+			}
+			*/
+			if($this->request->data["AlumnosIntentos"]){
+				$_SESSION["grafica_alumnos_intentos"] = true;
+				$this->__generarGraficaVerticalAlumnosIntentos();
+			}
+			if($this->request->data["AlumnosTest"]){
+				$_SESSION["grafica_alumnos_test"] = true;
+				$this->__generarGraficaAlumnosTest();
+			}
+			if($this->request->data["Todas"]){
+				$_SESSION["grafica_medias_globales"] = true;
+				$_SESSION["grafica_promedio_errores_violaciones"] = true;
+				$_SESSION["grafica_alumnos_violaciones"] = true;
+				$_SESSION["grafica_alumnos_intentos"] = true;
+				$_SESSION["grafica_alumnos_test"] = true;
+				$this->__generarGraficaHorizontalAlumnosIntentos();
+				$this->__generarGraficaHorizontalAlumnosViolacionesCometidas();
+				$this->__generarGraficaMedias();
+				$this->__generarGraficaLineaPromedioErroresUnitariosViolaciones();
+				$this->__generarGraficaVerticalAlumnosViolacionesCometidas();
+				$this->__generarGraficaVerticalAlumnosIntentos();
+				$this->__generarGraficaAlumnosTest();
+			}
+			if($this->request->data["field"]){
+				$_SESSION["dropdown"] = true;
+				$id_alumno = $this->request->data["field"];
+				//echo $id_alumno;
+				//echo $alumnos_intentos[$id_alumno];
+				$this->set("id_alumno", $id_alumno);
+			}
+			
+			if(!$_SESSION["grafica_medias_globales"] && !$_SESSION["grafica_promedio_errores_violaciones"] &&
+				!$_SESSION["grafica_alumnos_violaciones"] && !$_SESSION["grafica_alumnos_intentos"] &&
+				!$_SESSION["grafica_alumnos_test"] && !$_SESSION["dropdown"]){
+					$this->Flash->error(__('Debes de seleccionar una de las opciones'));
+			}
+		}
+		
+		
+		
+		/*
 		$this->__generarGraficaAlumnosTest();
 		$this->__generarGraficaVerticalAlumnosIntentos();
 		$this->__generarGraficaHorizontalAlumnosIntentos();
 		$this->__generarGraficaVerticalAlumnosViolacionesCometidas();
 		$this->__generarGraficaHorizontalAlumnosViolacionesCometidas();
 		$this->__generarGraficaMedias();
+		*/
+		
+	}
+	
+	private function __generarGraficaLineaPromedioErroresUnitariosViolaciones(){
+		
+		$alumnos_controller = new AlumnosController();
+		$intentos_controller = new IntentosController();
+		$violaciones_controller = new ViolacionesController();
+		$errores_controller = new ErroresController();
+		
+		$chart = new \LineChart(600, 350);
+		$serie_violaciones = new \XYDataSet();
+		$serie_errores = new \XYDataSet();
+		
+		$num_alumnos_por_intento = array();
+		$alumnos = $alumnos_controller->obtenerAlumnos();
+		$intento_realizado = false;
+		
+		foreach ($alumnos as $alumno){
+			$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			foreach ($intentos as $intento){
+				$intento_realizado = true;
+				$clave = "Intento ".$intento->numero_intento;
+				if(array_key_exists($clave, $num_alumnos_por_intento)){
+					$num_alumnos_por_intento[$clave] += 1;
+				}
+				else {
+					$num_alumnos_por_intento[$clave] = 1;
+				}
+				
+				// Violaciones
+				$num_violaciones = count($violaciones_controller->obtenerViolacionesPorIdIntento($intento->id));
+				$point_violacion = $serie_violaciones->getPointWithX($clave);
+				if($point_violacion != null){
+					$point_violacion->setY(($point_violacion->getY() + $num_violaciones) / $num_alumnos_por_intento[$clave]);
+				}else{
+					$serie_violaciones->addPoint(new \Point($clave, $num_violaciones));
+				}
+				
+				// Errores
+				$num_errores = count($errores_controller->obtenerErroresPorIdIntento($intento->id));
+				$point_error = $serie_errores->getPointWithX($clave);
+				if($point_error != null){
+					$point_error->setY(($point_error->getY() + $num_errores) / $num_alumnos_por_intento[$clave]);
+				}else{
+					$serie_errores->addPoint(new \Point($clave, $num_errores));
+				}
+				//echo "-".$clave." :".$num_errores."<br>";
+			}
+		}
+		
+		if($intento_realizado){
+			$dataSet = new \XYSeriesDataSet();
+			$dataSet->addSerie("Violaciones de código", $serie_violaciones);
+			$dataSet->addSerie("Errores unitarios", $serie_errores);
+			$chart->setDataSet($dataSet);
+			$chart->setTitle("Promedio de la clase de Violaciones-Errores por intento realizado");
+			$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-promedioViolacionesErrores.png");
+		}
+		
+		//print_r($num_alumnos_por_intento);
 		
 	}
 	
@@ -275,7 +417,7 @@ class ProfesoresController extends AppController{
 			$chart_pasa_test->setDataSet($dataSet_pasa_test);
 			$chart_pasa_test->getPlot()->setGraphPadding(new \Padding(5, 30, 20, 140));
 			$chart_pasa_test->setTitle("Número de intentos mínimo realizados para pasar los test");
-			$chart_pasa_test->render("img/".$_SESSION["lti_idTarea"]."-prof-intentos_pasaTest.png");		
+			//$chart_pasa_test->render("img/".$_SESSION["lti_idTarea"]."-prof-intentos_pasaTest.png");		
 		}
 		if($intentos_no_pasa_test){
 			$_SESSION["media_intentos_no_pasa_test"] = round($total_intentos_no_pasan_test/$num_alumnos_no_pasan_test, 2);
@@ -283,7 +425,7 @@ class ProfesoresController extends AppController{
 			$chart_no_pasa_test->setDataSet($dataSet_no_pasa_test);
 			$chart_no_pasa_test->getPlot()->setGraphPadding(new \Padding(5, 30, 20, 140));
 			$chart_no_pasa_test->setTitle("Número de intentos realizados sin conseguir pasar los test");
-			$chart_no_pasa_test->render("img/".$_SESSION["lti_idTarea"]."-prof-intentos_noPasaTest.png");
+			//$chart_no_pasa_test->render("img/".$_SESSION["lti_idTarea"]."-prof-intentos_noPasaTest.png");
 		}
 		
 	}
@@ -385,7 +527,7 @@ class ProfesoresController extends AppController{
 			$chart->setDataSet($dataSet);
 			$chart->getPlot()->setGraphPadding(new \Padding(5, 30, 20, 140));
 			$chart->setTitle("Número de violaciones de código cometidas");
-			$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-violaciones.png");
+			//$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-violaciones.png");
 		}
 	
 	}
