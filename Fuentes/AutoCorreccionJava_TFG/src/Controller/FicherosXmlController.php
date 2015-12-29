@@ -78,6 +78,11 @@ class FicherosXmlController extends AppController{
 			}
 		}
 		
+		if(!$_SESSION["findbugs_generado"]){
+			unlink("../../".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
+					"/".$_SESSION['lti_userId']."/".$intento_realizado."/site/findbugs.html");
+		}
+		
 	}
 	
 	public function guardarDatosXmlErroresUnitarios($ruta_carpeta_id, $id_intento, $intento_realizado){
@@ -87,11 +92,17 @@ class FicherosXmlController extends AppController{
 		
 		foreach($ficheros_xml as $fichero) {
 			$xml = simplexml_load_file($fichero);
-			$fallos = (int) $xml["failures"];			
-			if($fallos > 0){	// test que falla
+			$fallos = (int) $xml["failures"];
+			$errores = (int) $xml["errors"];
+			if($fallos > 0){	// test que falla por assert
 				foreach($xml->children()->testcase as $test_case){
 					$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],
-							$test_case->failure["type"], $test_case->failure);
+							"failure", $test_case->failure["type"], $test_case->failure);
+				}
+			}elseif($errores > 0){	// test que falla por excepción
+				foreach($xml->children()->testcase as $test_case){
+					$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],
+							"error", $test_case->error["type"], $test_case->error);
 				}
 			}
 		}

@@ -93,6 +93,7 @@ CREATE TABLE errores
 	intento_id INTEGER NOT NULL,
 	nombre_clase VARCHAR(45) NOT NULL,
 	nombre_test VARCHAR(45) NOT NULL,
+	tipo_error VARCHAR(45) NOT NULL,
 	tipo VARCHAR(45) NOT NULL,
 	CONSTRAINT pk01_errores PRIMARY KEY(id),
 	CONSTRAINT fk01_errores FOREIGN KEY(intento_id)

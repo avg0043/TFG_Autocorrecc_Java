@@ -29,7 +29,17 @@ class IntentosController extends AppController{
 		
 		$this->set("intento", $intento_realizado);		
 		$this->__comprobarTestSubido();
-			
+		
+		$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
+		$epa = 0;
+		if(!$intentos_alumno->isEmpty()){
+			$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
+			if(!empty($ultimo_intento)){
+				$epa = $ultimo_intento["numero_intento"];
+			}
+		}
+		$this->set("num_ultimo_intento", $epa);
+		
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
 			
@@ -160,6 +170,7 @@ class IntentosController extends AppController{
 			//$this->__generarGraficasViolaciones();
 			$this->__generarGraficasViolacionesErrores();
 			$this->__generarGraficaPrioridadesViolaciones();
+			$this->__generarGraficaPrioridadesViolacionesIntentoRealizado();
 		}
 		else{
 			$this->Flash->error(__('La práctica tiene errores de compilación!'));
@@ -250,6 +261,8 @@ class IntentosController extends AppController{
 		if(strpos($salida_string, 'BUILD SUCCESS')){
 			$this->Flash->success(__('La práctica ha pasado los test'));
 			$this->test_pasado = true;
+			unlink("../../".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
+					"/".$_SESSION['lti_userId']."/".$this->intento_realizado."/site/surefire-report.html");
 		}
 		elseif(strpos($salida_string, 'BUILD FAILURE')){
 			$_SESSION["errores_unitarios"] = true;
@@ -360,6 +373,44 @@ class IntentosController extends AppController{
 								
 	}
 	
+	private function __generarGraficaPrioridadesViolacionesIntentoRealizado(){
+		
+		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){
+			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png");
+		}
+		$violaciones_controller = new ViolacionesController();
+		$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($this->id_intento);
+		
+		if(!empty($violaciones)){
+			$chart = new \PieChart(600, 350);
+			$dataSet = new \XYDataSet();
+			$chart_barras = new \VerticalBarChart(600, 350);
+			$dataSet_barras = new \XYDataSet();
+			
+			foreach ($violaciones as $violacion){
+				$prioridad = $violacion->prioridad;
+				$point = $dataSet->getPointWithX("Prioridad ".$prioridad);
+				$point_barras = $dataSet_barras->getPointWithX("Prioridad ".$prioridad);
+				if($point == null){
+					$dataSet->addPoint(new \Point("Prioridad ".$prioridad, 1));
+					$dataSet_barras->addPoint(new \Point("Prioridad ".$prioridad, 1));
+				}else{
+					$point->setY($point->getY() + 1);
+					$point_barras->setY($point->getY() + 1);
+				}
+			}
+			
+			$chart->setDataSet($dataSet);
+			$chart->setTitle("Porcentaje de las prioridades de las violaciones de código cometidas");
+			$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png");	
+		
+			$chart_barras->setDataSet($dataSet_barras);
+			$chart_barras->setTitle("Número de violaciones cometidas por prioridad");
+			$chart_barras->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png");
+		}
+		
+	}
+	
 	/*
 	private function __generarGraficasErroresUnitarios(){
 		
@@ -420,10 +471,12 @@ class IntentosController extends AppController{
 		$dataSet_violaciones = new \XYDataSet();
 		
 		// Barras Errores
+		$chart_errores = new \VerticalBarChart(700, 350);
+		$serie_errores_unitarios = new \XYDataSet();
+		$serie_errores_excepciones = new \XYDataSet();
 		$total_intentos_errores = 0;
-		$total_errores = 0;
-		$chart_errores = new \VerticalBarChart(600, 350);
-		$dataSet_errores = new \XYDataSet();
+		$total_errores_unitarios = 0;
+		$total_errores_excepcion = 0;
 		
 		// Línea Violaciones
 		foreach ($query_violaciones as $intento) {
@@ -436,11 +489,22 @@ class IntentosController extends AppController{
 		
 		// Línea Errores
 		foreach ($query_errores as $intento) {
+			$total_intentos_errores++;
+			$num_errores_unitarios = 0;
+			$num_errores_excepcion = 0;
+			foreach ($intento->errores as $error){
+				if($error->tipo_error == "failure"){
+					$num_errores_unitarios++;
+					$total_errores_unitarios += $num_errores_unitarios;
+				}else{
+					$num_errores_excepcion++;
+					$total_errores_excepcion += $num_errores_excepcion;
+				}
+			}
+			$serie_errores_unitarios->addPoint(new \Point("Intento: ".$intento->numero_intento, $num_errores_unitarios));
+			$serie_errores_excepciones->addPoint(new \Point("Intento: ".$intento->numero_intento, $num_errores_excepcion));
 			$numero_errores = count($intento->errores);
 			$serie2->addPoint(new \Point("Intento: ".$intento->numero_intento, $numero_errores));
-			$dataSet_errores->addPoint(new \Point("Intento: ".$intento->numero_intento, $numero_errores));
-			$total_intentos_errores++;
-			$total_errores += $numero_errores;
 		}
 		
 		// Línea
@@ -458,9 +522,14 @@ class IntentosController extends AppController{
 		$chart_violaciones->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png");
 		
 		// Barras Errores
-		$dataSet_errores->addPoint(new \Point("Media", round($total_errores/$total_intentos_errores, 2)));
+		$serie_errores_unitarios->addPoint(new \Point("Media", round($total_errores_unitarios/$total_intentos_errores, 2)));
+		$serie_errores_excepciones->addPoint(new \Point("Media", round($total_errores_excepcion/$total_intentos_errores, 2)));
+		$dataSet_errores = new \XYSeriesDataSet();
+		$dataSet_errores->addSerie("Errores Unitarios", $serie_errores_unitarios);
+		$dataSet_errores->addSerie("Excepciones", $serie_errores_excepciones);
 		$chart_errores->setDataSet($dataSet_errores);
-		$chart_errores->setTitle("Número de errores unitarios cometidos");
+		$chart_errores->getPlot()->setGraphCaptionRatio(0.65);
+		$chart_errores->setTitle("Errores cometidos");
 		$chart_errores->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
 		
 	}
@@ -485,10 +554,10 @@ class IntentosController extends AppController{
 	
 	}
 	
-	public function obtenerUltimoIntentoPorIdAlumno($id_alumno){
+	public function obtenerUltimoIntentoPorIdTareaAlumno($id_tarea, $id_alumno){
 		
 		return $this->Intentos->find('all')
-							  ->where(['alumno_id' => $id_alumno])
+							  ->where(['tarea_id' => $id_tarea, 'alumno_id' => $id_alumno])
 							  ->last()
 							  ->toArray();
 		

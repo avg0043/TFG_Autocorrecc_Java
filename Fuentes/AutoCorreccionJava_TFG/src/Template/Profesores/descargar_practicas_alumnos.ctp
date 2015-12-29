@@ -26,6 +26,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 		<th>Número del intento</th>
 		<th>Test pasado</th>
 		<th>Fecha de subida</th>
+		<th>Reportes</th>
 		<th>Práctica</th>
 	</tr>
 	<?php 
@@ -35,7 +36,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 		if(!$intentos_alumno->isEmpty()){
 	?>
 		<tr>
-			<td colspan="5"><b><?= $alumno->nombre." ".$alumno->apellidos ?></b></td>
+			<td colspan="6"><b><?= $alumno->nombre." ".$alumno->apellidos ?></b></td>
 		</tr>
 			<?php foreach ($intentos_alumno as $intento):?>
 			<tr>
@@ -43,6 +44,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 				<td align="center"><?= $intento->numero_intento ?></td>
 				<td><?= ($intento->resultado == true ? "sí" : "no") ?></td>
 				<td><?= $intento->fecha_intento ?></td>
+				<td></td>
 				<td><a href=<?= $intento->ruta.$intento->nombre ?> ><?= $intento->nombre?></a></td>
 			</tr>
 			<?php endforeach;?>
