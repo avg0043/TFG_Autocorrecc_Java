@@ -23,10 +23,10 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 <table>
 	<tr>
 		<th>Nombre completo</th>
+		<th>Select</th>
 		<th>Número del intento</th>
 		<th>Test pasado</th>
 		<th>Fecha de subida</th>
-		<th>Reportes</th>
 		<th>Práctica</th>
 	</tr>
 	<?php 
@@ -41,10 +41,12 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 			<?php foreach ($intentos_alumno as $intento):?>
 			<tr>
 				<td></td>
+				<td scope="col">
+		            <input name="UserSelected" id="userSelected_1" type="radio" value="1">
+		        </td>
 				<td align="center"><?= $intento->numero_intento ?></td>
 				<td><?= ($intento->resultado == true ? "sí" : "no") ?></td>
 				<td><?= $intento->fecha_intento ?></td>
-				<td></td>
 				<td><a href=<?= $intento->ruta.$intento->nombre ?> ><?= $intento->nombre?></a></td>
 			</tr>
 			<?php endforeach;?>
@@ -54,3 +56,5 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 	?>
 </table>
 <?php }?>
+
+<a href="http://www.marca.com/" class="btn btn-default btn-lg" role="button">PMD</a>

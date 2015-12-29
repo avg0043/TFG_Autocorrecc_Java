@@ -247,6 +247,8 @@ class IntentosController extends AppController{
 		}
 		else{	// Violación de bucle infinito
 			$this->Flash->error(__('Hay bucles infinitos. Test no ejecutado.'));
+			unlink("../../".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
+					"/".$_SESSION['lti_userId']."/".$this->intento_realizado."/site/surefire-report.html");
 		}
 		
 		$this->__actualizarResultadoIntento($this->id_intento, $this->test_pasado);

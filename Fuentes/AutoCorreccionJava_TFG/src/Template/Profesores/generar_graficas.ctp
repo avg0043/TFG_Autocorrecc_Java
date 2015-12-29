@@ -24,6 +24,8 @@
 			echo "<br>";
 			echo $this->Form->input('MediaViolacionesErrores', ['type' => 'checkbox', 'value' => true, 'label' => 'Media Violaciones-Errores', 'class' => 'form-control']);
 			echo "<br>";
+			echo $this->Form->input('MediaErrores', ['type' => 'checkbox', 'value' => true, 'label' => 'Media Errores', 'class' => 'form-control']);
+			echo "<br>";
 			echo $this->Form->input('AlumnosViolaciones', ['type' => 'checkbox', 'value' => true, 'label' => 'Violaciones', 'class' => 'form-control']);
 			echo "<br>";
 			echo $this->Form->input('AlumnosIntentos', ['type' => 'checkbox', 'value' => true, 'label' => 'Intentos realizados', 'class' => 'form-control']);
@@ -57,7 +59,10 @@
 <?php } 
 	  if($_SESSION["grafica_promedio_errores_violaciones"] && file_exists("img/".$_SESSION["lti_idTarea"]."-prof-promedioViolacionesErrores.png")){?>
 		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $_SESSION["lti_idTarea"]."-prof-promedioViolacionesErrores.png" ?>" style="border: 1px solid gray;"/>
-<?php } 
+<?php }
+	  if($_SESSION["grafica_media_errores"] && file_exists("img/".$_SESSION["lti_idTarea"]."-prof-promedioErroresUnitariosExcepciones.png")){?>
+	  	<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $_SESSION["lti_idTarea"]."-prof-promedioErroresUnitariosExcepciones.png" ?>" style="border: 1px solid gray;"/>
+<?php }
 	  if($_SESSION["grafica_alumnos_intentos"] && file_exists("img/".$_SESSION["lti_idTarea"]."-prof-intentos_pasaTest_intervalos.png")){?>
 	  	<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $_SESSION["lti_idTarea"]."-prof-intentos_pasaTest_intervalos.png" ?>" style="border: 1px solid gray;"/>
 <?php }

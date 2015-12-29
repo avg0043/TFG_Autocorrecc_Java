@@ -192,6 +192,7 @@ class ProfesoresController extends AppController{
 		
 		$_SESSION["grafica_medias_globales"] = false;
 		$_SESSION["grafica_promedio_errores_violaciones"] = false;
+		$_SESSION["grafica_media_errores"] = false;
 		$_SESSION["grafica_alumnos_violaciones"] = false;
 		$_SESSION["grafica_alumnos_intentos"] = false;
 		$_SESSION["grafica_alumnos_test"] = false;
@@ -208,6 +209,10 @@ class ProfesoresController extends AppController{
 				$_SESSION["grafica_promedio_errores_violaciones"] = true;
 				$this->__generarGraficaLineaPromedioErroresUnitariosViolaciones();
 			}
+			if($this->request->data["MediaErrores"]){
+				$_SESSION["grafica_media_errores"] = true;
+				$this->__generarGraficaMediaErrores();
+			}
 			if($this->request->data["AlumnosViolaciones"]){
 				$_SESSION["grafica_alumnos_violaciones"] = true;
 				$this->__generarGraficaVerticalAlumnosViolacionesCometidas();			
@@ -223,6 +228,7 @@ class ProfesoresController extends AppController{
 			if($this->request->data["Todas"]){
 				$_SESSION["grafica_medias_globales"] = true;
 				$_SESSION["grafica_promedio_errores_violaciones"] = true;
+				$_SESSION["grafica_media_errores"] = true;
 				$_SESSION["grafica_alumnos_violaciones"] = true;
 				$_SESSION["grafica_alumnos_intentos"] = true;
 				$_SESSION["grafica_alumnos_test"] = true;
@@ -233,6 +239,7 @@ class ProfesoresController extends AppController{
 				$this->__generarGraficaVerticalAlumnosViolacionesCometidas();
 				$this->__generarGraficaVerticalAlumnosIntentos();
 				$this->__generarGraficaAlumnosTest();
+				$this->__generarGraficaMediaErrores();
 			}
 			if($this->request->data["field"]){
 				$_SESSION["dropdown"] = true;
@@ -242,7 +249,7 @@ class ProfesoresController extends AppController{
 			
 			if(!$_SESSION["grafica_medias_globales"] && !$_SESSION["grafica_promedio_errores_violaciones"] &&
 				!$_SESSION["grafica_alumnos_violaciones"] && !$_SESSION["grafica_alumnos_intentos"] &&
-				!$_SESSION["grafica_alumnos_test"] && !$_SESSION["dropdown"]){
+				!$_SESSION["grafica_alumnos_test"] && !$_SESSION["dropdown"] && !$_SESSION["grafica_media_errores"]){
 					$this->Flash->error(__('Debes de seleccionar una de las opciones'));
 			}
 		}
@@ -303,6 +310,83 @@ class ProfesoresController extends AppController{
 			$chart->setDataSet($dataSet);
 			$chart->setTitle("Promedio de la clase de Violaciones-Errores por intento realizado");
 			$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-promedioViolacionesErrores.png");
+		}
+		
+	}
+	
+	private function __generarGraficaMediaErrores(){
+		
+		$alumnos_controller = new AlumnosController();
+		$intentos_controller = new IntentosController();
+		$errores_controller = new ErroresController();
+		
+		$chart = new \VerticalBarChart(800, 350);
+		$serie_errores_unitarios = new \XYDataSet();
+		$serie_errores_excepcion = new \XYDataSet();
+		
+		$num_alumnos_por_intento = array();
+		$alumnos = $alumnos_controller->obtenerAlumnos();
+		$intento_realizado = false;
+		
+		foreach ($alumnos as $alumno){
+			$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			foreach ($intentos as $intento){
+				$intento_realizado = true;
+				$clave = "Intento ".$intento->numero_intento;
+				if(array_key_exists($clave, $num_alumnos_por_intento)){
+					$num_alumnos_por_intento[$clave] += 1;
+				}
+				else {
+					$num_alumnos_por_intento[$clave] = 1;
+				}
+		
+				// Errores
+				$num_errores_unitarios = 0;
+				$num_errores_excepcion = 0;
+				$errores = $errores_controller->obtenerErroresPorIdIntento($intento->id);
+				foreach ($errores as $error){
+					if($error->tipo_error == "failure"){
+						$num_errores_unitarios++;
+					}else{
+						$num_errores_excepcion++;
+					}
+				}
+				
+				$point_error_unitario = $serie_errores_unitarios->getPointWithX($clave);
+				if($point_error_unitario != null){
+					$point_error_unitario->setY(($point_error_unitario->getY() + $num_errores_unitarios) / $num_alumnos_por_intento[$clave]);
+				}else{
+					$serie_errores_unitarios->addPoint(new \Point($clave, $num_errores_unitarios));
+				}
+				
+				$point_error_excepcion = $serie_errores_excepcion->getPointWithX($clave);
+				if($point_error_excepcion != null){
+					$point_error_excepcion->setY(($point_error_excepcion->getY() + $num_errores_excepcion) / $num_alumnos_por_intento[$clave]);
+				}else{
+					$serie_errores_excepcion->addPoint(new \Point($clave, $num_errores_excepcion));
+				}
+				
+				///
+				/*
+				$num_errores = count($errores_controller->obtenerErroresPorIdIntento($intento->id));
+				$point_error = $serie_errores->getPointWithX($clave);
+				if($point_error != null){
+					$point_error->setY(($point_error->getY() + $num_errores) / $num_alumnos_por_intento[$clave]);
+				}else{
+					$serie_errores->addPoint(new \Point($clave, $num_errores));
+				}
+				*/
+			}
+		}
+		
+		if($intento_realizado){
+			$dataSet = new \XYSeriesDataSet();
+			$dataSet->addSerie("Unitarios", $serie_errores_unitarios);
+			$dataSet->addSerie("Excepciones", $serie_errores_excepcion);
+			$chart->setDataSet($dataSet);
+			$chart->getPlot()->setGraphCaptionRatio(0.75);
+			$chart->setTitle("Promedio de errores cometidos por intento");
+			$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-promedioErroresUnitariosExcepciones.png");
 		}
 		
 	}
