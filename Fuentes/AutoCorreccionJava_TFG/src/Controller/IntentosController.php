@@ -166,11 +166,16 @@ class IntentosController extends AppController{
 			$this->__guardarIntento();
 			
 			// Generar gráficas
-			//$this->__generarGraficasErroresUnitarios();
-			//$this->__generarGraficasViolaciones();
+			$graficas_controller = new GraficasController();
+			$graficas_controller->generarGraficasViolacionesErroresAlumno();
+			$graficas_controller->generarGraficaPrioridadesViolacionesAlumno();
+			$graficas_controller->generarGraficaPrioridadesViolacionesIntentoRealizadoAlumno($this->id_intento);
+			
+			/*
 			$this->__generarGraficasViolacionesErrores();
 			$this->__generarGraficaPrioridadesViolaciones();
 			$this->__generarGraficaPrioridadesViolacionesIntentoRealizado();
+			*/
 		}
 		else{
 			$this->Flash->error(__('La práctica tiene errores de compilación!'));
@@ -280,64 +285,6 @@ class IntentosController extends AppController{
 	}
 	
 	/*
-	private function __obtenerIntentoPorTareaAlumnoNumIntento($id_tarea, $id_alumno, $num_intento){
-		
-		return $this->Intentos->find('all')
-							  ->where(['tarea_id' => $id_tarea, 'alumno_id' => $id_alumno, 'numero_intento' => $num_intento])
-							  ->toArray();
-	
-	}
-		
-	private function __actualizarResultadoIntento($id_intento, $resultado){
-		
-		$this->Intentos->query()
-					   ->update()
-					   ->set(['resultado' => $resultado])
-					   ->where(['id' => $id_intento])
-					   ->execute();
-		
-		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
-		
-	}
-	*/
-	
-	/*
-	private function __generarGraficasViolaciones(){
-		
-		include('/../../vendor/libchart/libchart/classes/libchart.php');
-		
-		// INNER JOIN
-		$query = $this->Intentos->find('all')
-								->contain(['Violaciones'])
-								->where(['alumno_id' => $_SESSION["lti_userId"]]);
-		
-		$total_intentos = 0;
-		$total_violaciones = 0;
-		$chart = new \VerticalBarChart(600, 350);
-		$chart_line = new \LineChart(600, 350);
-		$dataSet = new \XYDataSet();
-		
-		foreach ($query as $intento) {
-			$numero_violaciones = count($intento->violaciones);
-			$dataSet->addPoint(new \Point("Intento: ".$intento->numero_intento, $numero_violaciones));
-			$total_intentos++;
-			$total_violaciones += $numero_violaciones;
-		}
-		
-		// Gráfico de líneas
-		$chart_line->setDataSet($dataSet);
-		$chart_line->setTitle("Número de violaciones de código cometidas");
-		$chart_line->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones_linea.png");
-		
-		// Gráfico de barras
-		$dataSet->addPoint(new \Point("Media", round($total_violaciones/$total_intentos, 2)));
-		$chart->setDataSet($dataSet);
-		$chart->setTitle("Número de violaciones de código cometidas");
-		$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png");
-		
-	}
-	*/
-	
 	private function __generarGraficaPrioridadesViolaciones(){
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
@@ -374,7 +321,9 @@ class IntentosController extends AppController{
 		}
 								
 	}
+	*/
 	
+	/*
 	private function __generarGraficaPrioridadesViolacionesIntentoRealizado(){
 		
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){
@@ -412,44 +361,9 @@ class IntentosController extends AppController{
 		}
 		
 	}
-	
-	/*
-	private function __generarGraficasErroresUnitarios(){
-		
-		include('/../../vendor/libchart/libchart/classes/libchart.php');
-		
-		// INNER JOIN
-		$query = $this->Intentos->find('all')
-								->contain(['Errores'])
-								->where(['alumno_id' => $_SESSION["lti_userId"]]);
-		
-		$total_intentos = 0;
-		$total_errores = 0;
-		$chart = new \VerticalBarChart(600, 350);
-		$chart_line = new \LineChart(600, 350);
-		$dataSet = new \XYDataSet();
-		
-		foreach ($query as $intento) {
-			$numero_errores = count($intento->errores);
-			$dataSet->addPoint(new \Point("Intento: ".$intento->numero_intento, $numero_errores));
-			$total_intentos++;
-			$total_errores += $numero_errores;
-		}
-		
-		// Gráfico de líneas
-		$chart_line->setDataSet($dataSet);
-		$chart_line->setTitle("Número de errores unitarios cometidos");
-		$chart_line->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios_linea.png");
-		
-		// Gráfico de barras
-		$dataSet->addPoint(new \Point("Media", round($total_errores/$total_intentos, 2)));
-		$chart->setDataSet($dataSet);
-		$chart->setTitle("Número de errores unitarios cometidos");
-		$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
-		
-	}
 	*/
 	
+	/*
 	private function __generarGraficasViolacionesErrores(){
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
@@ -535,6 +449,7 @@ class IntentosController extends AppController{
 		$chart_errores->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png");
 		
 	}
+	*/
 	
 	private function __obtenerIntentoPorTareaAlumnoNumIntento($id_tarea, $id_alumno, $num_intento){
 	
@@ -565,15 +480,6 @@ class IntentosController extends AppController{
 		
 	}
 	
-	/*
-	public function obtenerIntentosPorIdAlumno($id_alumno){
-		
-		return $this->Intentos->find('all')
-							  ->where(['alumno_id' => $id_alumno]);
-		
-	}
-	*/
-	
 	public function obtenerIntentosPorIdTarea($id_tarea){
 	
 		return $this->Intentos->find('all')
@@ -593,6 +499,22 @@ class IntentosController extends AppController{
 		return $this->Intentos->find('all')
 							  ->where(['tarea_id' => $id_tarea, 'alumno_id' => $id_alumno]);
 		
+	}
+	
+	public function obtenerIntentosConViolaciones(){
+		
+		return $this->Intentos->find('all')
+							  ->contain(['Violaciones'])
+							  ->where(['alumno_id' => $_SESSION["lti_userId"]]);
+		
+	}
+	
+	public function obtenerIntentosConErrores(){
+	
+		return $this->Intentos->find('all')
+							  ->contain(['Errores'])
+							  ->where(['alumno_id' => $_SESSION["lti_userId"]]);
+	
 	}
 	
 }

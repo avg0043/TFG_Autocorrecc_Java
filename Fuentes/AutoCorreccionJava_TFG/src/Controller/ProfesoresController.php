@@ -180,6 +180,7 @@ class ProfesoresController extends AppController{
 		
 		$alumnos_controler = new AlumnosController();
 		$intentos_controller = new IntentosController();
+		$graficas_controller = new GraficasController();
 		$alumnos = $alumnos_controler->obtenerAlumnos();
 		$alumnos_intentos = array();
 		foreach ($alumnos as $alumno){
@@ -201,29 +202,35 @@ class ProfesoresController extends AppController{
 		if ($this->request->is('post')) {
 			if($this->request->data["MediasGlobales"]){
 				$_SESSION["grafica_medias_globales"] = true;
-				$this->__calcularMediaIntentos();
-				$this->__calcularMediaViolaciones();
-				$this->__generarGraficaMedias();
+				$graficas_controller->generarGraficaMedias();
+				//$this->__calcularMediaIntentos();
+				//$this->__calcularMediaViolaciones();
+				//$this->__generarGraficaMedias();
 			}
 			if($this->request->data["MediaViolacionesErrores"]){
 				$_SESSION["grafica_promedio_errores_violaciones"] = true;
-				$this->__generarGraficaLineaPromedioErroresUnitariosViolaciones();
+				$graficas_controller->generarGraficaLineaPromedioErroresUnitariosViolaciones();
+				//$this->__generarGraficaLineaPromedioErroresUnitariosViolaciones();
 			}
 			if($this->request->data["MediaErrores"]){
 				$_SESSION["grafica_media_errores"] = true;
-				$this->__generarGraficaMediaErrores();
+				$graficas_controller->generarGraficaMediaErrores();
+				//$this->__generarGraficaMediaErrores();
 			}
 			if($this->request->data["AlumnosViolaciones"]){
 				$_SESSION["grafica_alumnos_violaciones"] = true;
-				$this->__generarGraficaVerticalAlumnosViolacionesCometidas();			
+				$graficas_controller->generarGraficaVerticalAlumnosViolacionesCometidas();
+				//$this->__generarGraficaVerticalAlumnosViolacionesCometidas();			
 			}
 			if($this->request->data["AlumnosIntentos"]){
 				$_SESSION["grafica_alumnos_intentos"] = true;
-				$this->__generarGraficaVerticalAlumnosIntentos();
+				$graficas_controller->generarGraficaVerticalAlumnosIntentos();
+				//$this->__generarGraficaVerticalAlumnosIntentos();
 			}
 			if($this->request->data["AlumnosTest"]){
 				$_SESSION["grafica_alumnos_test"] = true;
-				$this->__generarGraficaAlumnosTest();
+				$graficas_controller->generarGraficaAlumnosTest();
+				//$this->__generarGraficaAlumnosTest();
 			}
 			if($this->request->data["Todas"]){
 				$_SESSION["grafica_medias_globales"] = true;
@@ -232,6 +239,13 @@ class ProfesoresController extends AppController{
 				$_SESSION["grafica_alumnos_violaciones"] = true;
 				$_SESSION["grafica_alumnos_intentos"] = true;
 				$_SESSION["grafica_alumnos_test"] = true;
+				$graficas_controller->generarGraficaMedias();
+				$graficas_controller->generarGraficaLineaPromedioErroresUnitariosViolaciones();
+				$graficas_controller->generarGraficaVerticalAlumnosViolacionesCometidas();
+				$graficas_controller->generarGraficaVerticalAlumnosIntentos();
+				$graficas_controller->generarGraficaAlumnosTest();
+				$graficas_controller->generarGraficaMediaErrores();
+				/*
 				$this->__calcularMediaIntentos();
 				$this->__calcularMediaViolaciones();
 				$this->__generarGraficaMedias();
@@ -240,6 +254,7 @@ class ProfesoresController extends AppController{
 				$this->__generarGraficaVerticalAlumnosIntentos();
 				$this->__generarGraficaAlumnosTest();
 				$this->__generarGraficaMediaErrores();
+				*/
 			}
 			if($this->request->data["field"]){
 				$_SESSION["dropdown"] = true;
@@ -314,6 +329,7 @@ class ProfesoresController extends AppController{
 		
 	}
 	
+	/*
 	private function __generarGraficaMediaErrores(){
 		
 		$alumnos_controller = new AlumnosController();
@@ -366,16 +382,6 @@ class ProfesoresController extends AppController{
 					$serie_errores_excepcion->addPoint(new \Point($clave, $num_errores_excepcion));
 				}
 				
-				///
-				/*
-				$num_errores = count($errores_controller->obtenerErroresPorIdIntento($intento->id));
-				$point_error = $serie_errores->getPointWithX($clave);
-				if($point_error != null){
-					$point_error->setY(($point_error->getY() + $num_errores) / $num_alumnos_por_intento[$clave]);
-				}else{
-					$serie_errores->addPoint(new \Point($clave, $num_errores));
-				}
-				*/
 			}
 		}
 		
@@ -390,7 +396,9 @@ class ProfesoresController extends AppController{
 		}
 		
 	}
+	*/
 	
+	/*
 	private function __generarGraficaAlumnosTest(){
 		
 		$alumnos_controller = new AlumnosController();
@@ -423,6 +431,7 @@ class ProfesoresController extends AppController{
 		$this->set("alumnos_registrados", $alumnos_registrados);
 		
 	}
+	*/
 	
 	private function __calcularMediaIntentos(){
 		
@@ -498,6 +507,7 @@ class ProfesoresController extends AppController{
 		
 	}
 	
+	/*
 	private function __generarGraficaVerticalAlumnosIntentos(){
 	
 		$alumnos_controller = new AlumnosController();
@@ -558,6 +568,7 @@ class ProfesoresController extends AppController{
 		}
 	
 	}
+	*/
 	
 	private function __calcularMediaViolaciones(){
 	
@@ -639,6 +650,7 @@ class ProfesoresController extends AppController{
 		
 	}
 	
+	/*
 	private function __generarGraficaMedias(){
 		
 		$chart = new \HorizontalBarChart(800, 350);
@@ -660,7 +672,9 @@ class ProfesoresController extends AppController{
 		}
 		
 	}
+	*/
 	
+	/*
 	private function __añadirIntervalosViolacionesEjeX($dataSet){
 		
 		$dataSet->addPoint(new \Point("[0]", 0));
@@ -764,6 +778,7 @@ class ProfesoresController extends AppController{
 		}
 		
 	}
+	*/
 	
 	/*
 	public function seleccionarGraficas(){

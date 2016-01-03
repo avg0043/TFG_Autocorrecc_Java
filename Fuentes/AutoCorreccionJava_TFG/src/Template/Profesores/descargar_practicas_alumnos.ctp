@@ -10,6 +10,7 @@ use App\Controller\IntentosController;
 	        "pagingType": "full_numbers"
 	    } );
 	} );
+	
 	function btnFuncion(nombre_reporte) {
 	    var selected_radioButton = $('input[name=radioAlumno]:checked', '#tablaAlumnos');
 	    var $row = $(selected_radioButton).closest("tr"),
@@ -29,6 +30,44 @@ use App\Controller\IntentosController;
     		  ruta,
     		  '_blank'
     	);
+	}
+	
+	function radioBtnFuncion(){
+	    var selected_radioButton = $('input[name=radioAlumno]:checked', '#tablaAlumnos');
+	     	$row = $(selected_radioButton).closest("tr"),
+		    $nombre_completo = $row.find("td:nth-child(2)").text(),
+		    $numero_intento = $row.find("td:nth-child(3)").text(),
+	    	map_alumnos = <?php echo json_encode($_SESSION["map_alumnos_id"]) ?>,
+	     	ruta = "http://localhost/"+<?=$_SESSION['lti_idCurso']?>+"/"  +
+	    			<?=$_SESSION['lti_idTarea']?>+"/Learner"			  +
+					"/"+map_alumnos[$nombre_completo]+
+					"/"+$numero_intento+"/site/";
+
+		$.ajax({
+		    data: 'id=' + map_alumnos[$nombre_completo] + '&num_intento=' + $numero_intento,
+		    url: 'http://localhost/AutoCorreccionJava_TFG/Pruebas/recibeValor',
+		    method: 'POST', // or GET
+		    success: function(respuesta) {
+		    	var respuesta_reportes = $.parseJSON(respuesta);
+		    	console.log(respuesta_reportes);
+		    	if(!respuesta_reportes.pmd){
+		    		$('#btn_pmd').prop('disabled', true);
+		    	}else{
+		    		$('#btn_pmd').prop('disabled', false);
+		    	}
+		    	if(!respuesta_reportes.findbugs){
+		    		$('#btn_findbugs').prop('disabled', true);
+		    	}else{
+		    		$('#btn_findbugs').prop('disabled', false);
+		    	}
+		    	if(!respuesta_reportes.errores){
+		    		$('#btn_errores').prop('disabled', true);
+		    	}else{
+		    		$('#btn_errores').prop('disabled', false);
+		    	}
+		    }
+		});
+				
 	}
 </script>
 
@@ -68,7 +107,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 				<tr>
 
 					<td scope="col">
-			            <input name="radioAlumno" id="usuarioSeleccionado_1" type="radio" value="1">
+			            <input name="radioAlumno" id="usuarioSeleccionado_1" type="radio" value="1" onclick="radioBtnFuncion()">
 			        </td>
 			        <td><b><?= $alumno->nombre." ".$alumno->apellidos ?></b></td>
 					<td align="center"><?= $intento->numero_intento ?></td>
@@ -85,8 +124,8 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 </table>
 <?php }?>
 
-<button class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('javancss.html')">Reporte JavanCSS</button>
-<button class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('jdepend-report.html')">Reporte JDepend</button>
-<button class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('pmd.html')">Reporte PMD</button>
-<button class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('findbugs.html')">Reporte FindBugs</button>
-<button class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('surefire-report.html')">Reporte Errores</button>
+<button id="btn_javancss" class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('javancss.html')">Reporte JavanCSS</button>
+<button id="btn_jdepend" class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('jdepend-report.html')">Reporte JDepend</button>
+<button id="btn_pmd" class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('pmd.html')">Reporte PMD</button>
+<button id="btn_findbugs" class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('findbugs.html')">Reporte FindBugs</button>
+<button id="btn_errores" class="btn btn-default btn-sm dropdown-toggle" onclick="btnFuncion('surefire-report.html')">Reporte Errores</button>
