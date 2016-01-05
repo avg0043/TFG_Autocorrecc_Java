@@ -128,15 +128,18 @@ class ProfesoresController extends AppController{
 		
 		$alumnos_con_practicas = [];
 		foreach ($alumnos as $alumno):
-			$ultimo_intento = $intentos_controller->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			if(!empty($ultimo_intento)){
-				array_push($alumnos_con_practicas, $alumno->nombre." ".$alumno->apellidos);
-				$numero_practicas_subidas++;
-				mkdir("../../plagios/practicas/".utf8_decode($alumno->nombre.$alumno->apellidos), 0777, true);
-				exec('xcopy ' . str_replace('/', '\\', $ruta_carpeta_tarea)."Learner\\"
-						      . $ultimo_intento['alumno_id']."\\". $ultimo_intento['numero_intento']."\\".$paquete_ruta . ' '
-							  . "..\\..\\plagios\\practicas\\".utf8_decode($alumno->nombre.$alumno->apellidos)."\\" . ' /s /e');
-			}	
+			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			if(!$intentos_alumno->isEmpty()){
+				$ultimo_intento = $intentos_controller->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+				if(!empty($ultimo_intento)){
+					array_push($alumnos_con_practicas, $alumno->nombre." ".$alumno->apellidos);
+					$numero_practicas_subidas++;
+					mkdir("../../plagios/practicas/".utf8_decode($alumno->nombre.$alumno->apellidos), 0777, true);
+					exec('xcopy ' . str_replace('/', '\\', $ruta_carpeta_tarea)."Learner\\"
+							      . $ultimo_intento['alumno_id']."\\". $ultimo_intento['numero_intento']."\\".$paquete_ruta . ' '
+								  . "..\\..\\plagios\\practicas\\".utf8_decode($alumno->nombre.$alumno->apellidos)."\\" . ' /s /e');
+				}
+			}
 		endforeach;
 		
 		if($numero_practicas_subidas >= 2){

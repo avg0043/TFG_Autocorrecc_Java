@@ -28,4 +28,8 @@ class PruebasController extends AppController{
 		
 	}
 	
+	public function doble(){
+		return 2;
+	}
+	
 }

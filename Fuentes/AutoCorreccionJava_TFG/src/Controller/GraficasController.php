@@ -4,7 +4,6 @@ namespace App\Controller;
 
 include('/../../vendor/libchart/libchart/classes/libchart.php');
 
-
 class GraficasController extends AppController{
 	
 	public function generarGraficasViolacionesErroresAlumno(){
@@ -14,29 +13,20 @@ class GraficasController extends AppController{
 		$intentos_controller = new IntentosController();
 		$query_violaciones = $intentos_controller->obtenerIntentosConViolaciones();
 		$query_errores = $intentos_controller->obtenerIntentosConErrores();
-		
-		/*
-		$query_violaciones = $this->Intentos->find('all')
-											->contain(['Violaciones'])
-											->where(['alumno_id' => $_SESSION["lti_userId"]]);
-		$query_errores = $this->Intentos->find('all')
-										->contain(['Errores'])
-										->where(['alumno_id' => $_SESSION["lti_userId"]]);
-		*/
 	
 		// Línea
-		$chart_linea = new \LineChart(600, 350);
+		$chart_linea = new \LineChart(800, 350);
 		$serie1 = new \XYDataSet();
 		$serie2 = new \XYDataSet();
 	
 		// Barras Violaciones
-		$chart_violaciones = new \VerticalBarChart(600, 350);
+		$chart_violaciones = new \VerticalBarChart(800, 350);
 		$total_intentos_violaciones = 0;
 		$total_violaciones = 0;
 		$dataSet_violaciones = new \XYDataSet();
 	
 		// Barras Errores
-		$chart_errores = new \VerticalBarChart(700, 350);
+		$chart_errores = new \VerticalBarChart(800, 350);
 		$serie_errores_unitarios = new \XYDataSet();
 		$serie_errores_excepciones = new \XYDataSet();
 		$total_intentos_errores = 0;
@@ -73,12 +63,14 @@ class GraficasController extends AppController{
 		}
 	
 		// Línea violaciones y errores
-		$dataSet = new \XYSeriesDataSet();
-		$dataSet->addSerie("Violaciones de código", $serie1);
-		$dataSet->addSerie("Errores unitarios", $serie2);
-		$chart_linea->setDataSet($dataSet);
-		$chart_linea->setTitle("Errores unitarios- Violaciones de código");
-		$chart_linea->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png");
+		if($total_intentos_violaciones > 1 && $total_intentos_errores > 1){
+			$dataSet = new \XYSeriesDataSet();
+			$dataSet->addSerie("Violaciones de código", $serie1);
+			$dataSet->addSerie("Errores", $serie2);
+			$chart_linea->setDataSet($dataSet);
+			$chart_linea->setTitle("Violaciones de código - Errores");
+			$chart_linea->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png");
+		}
 	
 		// Barras Violaciones
 		$dataSet_violaciones->addPoint(new \Point("Media", round($total_violaciones/$total_intentos_violaciones, 2)));
@@ -114,7 +106,7 @@ class GraficasController extends AppController{
 								->where(['alumno_id' => $_SESSION["lti_userId"]]);
 		*/
 	
-		$chart = new \PieChart(600, 350);
+		$chart = new \PieChart(800, 350);
 		$dataSet = new \XYDataSet();
 	
 		foreach ($query as $intento){
@@ -134,7 +126,7 @@ class GraficasController extends AppController{
 	
 		if($violaciones_existen){
 			$chart->setDataSet($dataSet);
-			$chart->setTitle("Porcentaje de las prioridades de las violaciones de código cometidas");
+			$chart->setTitle("Porcentaje de la media las prioridades de las violaciones de código cometidas");
 			$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones.png");
 		}
 	
@@ -150,9 +142,9 @@ class GraficasController extends AppController{
 		//$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($this->id_intento);
 	
 		if(!empty($violaciones)){
-			$chart = new \PieChart(600, 350);
+			$chart = new \PieChart(800, 350);
 			$dataSet = new \XYDataSet();
-			$chart_barras = new \VerticalBarChart(600, 350);
+			$chart_barras = new \VerticalBarChart(800, 350);
 			$dataSet_barras = new \XYDataSet();
 				
 			foreach ($violaciones as $violacion){
