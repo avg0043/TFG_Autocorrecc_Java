@@ -2,16 +2,16 @@
 namespace App\Test\TestCase\Controller;
 
 use Cake\TestSuite\IntegrationTestCase;
-use App\Controller\ErroresController;
 use Cake\ORM\TableRegistry;
+use App\Controller\ViolacionesController;
 
-class ErroresControllerTest extends IntegrationTestCase{
+class ViolacionesControllerTest extends IntegrationTestCase{
 	
 	private $profesores_tabla;
 	private $alumnos_tabla;
 	private $tareas_tabla;
 	private $intentos_tabla;
-	private $errores_tabla;
+	private $violaciones_tabla;
 	
 	public function setUp(){
 		
@@ -24,37 +24,42 @@ class ErroresControllerTest extends IntegrationTestCase{
 	
 	public function tearDown(){
 		
-		$this->errores_tabla->deleteAll(['1 = 1']);
+		$this->violaciones_tabla->deleteAll(['1 = 1']);
 		$this->intentos_tabla->deleteAll(['1 = 1']);
 		$this->tareas_tabla->deleteAll(['1 = 1']);
 		$this->alumnos_tabla->deleteAll(['1 = 1']);
-		$this->profesores_tabla->deleteAll(['1 = 1']);	
+		$this->profesores_tabla->deleteAll(['1 = 1']);
 		
 	}
 	
-	public function testGuardarError(){
+	public function testGuardarViolacion(){
 		
-		$errores_controller = new ErroresController();
+		$violaciones_controller = new ViolacionesController();
 		$datos = [
 				'intento_id' => 1,
-				'nombre_clase' => 'Producto.java',
-				'nombre_test' => 'testCantidad',
-				'tipo_error' => 'failure',
-				'tipo' => 'junit.framework.AssertionFailedError',
+				'nombre_fichero' => 'Operaciones.java',
+				'tipo' => 'UnusedPrivateMethod',
+				'descripcion' => 'Avoid unused private methods such as foo()',
+				'prioridad' => 3,
+				'linea_inicio' => 11,
+				'linea_fin' => 15
 		];
 		
-		$errores_controller->guardarError($datos['intento_id'], $datos['nombre_clase'], $datos['nombre_test'], 
-										  $datos['tipo_error'], $datos['tipo']);
-		$this->errores_tabla = TableRegistry::get('Errores');
-		$query = $this->errores_tabla->find()->where(['intento_id' => $datos['intento_id'], 'nombre_clase' => $datos['nombre_clase']]);
+		$violaciones_controller->guardarViolacion($datos["intento_id"], $datos["nombre_fichero"], $datos["tipo"],
+											 	  $datos["descripcion"], $datos["prioridad"], $datos["linea_inicio"],
+												  $datos["linea_fin"]);	
+		$this->violaciones_tabla = TableRegistry::get('Violaciones');
+		$query = $this->violaciones_tabla->find()->where(['intento_id' => $datos['intento_id'], 'nombre_fichero' => $datos['nombre_fichero']]);
 		
 		$this->assertEquals(1, $query->count());
-		foreach ($query as $error){
-			$this->assertEquals($datos["intento_id"], $error->intento_id);
-			$this->assertEquals($datos["nombre_clase"], $error->nombre_clase);
-			$this->assertEquals($datos["nombre_test"], $error->nombre_test);
-			$this->assertEquals($datos["tipo_error"], $error->tipo_error);
-			$this->assertEquals($datos["tipo"], $error->tipo);
+		foreach ($query as $violacion){
+			$this->assertEquals($datos["intento_id"], $violacion->intento_id);
+			$this->assertEquals($datos["nombre_fichero"], $violacion->nombre_fichero);
+			$this->assertEquals($datos["tipo"], $violacion->tipo);
+			$this->assertEquals($datos["descripcion"], $violacion->descripcion);
+			$this->assertEquals($datos["prioridad"], $violacion->prioridad);
+			$this->assertEquals($datos["linea_inicio"], $violacion->linea_inicio);
+			$this->assertEquals($datos["linea_fin"], $violacion->linea_fin);
 		}
 		
 	}

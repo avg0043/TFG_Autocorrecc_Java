@@ -1,17 +1,14 @@
-<!--  
-<div class="page-header">
-	<h3>Plagios</h3>
-</div>
--->
+<nav class="navbar navbar-inverse">
+  <ul class="nav navbar-nav">
+  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
+  </ul>
+  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
+</nav>
 
 <div class="jumbotron">
   <h3>Plagios</h3>
   <p>Selecciona el botón <i>Reporte Plagios</i> para comprobar los posibles plagios existentes u observe la lista de razones
   	 posibles por las que no ha podido generarse el reporte.</p>
-</div>
-
-<div>
-	<?= $this->Html->link('Panel profesor', ['action' => 'mostrarPanel']) ?>
 </div>
 
 <?php

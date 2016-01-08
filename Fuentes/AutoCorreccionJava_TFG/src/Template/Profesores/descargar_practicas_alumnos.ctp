@@ -7,7 +7,19 @@ use App\Controller\IntentosController;
 <script type="text/javascript">
 	$(document).ready(function() {
 	    $('#tablaAlumnos').DataTable( {
-	        "pagingType": "full_numbers"
+	        "pagingType": "full_numbers",
+		    "language": {
+		    	"lengthMenu": "Mostrar _MENU_ intentos",
+		    	"search": "Buscar:",
+		    	"info": "Mostrando _START_ a _END_ de _TOTAL_ intentos",
+		    	"infoFiltered": "(filtrado de _MAX_ total de intentos)",
+			    "paginate": {
+				    "first": "Primera",
+				    "previous": "Anterior",
+				    "next": "Siguiente",
+				    "last": "Última"
+			    }
+		    }
 	    } );
 	} );
 	
@@ -71,13 +83,18 @@ use App\Controller\IntentosController;
 	}
 </script>
 
+<nav class="navbar navbar-inverse">
+  <ul class="nav navbar-nav">
+  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
+  </ul>
+  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
+</nav>
+
 <div class="jumbotron">
   <h3>Estadísticas de los Alumnos</h3>
   <p>Visualiza las estadísticas referentes a cada uno de los alumnos. Se podrá descargar el zip correspondiente a las
      prácticas y también visualizar las gráficas con las estadísticas de cada alumno.</p>
 </div>
-
-<?= $this->Html->link('Panel profesor', ['action' => 'mostrarPanel']) ?>
 
 <?php 
 if(!$alumnos->isEmpty() && !$intentos->isEmpty()){

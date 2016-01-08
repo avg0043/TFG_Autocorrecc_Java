@@ -1,8 +1,6 @@
-<!--
-<div class="page-header">
-	<h3>Subida de Prácticas</h3>
-</div>
--->
+<nav class="navbar navbar-inverse">
+  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
+</nav>
 
 <?php
 if(!$test_subido){

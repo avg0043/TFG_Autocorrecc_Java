@@ -1,18 +1,15 @@
-<!-- 
-<div class="page-header">
-	<h3>Subida de Tests</h3>
-</div>
- -->
+<nav class="navbar navbar-inverse">
+  <ul class="nav navbar-nav">
+  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
+  </ul>
+  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
+</nav>
 
 <div class="jumbotron">
   <h3>Subida de Tests</h3>
   <p>Se deberá de subir un único fichero .zip que contenga los ficheros test con extensión .java. Es importante que los test
      pertenezcan al paquete establecido previamente en la configuración de parámetros.</p>
 </div>
-
-<?php
-echo $this->Html->link('Panel profesor', ['controller' => 'Profesores', 'action' => 'mostrarPanel']);
-?>
 
 <div class="container">
 	<div class="row">

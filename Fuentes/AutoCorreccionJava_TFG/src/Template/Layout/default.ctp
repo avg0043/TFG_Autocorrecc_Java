@@ -31,9 +31,9 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->Html->css('custom.css') ?>
     <?= $this->Html->css('base.css') ?>
     <?= $this->Html->css('cake.css') ?>
-    <?= $this->Html->script('jquery-1.11.3') ?>
-    <?= $this->Html->script('bootstrap.min') ?>
 
+    <?= $this->Html->script('jquery-1.11.3') ?>	<!-- PROBAR A PONERLO EN LA VISTA EN VEZ DE AQUÍ -->
+    <?= $this->Html->script('bootstrap.min') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>

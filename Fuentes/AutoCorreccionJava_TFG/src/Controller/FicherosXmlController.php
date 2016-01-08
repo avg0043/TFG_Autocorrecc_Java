@@ -96,13 +96,17 @@ class FicherosXmlController extends AppController{
 			$errores = (int) $xml["errors"];
 			if($fallos > 0){	// test que falla por assert
 				foreach($xml->children()->testcase as $test_case){
-					$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],
-							"failure", $test_case->failure["type"], $test_case->failure);
+					if(isset($test_case->failure)){
+						$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],
+								"failure", $test_case->failure["type"], $test_case->failure);
+					}
 				}
 			}elseif($errores > 0){	// test que falla por excepción
 				foreach($xml->children()->testcase as $test_case){
-					$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],
-							"error", $test_case->error["type"], $test_case->error);
+					if(isset($test_case->error)){
+						$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],
+								"error", $test_case->error["type"]);
+					}
 				}
 			}
 		}

@@ -32,4 +32,8 @@ class PruebasController extends AppController{
 		return 2;
 	}
 	
+	public function redireccionando(){
+		return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
+	}
+	
 }

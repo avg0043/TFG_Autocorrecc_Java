@@ -51,8 +51,7 @@ CREATE TABLE tests
 	fecha_subida DATETIME NOT NULL,
 	CONSTRAINT pk01_tests PRIMARY KEY(id),
 	CONSTRAINT fk01_tests FOREIGN KEY(tarea_id)
-		REFERENCES tareas (id),
-	CONSTRAINT uk01_tests UNIQUE KEY(tarea_id, nombre)
+		REFERENCES tareas (id)
 );
 
 CREATE TABLE intentos

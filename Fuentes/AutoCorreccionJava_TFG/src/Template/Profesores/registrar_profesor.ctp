@@ -1,6 +1,6 @@
-<div class="page-header">
-	<h3>Registrar Profesor</h3>
-</div>
+<nav class="navbar navbar-inverse">
+  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
+</nav>
 
 <div class="jumbotron">
   <h1>Bienvenido!</h1>

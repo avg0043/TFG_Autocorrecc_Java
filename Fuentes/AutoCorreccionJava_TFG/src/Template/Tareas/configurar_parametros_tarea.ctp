@@ -1,6 +1,9 @@
-<!-- 
-<h3 class='page-header'>Configuración de los parámetros obligatorios de la práctica</h3>
- -->
+<nav class="navbar navbar-inverse">
+  <ul class="nav navbar-nav">
+  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
+  </ul>
+  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
+</nav>
  
 <div class="jumbotron">
   <h3>Configuración de los parámetros</h3>

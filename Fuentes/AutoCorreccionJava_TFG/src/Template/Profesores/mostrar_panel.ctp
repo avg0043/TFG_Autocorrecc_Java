@@ -1,26 +1,6 @@
-<!--  
-<div class="page-header">
-	<h3>Panel de opciones del profesor</h3>
-</div>
--->
-
-<?php
-/*
-echo $this->Html->link('Configurar parámetros de la práctica', ['controller' => 'Tareas', 'action' => 'configurarParametrosTarea']);
-echo "<br>";
-echo $this->Html->link('Información del profesor', ['action' => 'mostrarDatosProfesor']);
-echo "<br>";
-echo $this->Html->link('Subida de Tests', ['controller' => 'Tests', 'action' => 'subirTest']);
-echo "<br>";
-echo $this->Html->link('Ver alumnos registrados', ['controller' => 'Alumnos', 'action' => 'mostrarAlumnos']);
-echo "<br>";
-echo $this->Html->link('Comprobar plagios de prácticas', ['action' => 'generarReportePlagiosPracticas']);
-echo "<br>";
-echo $this->Html->link('Descargar prácticas subidas por los alumnos', ['action' => 'descargarPracticasAlumnos']);
-echo "<br>";
-echo $this->Html->link('Mostrar gráficas', ['action' => 'generarGraficas']);
-*/
-?>
+<nav class="navbar navbar-inverse">
+  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
+</nav>
 
 <div class="row">
 
