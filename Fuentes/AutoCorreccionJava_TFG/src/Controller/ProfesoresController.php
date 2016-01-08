@@ -87,6 +87,7 @@ class ProfesoresController extends AppController{
 	 * Función que guarda en una variable los datos del profesor actual para que
 	 * puedan ser mostrados desde su vista asociada.
 	 */
+	/*
 	public function mostrarDatosProfesor(){
 	
 		session_start();
@@ -95,6 +96,7 @@ class ProfesoresController extends AppController{
 		$this->set('profesor', $this->Profesores->find('all')->where(['correo' => $_SESSION['lti_correo']]));
 	
 	}
+	*/
 	
 	public function mostrarPanel(){
 	
@@ -272,6 +274,30 @@ class ProfesoresController extends AppController{
 			}
 		}
 		
+	}
+	
+	public function compruebaExistenciaReportes(){
+	
+		session_start();
+		$this->autoRender = false;
+		$id_alumno = $_POST["id"];
+		$numero_intento = $_POST["num_intento"];
+		$ruta = "../../".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/Learner".
+				"/".$id_alumno."/".$numero_intento."/site/";
+		$reportes = array("pmd" => false, "findbugs" => false, "errores" => false);
+	
+		if(file_exists($ruta."pmd.html")){
+			$reportes["pmd"] = true;
+		}
+		if(file_exists($ruta."findbugs.html")){
+			$reportes["findbugs"] = true;
+		}
+		if(file_exists($ruta."surefire-report.html")){
+			$reportes["errores"] = true;
+		}
+	
+		echo json_encode($reportes);
+	
 	}
 	
 	public function obtenerProfesorPorKeyCorreo($consumer_key, $correo){

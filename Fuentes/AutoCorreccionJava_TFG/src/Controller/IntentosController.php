@@ -25,20 +25,19 @@ class IntentosController extends AppController{
 	public function subirPractica($intento_realizado = null){
 		
 		session_start();
-		$this->comprobarSesion();
-		
+		$this->comprobarSesion();	
 		$this->set("intento", $intento_realizado);		
 		$this->__comprobarTestSubido();
 		
 		$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
-		$epa = 0;
+		$num_ultimo_intento = 0;
 		if(!$intentos_alumno->isEmpty()){
 			$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
 			if(!empty($ultimo_intento)){
-				$epa = $ultimo_intento["numero_intento"];
+				$num_ultimo_intento = $ultimo_intento["numero_intento"];
 			}
 		}
-		$this->set("num_ultimo_intento", $epa);
+		$this->set("num_ultimo_intento", $num_ultimo_intento);
 		
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
@@ -111,7 +110,7 @@ class IntentosController extends AppController{
 		// Copiar el arquetipo maven a la carpeta id alumno
 		$ruta_dir_origen = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
 							. "Instructor" . "\\" . $this->id_profesor;
-		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e');
+		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e /Y');
 		// Borrar estructura main>java del arquetipo
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo/src/main" . ' && rmdir java /s /q && md java');
 		$this->__extraerPractica();
@@ -168,7 +167,7 @@ class IntentosController extends AppController{
 			// Generar gráficas
 			$graficas_controller = new GraficasController();
 			$graficas_controller->generarGraficasViolacionesErroresAlumno();
-			$graficas_controller->generarGraficaPrioridadesViolacionesAlumno();
+			//$graficas_controller->generarGraficaPrioridadesViolacionesAlumno();
 			$graficas_controller->generarGraficaPrioridadesViolacionesIntentoRealizadoAlumno($this->id_intento);
 			
 			/*

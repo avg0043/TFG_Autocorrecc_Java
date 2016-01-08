@@ -57,7 +57,8 @@ use App\Controller\IntentosController;
 
 		$.ajax({
 		    data: 'id=' + map_alumnos[$nombre_completo] + '&num_intento=' + $numero_intento,
-		    url: 'http://localhost/AutoCorreccionJava_TFG/Pruebas/recibeValor',
+		    //url: 'http://localhost/AutoCorreccionJava_TFG/Pruebas/recibeValor',
+		    url: 'http://localhost/AutoCorreccionJava_TFG/Profesores/compruebaExistenciaReportes',
 		    method: 'POST', // or GET
 		    success: function(respuesta) {
 		    	var respuesta_reportes = $.parseJSON(respuesta);

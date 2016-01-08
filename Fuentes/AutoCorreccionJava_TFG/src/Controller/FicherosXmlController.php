@@ -101,7 +101,9 @@ class FicherosXmlController extends AppController{
 								"failure", $test_case->failure["type"], $test_case->failure);
 					}
 				}
-			}elseif($errores > 0){	// test que falla por excepción
+			}
+			//elseif($errores > 0){	// test que falla por excepción
+			if($errores > 0){
 				foreach($xml->children()->testcase as $test_case){
 					if(isset($test_case->error)){
 						$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],

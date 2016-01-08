@@ -108,11 +108,6 @@ else{
 		<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png"; ?>
 		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/>
 <?php }
-	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones.png")){?>
-		<h4 class="page-header">Gráfica Media de las Prioridades de las Violaciones de código</h4>
-		<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones.png"; ?>
-		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/>
-<?php }
 
 }
 ?>

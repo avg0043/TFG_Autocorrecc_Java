@@ -91,6 +91,7 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/*
 	public function generarGraficaPrioridadesViolacionesAlumno(){
 	
 		//include('/../../vendor/libchart/libchart/classes/libchart.php');
@@ -98,13 +99,6 @@ class GraficasController extends AppController{
 		$violaciones_existen = false;
 		$intentos_controller = new IntentosController();
 		$query = $intentos_controller->obtenerIntentosConViolaciones();
-	
-		// INNER JOIN
-		/*
-		$query = $this->Intentos->find('all')
-								->contain(['Violaciones'])
-								->where(['alumno_id' => $_SESSION["lti_userId"]]);
-		*/
 	
 		$chart = new \PieChart(800, 350);
 		$dataSet = new \XYDataSet();
@@ -131,11 +125,15 @@ class GraficasController extends AppController{
 		}
 	
 	}
+	*/
 	
 	public function generarGraficaPrioridadesViolacionesIntentoRealizadoAlumno($id_intento){
 	
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){
 			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png");
+		}
+		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){
+			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png");
 		}
 		$violaciones_controller = new ViolacionesController();
 		$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($id_intento);

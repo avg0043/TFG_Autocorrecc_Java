@@ -33,6 +33,7 @@ class AlumnosController extends AppController{
 	 * registrados en base de datos, para que puedan ser mostrados
 	 * desde la vista asociada.
 	 */
+	/*
 	public function mostrarAlumnos(){
 		
 		session_start();
@@ -41,6 +42,7 @@ class AlumnosController extends AppController{
 		$this->set('alumnos', $this->obtenerAlumnos());
 		
 	}
+	*/
 	
 	public function obtenerAlumnos(){
 		

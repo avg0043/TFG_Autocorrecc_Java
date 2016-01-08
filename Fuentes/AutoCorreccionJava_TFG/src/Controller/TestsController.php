@@ -60,8 +60,12 @@ class TestsController extends AppController{
 			$zip->extractTo($this->ruta_carpeta_id . 'arquetipo/src/test/java/'.$this->paquete_ruta.'/');
 			$zip->close();
 			
-			$ficherosXml_controller = new FicherosXmlController();
-			$ficherosXml_controller->editarPomArquetipoMaven($this->ruta_carpeta_id);
+			// El pom.xml sólo se edita la primera vez que se sube un test
+			$test_query = $this->obtenerTestPorIdTarea($_SESSION["lti_idTarea"]);
+			if(empty($test_query)){
+				$ficherosXml_controller = new FicherosXmlController();
+				$ficherosXml_controller->editarPomArquetipoMaven($this->ruta_carpeta_id);
+			}
 		}
 		
 		unlink('./' . $_FILES["ficheroAsubir"]["name"]);

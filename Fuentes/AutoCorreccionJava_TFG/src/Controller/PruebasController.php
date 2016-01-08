@@ -4,6 +4,7 @@ namespace App\Controller;
 
 class PruebasController extends AppController{
 	
+	/*
 	public function recibeValor(){
 		
 		session_start();
@@ -27,6 +28,7 @@ class PruebasController extends AppController{
 		echo json_encode($reportes);
 		
 	}
+	*/
 	
 	public function doble(){
 		return 2;
