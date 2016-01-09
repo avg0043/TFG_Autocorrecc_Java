@@ -12,6 +12,8 @@ class ViolacionesControllerTest extends IntegrationTestCase{
 	private $tareas_tabla;
 	private $intentos_tabla;
 	private $violaciones_tabla;
+	private $violaciones_controller;
+	private $datos;
 	
 	public function setUp(){
 		
@@ -19,6 +21,17 @@ class ViolacionesControllerTest extends IntegrationTestCase{
 		$this->__crearAlumno();
 		$this->__crearTarea();
 		$this->__crearIntento();
+		$this->violaciones_controller = new ViolacionesController();
+		$this->violaciones_tabla = TableRegistry::get('Violaciones');
+		$this->datos = [
+				'intento_id' => 1,
+				'nombre_fichero' => 'Operaciones.java',
+				'tipo' => 'UnusedPrivateMethod',
+				'descripcion' => 'Avoid unused private methods such as foo()',
+				'prioridad' => 3,
+				'linea_inicio' => 11,
+				'linea_fin' => 15
+		];
 		
 	}
 	
@@ -34,32 +47,58 @@ class ViolacionesControllerTest extends IntegrationTestCase{
 	
 	public function testGuardarViolacion(){
 		
-		$violaciones_controller = new ViolacionesController();
-		$datos = [
-				'intento_id' => 1,
-				'nombre_fichero' => 'Operaciones.java',
-				'tipo' => 'UnusedPrivateMethod',
-				'descripcion' => 'Avoid unused private methods such as foo()',
-				'prioridad' => 3,
-				'linea_inicio' => 11,
-				'linea_fin' => 15
-		];
-		
-		$violaciones_controller->guardarViolacion($datos["intento_id"], $datos["nombre_fichero"], $datos["tipo"],
-											 	  $datos["descripcion"], $datos["prioridad"], $datos["linea_inicio"],
-												  $datos["linea_fin"]);	
-		$this->violaciones_tabla = TableRegistry::get('Violaciones');
-		$query = $this->violaciones_tabla->find()->where(['intento_id' => $datos['intento_id'], 'nombre_fichero' => $datos['nombre_fichero']]);
+		$this->violaciones_controller->guardarViolacion($this->datos["intento_id"], $this->datos["nombre_fichero"], $this->datos["tipo"],
+											 	 		$this->datos["descripcion"], $this->datos["prioridad"], $this->datos["linea_inicio"],
+												 	 	$this->datos["linea_fin"]);	
+		$query = $this->violaciones_tabla->find()->where(['intento_id' => $this->datos['intento_id'], 'nombre_fichero' => $this->datos['nombre_fichero']]);
 		
 		$this->assertEquals(1, $query->count());
 		foreach ($query as $violacion){
-			$this->assertEquals($datos["intento_id"], $violacion->intento_id);
-			$this->assertEquals($datos["nombre_fichero"], $violacion->nombre_fichero);
-			$this->assertEquals($datos["tipo"], $violacion->tipo);
-			$this->assertEquals($datos["descripcion"], $violacion->descripcion);
-			$this->assertEquals($datos["prioridad"], $violacion->prioridad);
-			$this->assertEquals($datos["linea_inicio"], $violacion->linea_inicio);
-			$this->assertEquals($datos["linea_fin"], $violacion->linea_fin);
+			$this->assertEquals($this->datos["intento_id"], $violacion->intento_id);
+			$this->assertEquals($this->datos["nombre_fichero"], $violacion->nombre_fichero);
+			$this->assertEquals($this->datos["tipo"], $violacion->tipo);
+			$this->assertEquals($this->datos["descripcion"], $violacion->descripcion);
+			$this->assertEquals($this->datos["prioridad"], $violacion->prioridad);
+			$this->assertEquals($this->datos["linea_inicio"], $violacion->linea_inicio);
+			$this->assertEquals($this->datos["linea_fin"], $violacion->linea_fin);
+		}
+		
+	}
+	
+	public function testObtenerViolacionPorIntentoTipo(){
+		
+		$this->violaciones_controller->guardarViolacion($this->datos["intento_id"], $this->datos["nombre_fichero"], $this->datos["tipo"],
+														$this->datos["descripcion"], $this->datos["prioridad"], $this->datos["linea_inicio"],
+														$this->datos["linea_fin"]);
+		$query = $this->violaciones_controller->obtenerViolacionPorIntentoTipo($this->datos["intento_id"], $this->datos["tipo"]);
+		
+		foreach ($query as $violacion){
+			$this->assertEquals($this->datos["intento_id"], $violacion->intento_id);
+			$this->assertEquals($this->datos["nombre_fichero"], $violacion->nombre_fichero);
+			$this->assertEquals($this->datos["tipo"], $violacion->tipo);
+			$this->assertEquals($this->datos["descripcion"], $violacion->descripcion);
+			$this->assertEquals($this->datos["prioridad"], $violacion->prioridad);
+			$this->assertEquals($this->datos["linea_inicio"], $violacion->linea_inicio);
+			$this->assertEquals($this->datos["linea_fin"], $violacion->linea_fin);
+		}	
+		
+	}
+	
+	public function testObtenerViolacionesPorIdIntento(){
+		
+		$this->violaciones_controller->guardarViolacion($this->datos["intento_id"], $this->datos["nombre_fichero"], $this->datos["tipo"],
+														$this->datos["descripcion"], $this->datos["prioridad"], $this->datos["linea_inicio"],
+														$this->datos["linea_fin"]);
+		$query = $this->violaciones_controller->obtenerViolacionesPorIdIntento($this->datos["intento_id"]);
+		
+		foreach ($query as $violacion){
+			$this->assertEquals($this->datos["intento_id"], $violacion->intento_id);
+			$this->assertEquals($this->datos["nombre_fichero"], $violacion->nombre_fichero);
+			$this->assertEquals($this->datos["tipo"], $violacion->tipo);
+			$this->assertEquals($this->datos["descripcion"], $violacion->descripcion);
+			$this->assertEquals($this->datos["prioridad"], $violacion->prioridad);
+			$this->assertEquals($this->datos["linea_inicio"], $violacion->linea_inicio);
+			$this->assertEquals($this->datos["linea_fin"], $violacion->linea_fin);
 		}
 		
 	}

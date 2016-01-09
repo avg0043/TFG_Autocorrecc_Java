@@ -10,11 +10,20 @@ class TestsControllerTest extends IntegrationTestCase{
 	private $profesores_tabla;
 	private $tareas_tabla;
 	private $tests_tabla;
+	private $tests_controller;
+	private $datos;
 	
 	public function setUp(){
 		
 		$this->__crearProfesor();
 		$this->__crearTarea();
+		$this->tests_controller = new TestsController();
+		$this->tests_tabla = TableRegistry::get('Tests');
+		$this->datos = [
+				'tarea_id' => 18,
+				'nombre' => 'test.zip',
+				'fecha_subida' => new \DateTime(date("Y-m-d H:i:s"))
+		];
 		
 	}
 	
@@ -28,21 +37,25 @@ class TestsControllerTest extends IntegrationTestCase{
 	
 	public function testGuardarTest(){
 		
-		$tests_controller = new TestsController();
-		$datos = [
-				'tarea_id' => 18,
-				'nombre' => 'test.zip',
-				'fecha_subida' => new \DateTime(date("Y-m-d H:i:s"))
-		];
-		
-		$tests_controller->guardarTest($datos["tarea_id"], $datos["nombre"]);
-		$this->tests_tabla = TableRegistry::get('Tests');
-		$query = $this->tests_tabla->find()->where(['tarea_id' => $datos['tarea_id'], 'nombre' => $datos['nombre']]);
+		$this->tests_controller->guardarTest($this->datos["tarea_id"], $this->datos["nombre"]);
+		$query = $this->tests_tabla->find()->where(['tarea_id' => $this->datos['tarea_id'], 'nombre' => $this->datos['nombre']]);
 		
 		$this->assertEquals(1, $query->count());
 		foreach ($query as $error){
-			$this->assertEquals($datos["tarea_id"], $error->tarea_id);
-			$this->assertEquals($datos["nombre"], $error->nombre);
+			$this->assertEquals($this->datos["tarea_id"], $error->tarea_id);
+			$this->assertEquals($this->datos["nombre"], $error->nombre);
+		}
+		
+	}
+	
+	public function testObtenerTestPorIdTarea(){
+		
+		$this->tests_controller->guardarTest($this->datos["tarea_id"], $this->datos["nombre"]);
+		$query = $this->tests_controller->obtenerTestPorIdTarea($this->datos["tarea_id"]);
+		
+		foreach ($query as $error){
+			$this->assertEquals($this->datos["tarea_id"], $error->tarea_id);
+			$this->assertEquals($this->datos["nombre"], $error->nombre);
 		}
 		
 	}

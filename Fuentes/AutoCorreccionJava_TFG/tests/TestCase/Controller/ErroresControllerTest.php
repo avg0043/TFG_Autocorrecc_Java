@@ -1,10 +1,8 @@
 <?php
 namespace App\Test\TestCase\Controller;
-
 use Cake\TestSuite\IntegrationTestCase;
 use App\Controller\ErroresController;
 use Cake\ORM\TableRegistry;
-
 class ErroresControllerTest extends IntegrationTestCase{
 	
 	private $profesores_tabla;
@@ -12,6 +10,8 @@ class ErroresControllerTest extends IntegrationTestCase{
 	private $tareas_tabla;
 	private $intentos_tabla;
 	private $errores_tabla;
+	private $errores_controller;
+	private $datos;
 	
 	public function setUp(){
 		
@@ -19,6 +19,15 @@ class ErroresControllerTest extends IntegrationTestCase{
 		$this->__crearAlumno();
 		$this->__crearTarea();
 		$this->__crearIntento();
+		$this->errores_controller = new ErroresController();
+		$this->errores_tabla = TableRegistry::get('Errores');
+		$this->datos = [
+				'intento_id' => 1,
+				'nombre_clase' => 'Producto.java',
+				'nombre_test' => 'testCantidad',
+				'tipo_error' => 'failure',
+				'tipo' => 'junit.framework.AssertionFailedError',
+		];
 		
 	}
 	
@@ -34,27 +43,33 @@ class ErroresControllerTest extends IntegrationTestCase{
 	
 	public function testGuardarError(){
 		
-		$errores_controller = new ErroresController();
-		$datos = [
-				'intento_id' => 1,
-				'nombre_clase' => 'Producto.java',
-				'nombre_test' => 'testCantidad',
-				'tipo_error' => 'failure',
-				'tipo' => 'junit.framework.AssertionFailedError',
-		];
-		
-		$errores_controller->guardarError($datos['intento_id'], $datos['nombre_clase'], $datos['nombre_test'], 
-										  $datos['tipo_error'], $datos['tipo']);
-		$this->errores_tabla = TableRegistry::get('Errores');
-		$query = $this->errores_tabla->find()->where(['intento_id' => $datos['intento_id'], 'nombre_clase' => $datos['nombre_clase']]);
+		$this->errores_controller->guardarError($this->datos['intento_id'], $this->datos['nombre_clase'], $this->datos['nombre_test'], 
+										  		$this->datos['tipo_error'], $this->datos['tipo']);
+		$query = $this->errores_tabla->find()->where(['intento_id' => $this->datos['intento_id'], 'nombre_clase' => $this->datos['nombre_clase']]);
 		
 		$this->assertEquals(1, $query->count());
 		foreach ($query as $error){
-			$this->assertEquals($datos["intento_id"], $error->intento_id);
-			$this->assertEquals($datos["nombre_clase"], $error->nombre_clase);
-			$this->assertEquals($datos["nombre_test"], $error->nombre_test);
-			$this->assertEquals($datos["tipo_error"], $error->tipo_error);
-			$this->assertEquals($datos["tipo"], $error->tipo);
+			$this->assertEquals($this->datos["intento_id"], $error->intento_id);
+			$this->assertEquals($this->datos["nombre_clase"], $error->nombre_clase);
+			$this->assertEquals($this->datos["nombre_test"], $error->nombre_test);
+			$this->assertEquals($this->datos["tipo_error"], $error->tipo_error);
+			$this->assertEquals($this->datos["tipo"], $error->tipo);
+		}
+		
+	}
+	
+	public function testObtenerErroresPorIdIntento(){
+		
+		$this->errores_controller->guardarError($this->datos['intento_id'], $this->datos['nombre_clase'], $this->datos['nombre_test'], 
+										  		$this->datos['tipo_error'], $this->datos['tipo']);
+		$query = $this->errores_controller->obtenerErroresPorIdIntento(1);
+		
+		foreach ($query as $error){
+			$this->assertEquals($this->datos["intento_id"], $error->intento_id);
+			$this->assertEquals($this->datos["nombre_clase"], $error->nombre_clase);
+			$this->assertEquals($this->datos["nombre_test"], $error->nombre_test);
+			$this->assertEquals($this->datos["tipo_error"], $error->tipo_error);
+			$this->assertEquals($this->datos["tipo"], $error->tipo);
 		}
 		
 	}
@@ -125,5 +140,4 @@ class ErroresControllerTest extends IntegrationTestCase{
 		$this->intentos_tabla->save($nuevo_intento);
 		
 	}
-
 }
