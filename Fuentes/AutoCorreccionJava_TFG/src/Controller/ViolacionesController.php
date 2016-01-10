@@ -21,6 +21,7 @@ class ViolacionesController extends AppController{
 		
 	}
 	
+	/*
 	public function obtenerViolacionPorIntentoTipo($id_intento, $tipo_violacion){
 		
 		return $this->Violaciones->find('all')
@@ -36,6 +37,7 @@ class ViolacionesController extends AppController{
 								 ->toArray();
 		
 	}
+	*/
 	
 }
 

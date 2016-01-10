@@ -58,6 +58,7 @@ class ErroresControllerTest extends IntegrationTestCase{
 		
 	}
 	
+	/*
 	public function testObtenerErroresPorIdIntento(){
 		
 		$this->errores_controller->guardarError($this->datos['intento_id'], $this->datos['nombre_clase'], $this->datos['nombre_test'], 
@@ -73,6 +74,7 @@ class ErroresControllerTest extends IntegrationTestCase{
 		}
 		
 	}
+	*/
 	
 	private function __crearProfesor(){
 		

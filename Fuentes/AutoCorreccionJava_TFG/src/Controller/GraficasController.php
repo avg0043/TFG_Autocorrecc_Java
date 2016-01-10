@@ -10,9 +10,11 @@ class GraficasController extends AppController{
 	
 		//include('/../../vendor/libchart/libchart/classes/libchart.php');
 	
-		$intentos_controller = new IntentosController();
-		$query_violaciones = $intentos_controller->obtenerIntentosConViolaciones();
-		$query_errores = $intentos_controller->obtenerIntentosConErrores();
+		//$intentos_controller = new IntentosController();
+		//$query_violaciones = $intentos_controller->obtenerIntentosConViolaciones();
+		$query_violaciones = $this->obtenerIntentosConViolaciones();
+		//$query_errores = $intentos_controller->obtenerIntentosConErrores();
+		$query_errores = $this->obtenerIntentosConErrores();
 	
 		// Línea
 		$chart_linea = new \LineChart(800, 350);
@@ -135,9 +137,9 @@ class GraficasController extends AppController{
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){
 			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png");
 		}
-		$violaciones_controller = new ViolacionesController();
-		$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($id_intento);
-		//$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($this->id_intento);
+		//$violaciones_controller = new ViolacionesController();
+		//$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($id_intento);
+		$violaciones = $this->obtenerViolacionesPorIdIntento($id_intento);
 	
 		if(!empty($violaciones)){
 			$chart = new \PieChart(800, 350);
@@ -171,21 +173,23 @@ class GraficasController extends AppController{
 	
 	public function generarGraficaLineaPromedioErroresUnitariosViolaciones(){
 	
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$violaciones_controller = new ViolacionesController();
-		$errores_controller = new ErroresController();
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$violaciones_controller = new ViolacionesController();
+		//$errores_controller = new ErroresController();
 	
 		$chart = new \LineChart(800, 350);
 		$serie_violaciones = new \XYDataSet();
 		$serie_errores = new \XYDataSet();
 	
 		$num_alumnos_por_intento = array();
-		$alumnos = $alumnos_controller->obtenerAlumnos();
+		//$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 		$intento_realizado = false;
 	
 		foreach ($alumnos as $alumno){
-			$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			foreach ($intentos as $intento){
 				$intento_realizado = true;
 				$clave = "Intento ".$intento->numero_intento;
@@ -197,7 +201,8 @@ class GraficasController extends AppController{
 				}
 	
 				// Violaciones
-				$num_violaciones = count($violaciones_controller->obtenerViolacionesPorIdIntento($intento->id));
+				//$num_violaciones = count($violaciones_controller->obtenerViolacionesPorIdIntento($intento->id));
+				$num_violaciones = count($this->obtenerViolacionesPorIdIntento($intento->id));
 				$point_violacion = $serie_violaciones->getPointWithX($clave);
 				if($point_violacion != null){
 					$point_violacion->setY(($point_violacion->getY() + $num_violaciones) / $num_alumnos_por_intento[$clave]);
@@ -206,7 +211,8 @@ class GraficasController extends AppController{
 				}
 	
 				// Errores
-				$num_errores = count($errores_controller->obtenerErroresPorIdIntento($intento->id));
+				//$num_errores = count($errores_controller->obtenerErroresPorIdIntento($intento->id));
+				$num_errores = count($this->obtenerErroresPorIdIntento($intento->id));
 				$point_error = $serie_errores->getPointWithX($clave);
 				if($point_error != null){
 					$point_error->setY(($point_error->getY() + $num_errores) / $num_alumnos_por_intento[$clave]);
@@ -229,20 +235,22 @@ class GraficasController extends AppController{
 	
 	public function generarGraficaMediaErrores(){
 	
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$errores_controller = new ErroresController();
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$errores_controller = new ErroresController();
 	
 		$chart = new \VerticalBarChart(800, 350);
 		$serie_errores_unitarios = new \XYDataSet();
 		$serie_errores_excepcion = new \XYDataSet();
 	
 		$num_alumnos_por_intento = array();
-		$alumnos = $alumnos_controller->obtenerAlumnos();
+		//$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 		$intento_realizado = false;
 	
 		foreach ($alumnos as $alumno){
-			$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			foreach ($intentos as $intento){
 				$intento_realizado = true;
 				$clave = "Intento ".$intento->numero_intento;
@@ -256,7 +264,8 @@ class GraficasController extends AppController{
 				// Errores
 				$num_errores_unitarios = 0;
 				$num_errores_excepcion = 0;
-				$errores = $errores_controller->obtenerErroresPorIdIntento($intento->id);
+				//$errores = $errores_controller->obtenerErroresPorIdIntento($intento->id);
+				$errores = $this->obtenerErroresPorIdIntento($intento->id);
 				foreach ($errores as $error){
 					if($error->tipo_error == "failure"){
 						$num_errores_unitarios++;
@@ -296,10 +305,11 @@ class GraficasController extends AppController{
 	
 	public function generarGraficaVerticalAlumnosViolacionesCometidas(){
 	
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$violaciones_controller = new ViolacionesController();
-		$alumnos = $alumnos_controller->obtenerAlumnos();
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$violaciones_controller = new ViolacionesController();
+		//$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 		$intentos_realizados = false;
 	
 		$chart = new \VerticalBarChart(800, 350);
@@ -307,12 +317,14 @@ class GraficasController extends AppController{
 		$this->__añadirIntervalosViolacionesEjeX($dataSet);
 	
 		foreach($alumnos as $alumno){
-			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			if(!$intentos_alumno->isEmpty()){
 				$intentos_realizados = true;
 				$total_violaciones = 0;
 				foreach($intentos_alumno as $intento){
-					$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($intento->id);
+					//$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($intento->id);
+					$violaciones = $this->obtenerViolacionesPorIdIntento($intento->id);
 					$total_violaciones += count($violaciones);
 				}
 				$intervalo = $this->__obtenerIntervaloViolacion($total_violaciones);
@@ -383,9 +395,10 @@ class GraficasController extends AppController{
 	
 	public function generarGraficaVerticalAlumnosIntentos(){
 	
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$alumnos = $alumnos_controller->obtenerAlumnos();
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 	
 		$intentos_pasa_test = false;
 		$intentos_no_pasa_test = false;
@@ -403,7 +416,8 @@ class GraficasController extends AppController{
 		}
 	
 		foreach($alumnos as $alumno){
-			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);	
 			if(!$intentos_alumno->isEmpty()){
 				$num_intentos_realizados = 0;
 				$test_pasados = false;
@@ -496,16 +510,18 @@ class GraficasController extends AppController{
 	
 	public function generarGraficaAlumnosTest(){
 	
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$alumnos = $alumnos_controller->obtenerAlumnos();
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 		$alumnos_registrados = false;
 		$alumnos_pasan_test = 0;
 		$alumnos_no_pasan_test = 0;
 	
 		foreach($alumnos as $alumno){
 			$alumnos_registrados = true;
-			$intentos_pasan_test = $intentos_controller->obtenerIntentosTestPasados($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_pasan_test = $intentos_controller->obtenerIntentosTestPasados($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_pasan_test = $this->obtenerIntentosTestPasados($_SESSION["lti_idTarea"], $alumno->id);
 			if($intentos_pasan_test->isEmpty()){
 				$alumnos_no_pasan_test++;
 			}
@@ -554,9 +570,10 @@ class GraficasController extends AppController{
 	
 	private function __calcularMediaIntentos(){
 	
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$alumnos = $alumnos_controller->obtenerAlumnos();
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 	
 		$_SESSION["media_intentos_pasa_test"] = false;
 		$_SESSION["media_intentos_no_pasa_test"] = false;
@@ -579,7 +596,8 @@ class GraficasController extends AppController{
 		}
 	
 		foreach($alumnos as $alumno){
-			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			if(!$intentos_alumno->isEmpty()){
 				$num_intentos_realizados = 0;
 				$test_pasados = false;
@@ -628,10 +646,11 @@ class GraficasController extends AppController{
 	
 	private function __calcularMediaViolaciones(){
 	
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$violaciones_controller = new ViolacionesController();
-		$alumnos = $alumnos_controller->obtenerAlumnos();
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$violaciones_controller = new ViolacionesController();
+		//$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 	
 		$_SESSION["media_violaciones"] = false;
 		$intentos_realizados = false;
@@ -644,13 +663,15 @@ class GraficasController extends AppController{
 			*/
 	
 		foreach($alumnos as $alumno){
-			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			if(!$intentos_alumno->isEmpty()){
 				$intentos_realizados = true;
 				$total_violaciones_alumno = 0;
 				$num_alumnos += 1;
 				foreach($intentos_alumno as $intento){
-					$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($intento->id);
+					//$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($intento->id);
+					$violaciones = $this->obtenerViolacionesPorIdIntento($intento->id);
 					$total_violaciones_alumno += count($violaciones);
 				}
 				//$dataSet->addPoint(new \Point($alumno->apellidos, $total_violaciones_alumno));

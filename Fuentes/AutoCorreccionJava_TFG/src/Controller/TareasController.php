@@ -13,7 +13,8 @@ class TareasController extends AppController{
 		session_start();
 		$this->comprobarSesion();
 		
-		$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));	
+		//$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));	
+		$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));
 		$nueva_tarea = $this->Tareas->newEntity();
 		
 		if ($this->request->is('post')) {			
@@ -25,8 +26,11 @@ class TareasController extends AppController{
 			$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s")); // fecha actual
 			
 			// Obtención del id del profesor
+			/* -- AppController
 			$profesores_controller = new ProfesoresController();		
 			$nueva_tarea->profesor_id = $profesores_controller->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
+			*/
+			$nueva_tarea->profesor_id = $this->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
 			
 			if ($this->Tareas->save($nueva_tarea)) {
 				$this->Flash->success(__('La tarea ha sido configurada correctamente'));
@@ -40,6 +44,7 @@ class TareasController extends AppController{
 		
 	}
 	
+	/*
 	public function obtenerTareaPorId($id){
 		
 		return $this->Tareas->find('all')
@@ -47,6 +52,7 @@ class TareasController extends AppController{
 							->toArray();
 		
 	}
+	*/
 	
 }
 

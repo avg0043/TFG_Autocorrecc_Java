@@ -65,6 +65,7 @@ class ViolacionesControllerTest extends IntegrationTestCase{
 		
 	}
 	
+	/*
 	public function testObtenerViolacionPorIntentoTipo(){
 		
 		$this->violaciones_controller->guardarViolacion($this->datos["intento_id"], $this->datos["nombre_fichero"], $this->datos["tipo"],
@@ -102,6 +103,7 @@ class ViolacionesControllerTest extends IntegrationTestCase{
 		}
 		
 	}
+	*/
 	
 	private function __crearProfesor(){
 		

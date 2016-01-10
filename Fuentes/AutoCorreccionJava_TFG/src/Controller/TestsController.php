@@ -20,8 +20,9 @@ class TestsController extends AppController{
 				$this->Flash->error(__('El fichero debe tener extensión .zip!'));				
 			}
 			else{		
-				$tareas_controller = new TareasController();
-				$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;		
+				//$tareas_controller = new TareasController();
+				//$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;		
+				$this->id_profesor = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;
 				$this->ruta_carpeta_id = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
 										. $_SESSION["lti_rol"] . "/" . $this->id_profesor . "/";					
 				$this->__crearArquetipoMaven();					
@@ -33,8 +34,9 @@ class TestsController extends AppController{
 	private function __crearArquetipoMaven(){
 		
 		// Obtención del nombre del paquete de la tarea
-		$tareas_controller = new TareasController();
-		$paquete = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
+		//$tareas_controller = new TareasController();
+		//$paquete = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
+		$paquete = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
 		$this->paquete_ruta = str_replace('.', '/', $paquete);
 		
 		if(!is_dir($this->ruta_carpeta_id)){
@@ -61,6 +63,7 @@ class TestsController extends AppController{
 			$zip->close();
 			
 			// El pom.xml sólo se edita la primera vez que se sube un test
+			//$test_query = $this->obtenerTestPorIdTarea($_SESSION["lti_idTarea"]);
 			$test_query = $this->obtenerTestPorIdTarea($_SESSION["lti_idTarea"]);
 			if(empty($test_query)){
 				$ficherosXml_controller = new FicherosXmlController();
@@ -87,6 +90,7 @@ class TestsController extends AppController{
 		
 	}
 	
+	/*
 	public function obtenerTestPorIdTarea($id_tarea){
 	
 		return $this->Tests->find('all')
@@ -94,6 +98,7 @@ class TestsController extends AppController{
 						   ->toArray();
 		
 	}
+	*/
 	
 }
 

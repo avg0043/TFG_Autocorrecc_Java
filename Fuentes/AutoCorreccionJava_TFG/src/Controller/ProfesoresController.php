@@ -113,12 +113,14 @@ class ProfesoresController extends AppController{
 		}
 		//$this->__comprobarSesion();
 		
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$tareas_controller = new TareasController();
-		$paquete = $tareas_controller->obtenerTareaPorId($_SESSION["lti_idTarea"])[0]->paquete;
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$tareas_controller = new TareasController();
+		//$paquete = $tareas_controller->obtenerTareaPorId($_SESSION["lti_idTarea"])[0]->paquete;
+		$paquete = $this->obtenerTareaPorId($_SESSION["lti_idTarea"])[0]->paquete;
 		$paquete_ruta = str_replace('.', '\\', $paquete);
-		$alumnos = $alumnos_controller->obtenerAlumnos();
+		//$alumnos = $alumnos_controller->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 		$reporte_jplag_generado = false;
 		$numero_practicas_subidas = 0;
 		$ruta_carpeta_tarea = "../../".$_SESSION["lti_idCurso"]."/".$_SESSION["lti_idTarea"]."/";
@@ -130,9 +132,11 @@ class ProfesoresController extends AppController{
 		
 		$alumnos_con_practicas = [];
 		foreach ($alumnos as $alumno):
-			$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			if(!$intentos_alumno->isEmpty()){
-				$ultimo_intento = $intentos_controller->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+				//$ultimo_intento = $intentos_controller->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+				$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 				if(!empty($ultimo_intento)){
 					array_push($alumnos_con_practicas, $alumno->nombre." ".$alumno->apellidos);
 					$numero_practicas_subidas++;
@@ -166,10 +170,12 @@ class ProfesoresController extends AppController{
 		}
 		//$this->comprobarSesion();
 		
-		$alumnos_controller = new AlumnosController();
-		$intentos_controller = new IntentosController();
-		$this->set('alumnos', $alumnos_controller->obtenerAlumnos());
-		$this->set('intentos', $intentos_controller->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));
+		//$alumnos_controller = new AlumnosController();
+		//$intentos_controller = new IntentosController();
+		//$this->set('alumnos', $alumnos_controller->obtenerAlumnos());
+		$this->set('alumnos', $this->obtenerAlumnos());
+		//$this->set('intentos', $intentos_controller->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));
+		$this->set('intentos', $this->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));
 		
 	}
 	
@@ -183,13 +189,15 @@ class ProfesoresController extends AppController{
 		}
 		//$this->comprobarSesion();
 		
-		$alumnos_controler = new AlumnosController();
-		$intentos_controller = new IntentosController();
+		//$alumnos_controler = new AlumnosController();
+		//$intentos_controller = new IntentosController();
 		$graficas_controller = new GraficasController();
-		$alumnos = $alumnos_controler->obtenerAlumnos();
+		//$alumnos = $alumnos_controler->obtenerAlumnos();
+		$alumnos = $this->obtenerAlumnos();
 		$alumnos_intentos = array();
 		foreach ($alumnos as $alumno){
-			$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			if(!$intentos->isEmpty()){
 				$alumnos_intentos[$alumno->id] = $alumno->nombre." ".$alumno->apellidos;
 			}
@@ -300,6 +308,7 @@ class ProfesoresController extends AppController{
 	
 	}
 	
+	/*
 	public function obtenerProfesorPorKeyCorreo($consumer_key, $correo){
 		
 		return $this->Profesores->find('all')
@@ -323,6 +332,7 @@ class ProfesoresController extends AppController{
 								->toArray();
 		
 	}
+	*/
 	
 }
 

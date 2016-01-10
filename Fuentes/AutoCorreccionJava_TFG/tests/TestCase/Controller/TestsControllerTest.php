@@ -48,6 +48,7 @@ class TestsControllerTest extends IntegrationTestCase{
 		
 	}
 	
+	/*
 	public function testObtenerTestPorIdTarea(){
 		
 		$this->tests_controller->guardarTest($this->datos["tarea_id"], $this->datos["nombre"]);
@@ -59,6 +60,7 @@ class TestsControllerTest extends IntegrationTestCase{
 		}
 		
 	}
+	*/
 	
 	private function __crearProfesor(){
 		

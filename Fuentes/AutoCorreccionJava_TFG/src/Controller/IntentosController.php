@@ -29,9 +29,11 @@ class IntentosController extends AppController{
 		$this->set("intento", $intento_realizado);		
 		$this->__comprobarTestSubido();
 		
+		//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
 		$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
 		$num_ultimo_intento = 0;
 		if(!$intentos_alumno->isEmpty()){
+			//$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
 			$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
 			if(!empty($ultimo_intento)){
 				$num_ultimo_intento = $ultimo_intento["numero_intento"];
@@ -55,8 +57,9 @@ class IntentosController extends AppController{
 				else{									
 					$this->ruta_carpeta_id = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
 										. $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";				
-					$tareas_controller = new TareasController();
-					$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;									
+					//$tareas_controller = new TareasController();
+					//$this->id_profesor = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;									
+					$this->id_profesor = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;
 					$this->__copiarArquetipoMaven();
 					return $this->redirect(['action' => 'subirPractica', $this->intento_realizado]);
 				}
@@ -66,8 +69,9 @@ class IntentosController extends AppController{
 	
 	private function __comprobarTestSubido(){
 		
-		$tests_controller = new TestsController();
-		$query = $tests_controller->obtenerTestPorIdTarea($_SESSION['lti_idTarea']);
+		//$tests_controller = new TestsController();
+		//$query = $tests_controller->obtenerTestPorIdTarea($_SESSION['lti_idTarea']);
+		$query = $this->obtenerTestPorIdTarea($_SESSION['lti_idTarea']);
 		$test_subido = true;
 		
 		if(empty($query)){
@@ -83,14 +87,17 @@ class IntentosController extends AppController{
 	
 	private function __establecerDatosVista(){
 		
-		$tareas_controller = new TareasController();
-		$this->paquete = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;	
-		$this->numero_maximo_intentos = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->num_max_intentos;			
+		//$tareas_controller = new TareasController();
+		//$this->paquete = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;	
+		$this->paquete = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
+		//$this->numero_maximo_intentos = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->num_max_intentos;			
+		$this->numero_maximo_intentos = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->num_max_intentos;
 		$query = $this->Intentos->find('all')
 								->where(['tarea_id' => $_SESSION['lti_idTarea'], 'alumno_id' => $_SESSION['lti_userId']])
 								->toArray();
 		$this->total_intentos_realizados = count($query);		
-		$this->fecha_limite = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->fecha_limite;
+		//$this->fecha_limite = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->fecha_limite;
+		$this->fecha_limite = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->fecha_limite;
 		$this->fecha_limite = (new \DateTime($this->fecha_limite))->format('Y-m-d');
 		$this->fecha_actual = (new \DateTime(date("Y-m-d H:i:s")))->format('Y-m-d');
 		
@@ -244,9 +251,10 @@ class IntentosController extends AppController{
 																						   $this->intento_realizado);
 		}
 		
-		$violaciones_controller = new ViolacionesController();
+		//$violaciones_controller = new ViolacionesController();
 		
-		if(empty($violaciones_controller->obtenerViolacionPorIntentoTipo($this->id_intento, "IL_INFINITE_LOOP"))){
+		//if(empty($violaciones_controller->obtenerViolacionPorIntentoTipo($this->id_intento, "IL_INFINITE_LOOP"))){
+		if(empty($this->obtenerViolacionPorIntentoTipo($this->id_intento, "IL_INFINITE_LOOP"))){
 			$this->__ejecutarTests();
 		}
 		else{	// Violación de bucle infinito
@@ -470,6 +478,7 @@ class IntentosController extends AppController{
 	
 	}
 	
+	/*
 	public function obtenerUltimoIntentoPorIdTareaAlumno($id_tarea, $id_alumno){
 		
 		return $this->Intentos->find('all')
@@ -515,6 +524,7 @@ class IntentosController extends AppController{
 							  ->where(['alumno_id' => $_SESSION["lti_userId"]]);
 	
 	}
+	*/
 	
 }
 

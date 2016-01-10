@@ -44,6 +44,7 @@ class AlumnosController extends AppController{
 	}
 	*/
 	
+	/*
 	public function obtenerAlumnos(){
 		
 		return $this->Alumnos->find('all');
@@ -57,6 +58,7 @@ class AlumnosController extends AppController{
 							 ->toArray();
 		
 	}
+	*/
 	
 }
 
