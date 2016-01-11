@@ -466,6 +466,42 @@ class AppControllerTest extends IntegrationTestCase{
 	
 	}
 	
+	public function testObtenerIntentosConViolacionesVacio(){
+	
+		$this->__crearProfesor("Luis", "Izquierdo", "ck1", "s1", "li@ubu.es", 1);
+		$this->__crearAlumno(3, 9, "Ivan", "Izquierdo", "ii@alu.ubu.es");
+		$this->__crearTarea(18, 9, 1, "practica1", 20, "es.ubu", new \DateTime(date("Y-m-d H:i:s")),
+							new \DateTime(date("Y-m-d H:i:s")));
+		$this->__crearIntento(18, 3, "practica.zip", 1, 1, "../1/", new \DateTime(date("Y-m-d H:i:s")), 1);
+	
+		@session_start();
+		$_SESSION['lti_userId'] = 3;
+		$query = $this->app_controller->obtenerIntentosConViolaciones();
+	
+		foreach ($query as $intento){
+			$this->assertEquals(0, count($intento->violaciones));
+		}
+	
+	}
+	
+	public function testObtenerIntentosConErroresVacio(){
+		
+		$this->__crearProfesor("Luis", "Izquierdo", "ck1", "s1", "li@ubu.es", 1);
+		$this->__crearAlumno(3, 9, "Ivan", "Izquierdo", "ii@alu.ubu.es");
+		$this->__crearTarea(18, 9, 1, "practica1", 20, "es.ubu", new \DateTime(date("Y-m-d H:i:s")),
+							new \DateTime(date("Y-m-d H:i:s")));
+		$this->__crearIntento(18, 3, "practica.zip", 1, 1, "../1/", new \DateTime(date("Y-m-d H:i:s")), 1);
+		
+		@session_start();
+		$_SESSION['lti_userId'] = 3;
+		$query = $this->app_controller->obtenerIntentosConErrores();
+		
+		foreach ($query as $intento){
+			$this->assertEquals(0, count($intento->errores));
+		}
+		
+	}
+	
 	private function __crearProfesor($nombre, $apellidos, $consumer_key, $secret, $correo, $id = null){
 	
 		$nuevo_profesor = $this->profesores_tabla->newEntity();

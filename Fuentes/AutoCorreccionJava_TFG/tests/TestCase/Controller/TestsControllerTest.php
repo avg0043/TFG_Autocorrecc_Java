@@ -48,20 +48,6 @@ class TestsControllerTest extends IntegrationTestCase{
 		
 	}
 	
-	/*
-	public function testObtenerTestPorIdTarea(){
-		
-		$this->tests_controller->guardarTest($this->datos["tarea_id"], $this->datos["nombre"]);
-		$query = $this->tests_controller->obtenerTestPorIdTarea($this->datos["tarea_id"]);
-		
-		foreach ($query as $error){
-			$this->assertEquals($this->datos["tarea_id"], $error->tarea_id);
-			$this->assertEquals($this->datos["nombre"], $error->nombre);
-		}
-		
-	}
-	*/
-	
 	private function __crearProfesor(){
 		
 		$this->profesores_tabla = TableRegistry::get("Profesores");
