@@ -12,20 +12,9 @@ class ErroresController extends AppController{
 		$nuevo_error->nombre_test = $nombre_test;
 		$nuevo_error->tipo_error = $tipo_error;
 		$nuevo_error->tipo = $tipo;
-		//$nuevo_error->traza = $traza_error;
 		$this->Errores->save($nuevo_error);
 		
 	}
-	
-	/*
-	public function obtenerErroresPorIdIntento($id_intento){
-	
-		return $this->Errores->find('all')
-							 ->where(['intento_id' => $id_intento])
-							 ->toArray();
-	
-	}
-	*/
 	
 }
 

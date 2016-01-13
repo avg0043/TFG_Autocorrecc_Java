@@ -3,14 +3,14 @@
 </nav>
 
 <div class="jumbotron">
-  <h1>Bienvenido!</h1>
-  <p>Rellene el siguiente formulario para registrarse en el servicio web y así poder obtener los
-  	 parámetros LTI necesarios para crear la tarea de tipo "herramienta externa" desde Moodle.</p>
+  <h3>Registro Autocorrección de prácticas Java</h3>
+  <p>Rellena el siguiente formulario para registrarte en la aplicación web y poder empezar
+  a utilizarla.</p>
 </div>
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
+		<div class="col-md-4 col-md-offset-4">
 			<?php
 			echo $this->Form->create($nuevo_profesor);
 			echo $this->Form->input('nombre', ['type' => 'text', 'label' => 'Nombre', 'class' => 'form-control']);

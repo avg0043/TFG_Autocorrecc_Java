@@ -11,6 +11,8 @@ class TareasControllerTest extends IntegrationTestCase{
 	
 	public function setUp(){
 		
+		error_reporting(0);
+		@session_start();
 		$this->profesores_tabla = TableRegistry::get("Profesores");
 		$this->tareas_tabla = TableRegistry::get("Tareas");
 	
@@ -25,8 +27,6 @@ class TareasControllerTest extends IntegrationTestCase{
 	
 	public function testConfigurarParametrosTarea(){
 		
-		@session_start();
-		//error_reporting(0);
 		$datos = [
 				'num_max_intentos' => 20,
 				'paquete' => "es.ubu",

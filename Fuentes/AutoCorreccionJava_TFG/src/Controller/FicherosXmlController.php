@@ -4,6 +4,20 @@ namespace App\Controller;
 
 class FicherosXmlController extends AppController{
 	
+	public function probando(){
+		simplexml_load_file('pmd.xml');
+		if(file_exists("index.php")){
+			return 1;
+		}else{
+			return 3;
+		}
+	}
+	
+	public function probandoNuevo(){
+		exec('dir', $salida);
+		return $salida;
+	}
+	
 	public function editarPomArquetipoMaven($ruta_carpeta_id){
 		
 		$pom_xml = simplexml_load_file($ruta_carpeta_id . 'arquetipo/pom.xml');
@@ -85,7 +99,7 @@ class FicherosXmlController extends AppController{
 		
 	}
 	
-	public function guardarDatosXmlErroresUnitarios($ruta_carpeta_id, $id_intento, $intento_realizado){
+	public function guardarDatosXmlErrores($ruta_carpeta_id, $id_intento, $intento_realizado){
 		
 		$errores_controller = new ErroresController();
 		$ficheros_xml = glob($ruta_carpeta_id . $intento_realizado . "/surefire-reports/*xml");
@@ -94,6 +108,7 @@ class FicherosXmlController extends AppController{
 			$xml = simplexml_load_file($fichero);
 			$fallos = (int) $xml["failures"];
 			$errores = (int) $xml["errors"];
+			
 			if($fallos > 0){	// test que falla por assert
 				foreach($xml->children()->testcase as $test_case){
 					if(isset($test_case->failure)){
@@ -102,8 +117,8 @@ class FicherosXmlController extends AppController{
 					}
 				}
 			}
-			//elseif($errores > 0){	// test que falla por excepción
-			if($errores > 0){
+			
+			if($errores > 0){	// test que falla por excepción
 				foreach($xml->children()->testcase as $test_case){
 					if(isset($test_case->error)){
 						$errores_controller->guardarError($id_intento, $test_case["classname"], $test_case["name"],

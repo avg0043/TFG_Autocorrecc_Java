@@ -2,19 +2,23 @@
 
 namespace App\Controller;
 
+use Cake\ORM\TableRegistry;
 include('/../../vendor/libchart/libchart/classes/libchart.php');
 
 class GraficasController extends AppController{
 	
 	public function generarGraficasViolacionesErroresAlumno(){
 	
-		//include('/../../vendor/libchart/libchart/classes/libchart.php');
-	
-		//$intentos_controller = new IntentosController();
-		//$query_violaciones = $intentos_controller->obtenerIntentosConViolaciones();
-		$query_violaciones = $this->obtenerIntentosConViolaciones();
-		//$query_errores = $intentos_controller->obtenerIntentosConErrores();
-		$query_errores = $this->obtenerIntentosConErrores();
+		//$query_violaciones = $this->obtenerIntentosConViolaciones();
+		$intentos_tabla = TableRegistry::get("Intentos");
+		$query_violaciones = $intentos_tabla->find('all')
+									    	->contain(['Violaciones'])
+									    	->where(['alumno_id' => $_SESSION["lti_userId"]]);
+		
+		//$query_errores = $this->obtenerIntentosConErrores();
+		$query_errores = $intentos_tabla->find('all')
+								    	->contain(['Errores'])
+								    	->where(['alumno_id' => $_SESSION["lti_userId"]]);
 	
 		// Línea
 		$chart_linea = new \LineChart(800, 350);
@@ -93,42 +97,6 @@ class GraficasController extends AppController{
 	
 	}
 	
-	/*
-	public function generarGraficaPrioridadesViolacionesAlumno(){
-	
-		//include('/../../vendor/libchart/libchart/classes/libchart.php');
-	
-		$violaciones_existen = false;
-		$intentos_controller = new IntentosController();
-		$query = $intentos_controller->obtenerIntentosConViolaciones();
-	
-		$chart = new \PieChart(800, 350);
-		$dataSet = new \XYDataSet();
-	
-		foreach ($query as $intento){
-			if(count($intento->violaciones) > 0){
-				$violaciones_existen = true;
-				foreach ($intento->violaciones as $violacion){
-					$prioridad = $violacion->prioridad;
-					$point = $dataSet->getPointWithX("Prioridad ".$prioridad);
-					if($point == null){
-						$dataSet->addPoint(new \Point("Prioridad ".$prioridad, 1));
-					}else{
-						$point->setY($point->getY() + 1);
-					}
-				}
-			}
-		}
-	
-		if($violaciones_existen){
-			$chart->setDataSet($dataSet);
-			$chart->setTitle("Porcentaje de la media las prioridades de las violaciones de código cometidas");
-			$chart->render("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones.png");
-		}
-	
-	}
-	*/
-	
 	public function generarGraficaPrioridadesViolacionesIntentoRealizadoAlumno($id_intento){
 	
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){
@@ -137,9 +105,12 @@ class GraficasController extends AppController{
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){
 			unlink("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png");
 		}
-		//$violaciones_controller = new ViolacionesController();
-		//$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($id_intento);
-		$violaciones = $this->obtenerViolacionesPorIdIntento($id_intento);
+
+		//$violaciones = $this->obtenerViolacionesPorIdIntento($id_intento);
+		$violaciones_tabla = TableRegistry::get("Violaciones");
+		$violaciones = $violaciones_tabla->find('all')
+									     ->where(['intento_id' => $id_intento])
+									     ->toArray();
 	
 		if(!empty($violaciones)){
 			$chart = new \PieChart(800, 350);
@@ -173,23 +144,22 @@ class GraficasController extends AppController{
 	
 	public function generarGraficaLineaPromedioErroresUnitariosViolaciones(){
 	
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$violaciones_controller = new ViolacionesController();
-		//$errores_controller = new ErroresController();
-	
 		$chart = new \LineChart(800, 350);
 		$serie_violaciones = new \XYDataSet();
 		$serie_errores = new \XYDataSet();
 	
 		$num_alumnos_por_intento = array();
-		//$alumnos = $alumnos_controller->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 		$intento_realizado = false;
 	
 		foreach ($alumnos as $alumno){
-			//$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos = $intentos_tabla->find('all')
+    								   ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
+			
 			foreach ($intentos as $intento){
 				$intento_realizado = true;
 				$clave = "Intento ".$intento->numero_intento;
@@ -201,8 +171,13 @@ class GraficasController extends AppController{
 				}
 	
 				// Violaciones
-				//$num_violaciones = count($violaciones_controller->obtenerViolacionesPorIdIntento($intento->id));
-				$num_violaciones = count($this->obtenerViolacionesPorIdIntento($intento->id));
+				//$num_violaciones = count($this->obtenerViolacionesPorIdIntento($intento->id));
+				$violaciones_tabla = TableRegistry::get("Violaciones");
+				$query = $violaciones_tabla->find('all')
+									       ->where(['intento_id' => $intento->id])
+									       ->toArray();
+				$num_violaciones = count($query);
+				
 				$point_violacion = $serie_violaciones->getPointWithX($clave);
 				if($point_violacion != null){
 					$point_violacion->setY(($point_violacion->getY() + $num_violaciones) / $num_alumnos_por_intento[$clave]);
@@ -211,8 +186,13 @@ class GraficasController extends AppController{
 				}
 	
 				// Errores
-				//$num_errores = count($errores_controller->obtenerErroresPorIdIntento($intento->id));
-				$num_errores = count($this->obtenerErroresPorIdIntento($intento->id));
+				//$num_errores = count($this->obtenerErroresPorIdIntento($intento->id));
+				$errores_tabla = TableRegistry::get("Errores");
+				$query = $errores_tabla->find('all')
+									   ->where(['intento_id' => $intento->id])
+									   ->toArray();
+				$num_errores = count($query);
+				
 				$point_error = $serie_errores->getPointWithX($clave);
 				if($point_error != null){
 					$point_error->setY(($point_error->getY() + $num_errores) / $num_alumnos_por_intento[$clave]);
@@ -235,22 +215,22 @@ class GraficasController extends AppController{
 	
 	public function generarGraficaMediaErrores(){
 	
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$errores_controller = new ErroresController();
-	
 		$chart = new \VerticalBarChart(800, 350);
 		$serie_errores_unitarios = new \XYDataSet();
 		$serie_errores_excepcion = new \XYDataSet();
 	
 		$num_alumnos_por_intento = array();
-		//$alumnos = $alumnos_controller->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 		$intento_realizado = false;
 	
 		foreach ($alumnos as $alumno){
-			//$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos = $intentos_tabla->find('all')
+    								   ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
+			
 			foreach ($intentos as $intento){
 				$intento_realizado = true;
 				$clave = "Intento ".$intento->numero_intento;
@@ -264,8 +244,12 @@ class GraficasController extends AppController{
 				// Errores
 				$num_errores_unitarios = 0;
 				$num_errores_excepcion = 0;
-				//$errores = $errores_controller->obtenerErroresPorIdIntento($intento->id);
-				$errores = $this->obtenerErroresPorIdIntento($intento->id);
+				//$errores = $this->obtenerErroresPorIdIntento($intento->id);
+				$errores_tabla = TableRegistry::get("Errores");
+				$errores = $errores_tabla->find('all')
+							       		 ->where(['intento_id' => $intento->id])
+							       	     ->toArray();
+				
 				foreach ($errores as $error){
 					if($error->tipo_error == "failure"){
 						$num_errores_unitarios++;
@@ -305,11 +289,9 @@ class GraficasController extends AppController{
 	
 	public function generarGraficaVerticalAlumnosViolacionesCometidas(){
 	
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$violaciones_controller = new ViolacionesController();
-		//$alumnos = $alumnos_controller->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 		$intentos_realizados = false;
 	
 		$chart = new \VerticalBarChart(800, 350);
@@ -317,14 +299,21 @@ class GraficasController extends AppController{
 		$this->__añadirIntervalosViolacionesEjeX($dataSet);
 	
 		foreach($alumnos as $alumno){
-			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos_alumno = $intentos_tabla->find('all')
+    										  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
+			
 			if(!$intentos_alumno->isEmpty()){
 				$intentos_realizados = true;
 				$total_violaciones = 0;
 				foreach($intentos_alumno as $intento){
-					//$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($intento->id);
-					$violaciones = $this->obtenerViolacionesPorIdIntento($intento->id);
+					//$violaciones = $this->obtenerViolacionesPorIdIntento($intento->id);
+					$violaciones_tabla = TableRegistry::get("Violaciones");
+					$violaciones = $violaciones_tabla->find('all')
+												     ->where(['intento_id' => $intento->id])
+												     ->toArray();
+					
 					$total_violaciones += count($violaciones);
 				}
 				$intervalo = $this->__obtenerIntervaloViolacion($total_violaciones);
@@ -394,11 +383,10 @@ class GraficasController extends AppController{
 	}
 	
 	public function generarGraficaVerticalAlumnosIntentos(){
-	
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$alumnos = $alumnos_controller->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 	
 		$intentos_pasa_test = false;
 		$intentos_no_pasa_test = false;
@@ -416,8 +404,11 @@ class GraficasController extends AppController{
 		}
 	
 		foreach($alumnos as $alumno){
-			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);	
+			//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);	
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos_alumno = $intentos_tabla->find('all')
+    										  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
+			
 			if(!$intentos_alumno->isEmpty()){
 				$num_intentos_realizados = 0;
 				$test_pasados = false;
@@ -426,11 +417,9 @@ class GraficasController extends AppController{
 					if($intento->resultado == 1){	// Test pasados
 						$intentos_pasa_test = true;
 						$test_pasados = true;
-						/////////////////////////////////////////
 						$intervalo = $this->__obtenerIntervaloIntento($num_intentos_realizados);
 						$point = $dataSet_pasa_test->getPointWithX($intervalo);
 						$point->setY($point->getY() + 1);
-						/////////////////////////////////////////
 						break;
 					}
 				}
@@ -509,19 +498,21 @@ class GraficasController extends AppController{
 	}
 	
 	public function generarGraficaAlumnosTest(){
-	
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$alumnos = $alumnos_controller->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 		$alumnos_registrados = false;
 		$alumnos_pasan_test = 0;
 		$alumnos_no_pasan_test = 0;
 	
 		foreach($alumnos as $alumno){
 			$alumnos_registrados = true;
-			//$intentos_pasan_test = $intentos_controller->obtenerIntentosTestPasados($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos_pasan_test = $this->obtenerIntentosTestPasados($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_pasan_test = $this->obtenerIntentosTestPasados($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos_pasan_test = $intentos_tabla->find('all')
+    											  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id, 'resultado' => 1]);
+			
 			if($intentos_pasan_test->isEmpty()){
 				$alumnos_no_pasan_test++;
 			}
@@ -539,7 +530,6 @@ class GraficasController extends AppController{
 			$chart->setTitle("Porcentaje de alumnos que pasan y no pasan los test");
 			$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-test.png");
 		}
-		//$this->set("alumnos_registrados", $alumnos_registrados);
 	
 	}
 	
@@ -570,10 +560,9 @@ class GraficasController extends AppController{
 	
 	private function __calcularMediaIntentos(){
 	
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$alumnos = $alumnos_controller->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 	
 		$_SESSION["media_intentos_pasa_test"] = false;
 		$_SESSION["media_intentos_no_pasa_test"] = false;
@@ -584,20 +573,16 @@ class GraficasController extends AppController{
 		$total_intentos_pasan_test = 0;
 		$total_intentos_no_pasan_test = 0;
 	
-		/*
-			$chart_pasa_test = new \HorizontalBarChart(600, 350);
-			$dataSet_pasa_test = new \XYDataSet();
-			$chart_no_pasa_test = new \HorizontalBarChart(600, 350);
-			$dataSet_no_pasa_test = new \XYDataSet();
-			*/
-	
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-prof-intentos_noPasaTest.png")){
 			unlink("img/".$_SESSION["lti_idTarea"]."-prof-intentos_noPasaTest.png");
 		}
 	
 		foreach($alumnos as $alumno){
-			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos_alumno = $intentos_tabla->find('all')
+    										  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);	
+			
 			if(!$intentos_alumno->isEmpty()){
 				$num_intentos_realizados = 0;
 				$test_pasados = false;
@@ -606,7 +591,6 @@ class GraficasController extends AppController{
 					if($intento->resultado == 1){	// Test pasados
 						$intentos_pasa_test = true;
 						$test_pasados = true;
-						//$dataSet_pasa_test->addPoint(new \Point($alumno->apellidos, $num_intentos_realizados));
 						$num_alumnos_pasan_test++;
 						$total_intentos_pasan_test += $num_intentos_realizados;
 						break;
@@ -614,7 +598,6 @@ class GraficasController extends AppController{
 				}
 				if(!$test_pasados){		// Test no pasados
 					$intentos_no_pasa_test = true;
-					//$dataSet_no_pasa_test->addPoint(new \Point($alumno->apellidos, $num_intentos_realizados));
 					$num_alumnos_no_pasan_test++;
 					$total_intentos_no_pasan_test += $num_intentos_realizados;
 				}
@@ -623,71 +606,49 @@ class GraficasController extends AppController{
 	
 		if($intentos_pasa_test){
 			$_SESSION["media_intentos_pasa_test"] = round($total_intentos_pasan_test/$num_alumnos_pasan_test, 2);
-			/*
-				$dataSet_pasa_test->addPoint(new \Point("Media", $_SESSION["media_intentos_pasa_test"]));
-				$chart_pasa_test->setDataSet($dataSet_pasa_test);
-				$chart_pasa_test->getPlot()->setGraphPadding(new \Padding(5, 30, 20, 140));
-				$chart_pasa_test->setTitle("Número de intentos mínimo realizados para pasar los test");
-				*/
-			//$chart_pasa_test->render("img/".$_SESSION["lti_idTarea"]."-prof-intentos_pasaTest.png");
 		}
 		if($intentos_no_pasa_test){
 			$_SESSION["media_intentos_no_pasa_test"] = round($total_intentos_no_pasan_test/$num_alumnos_no_pasan_test, 2);
-			/*
-				$dataSet_no_pasa_test->addPoint(new \Point("Media", $_SESSION["media_intentos_no_pasa_test"]));
-				$chart_no_pasa_test->setDataSet($dataSet_no_pasa_test);
-				$chart_no_pasa_test->getPlot()->setGraphPadding(new \Padding(5, 30, 20, 140));
-				$chart_no_pasa_test->setTitle("Número de intentos realizados sin conseguir pasar los test");
-				*/
-			//$chart_no_pasa_test->render("img/".$_SESSION["lti_idTarea"]."-prof-intentos_noPasaTest.png");
 		}
 	
 	}
 	
 	private function __calcularMediaViolaciones(){
-	
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$violaciones_controller = new ViolacionesController();
-		//$alumnos = $alumnos_controller->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 	
 		$_SESSION["media_violaciones"] = false;
 		$intentos_realizados = false;
 		$total_violaciones = 0;
 		$num_alumnos = 0;
 	
-		/*
-			$chart = new \HorizontalBarChart(600, 350);
-			$dataSet = new \XYDataSet();
-			*/
-	
 		foreach($alumnos as $alumno){
-			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos_alumno = $intentos_tabla->find('all')
+											  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
+			
 			if(!$intentos_alumno->isEmpty()){
 				$intentos_realizados = true;
 				$total_violaciones_alumno = 0;
 				$num_alumnos += 1;
 				foreach($intentos_alumno as $intento){
-					//$violaciones = $violaciones_controller->obtenerViolacionesPorIdIntento($intento->id);
-					$violaciones = $this->obtenerViolacionesPorIdIntento($intento->id);
+					//$violaciones = $this->obtenerViolacionesPorIdIntento($intento->id);
+					$violaciones_tabla = TableRegistry::get("Violaciones");
+					$violaciones = $violaciones_tabla->find('all')
+												     ->where(['intento_id' => $intento->id])
+												     ->toArray();
+					
 					$total_violaciones_alumno += count($violaciones);
 				}
-				//$dataSet->addPoint(new \Point($alumno->apellidos, $total_violaciones_alumno));
 				$total_violaciones += $total_violaciones_alumno;
 			}
 		}
 	
 		if($intentos_realizados){
 			$_SESSION["media_violaciones"] = round($total_violaciones/$num_alumnos, 2);
-			/*
-				$dataSet->addPoint(new \Point("Media", $_SESSION["media_violaciones"]));
-				$chart->setDataSet($dataSet);
-				$chart->getPlot()->setGraphPadding(new \Padding(5, 30, 20, 140));
-				$chart->setTitle("Número de violaciones de código cometidas");
-				*/
-			//$chart->render("img/".$_SESSION["lti_idTarea"]."-prof-violaciones.png");
 		}
 	
 	}

@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Cake\ORM\TableRegistry;
+
 class ProfesoresController extends AppController{
 	
 	/**
@@ -83,21 +85,6 @@ class ProfesoresController extends AppController{
 	
 	}
 	
-	/**
-	 * Función que guarda en una variable los datos del profesor actual para que
-	 * puedan ser mostrados desde su vista asociada.
-	 */
-	/*
-	public function mostrarDatosProfesor(){
-	
-		session_start();
-		$this->comprobarSesion();
-		
-		$this->set('profesor', $this->Profesores->find('all')->where(['correo' => $_SESSION['lti_correo']]));
-	
-	}
-	*/
-	
 	public function mostrarPanel(){
 	
 		session_start();
@@ -113,14 +100,17 @@ class ProfesoresController extends AppController{
 		}
 		//$this->__comprobarSesion();
 		
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$tareas_controller = new TareasController();
-		//$paquete = $tareas_controller->obtenerTareaPorId($_SESSION["lti_idTarea"])[0]->paquete;
-		$paquete = $this->obtenerTareaPorId($_SESSION["lti_idTarea"])[0]->paquete;
+		//$paquete = $this->obtenerTareaPorId($_SESSION["lti_idTarea"])[0]->paquete;
+		$tareas_tabla = TableRegistry::get("Tareas");
+		$query = $tareas_tabla->find('all')
+							  ->where(['id' => $_SESSION["lti_idTarea"]])
+							  ->toArray();
+		$paquete = $query[0]->paquete;
+		
 		$paquete_ruta = str_replace('.', '\\', $paquete);
-		//$alumnos = $alumnos_controller->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 		$reporte_jplag_generado = false;
 		$numero_practicas_subidas = 0;
 		$ruta_carpeta_tarea = "../../".$_SESSION["lti_idCurso"]."/".$_SESSION["lti_idTarea"]."/";
@@ -130,13 +120,21 @@ class ProfesoresController extends AppController{
 		}
 		mkdir("../../plagios/practicas", 0777, true);
 		
+		$intentos_tabla = TableRegistry::get("Intentos");
 		$alumnos_con_practicas = [];
 		foreach ($alumnos as $alumno):
-			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_alumno = $intentos_tabla->find('all')
+    										  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
+		
 			if(!$intentos_alumno->isEmpty()){
-				//$ultimo_intento = $intentos_controller->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-				$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+				//$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+				//$intentos_tabla = TableRegistry::get("Intentos");
+				$ultimo_intento = $intentos_tabla->find('all')
+										    	 ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id])
+										    	 ->last()
+										    	 ->toArray();
+				
 				if(!empty($ultimo_intento)){
 					array_push($alumnos_con_practicas, $alumno->nombre." ".$alumno->apellidos);
 					$numero_practicas_subidas++;
@@ -170,12 +168,13 @@ class ProfesoresController extends AppController{
 		}
 		//$this->comprobarSesion();
 		
-		//$alumnos_controller = new AlumnosController();
-		//$intentos_controller = new IntentosController();
-		//$this->set('alumnos', $alumnos_controller->obtenerAlumnos());
-		$this->set('alumnos', $this->obtenerAlumnos());
-		//$this->set('intentos', $intentos_controller->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));
-		$this->set('intentos', $this->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$intentos_tabla = TableRegistry::get("Intentos");
+		
+		//$this->set('alumnos', $this->obtenerAlumnos());
+		$this->set('alumnos', $alumnos_tabla->find('all'));
+		//$this->set('intentos', $this->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));
+		$this->set('intentos', $intentos_tabla->find('all')->where(['tarea_id' => $_SESSION["lti_idTarea"]]));
 		
 	}
 	
@@ -189,15 +188,17 @@ class ProfesoresController extends AppController{
 		}
 		//$this->comprobarSesion();
 		
-		//$alumnos_controler = new AlumnosController();
-		//$intentos_controller = new IntentosController();
 		$graficas_controller = new GraficasController();
-		//$alumnos = $alumnos_controler->obtenerAlumnos();
-		$alumnos = $this->obtenerAlumnos();
+		//$alumnos = $this->obtenerAlumnos();
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
 		$alumnos_intentos = array();
 		foreach ($alumnos as $alumno){
-			//$intentos = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-			$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			//$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos = $intentos_tabla->find('all')
+    								   ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
+			
 			if(!$intentos->isEmpty()){
 				$alumnos_intentos[$alumno->id] = $alumno->nombre." ".$alumno->apellidos;
 			}
@@ -216,34 +217,26 @@ class ProfesoresController extends AppController{
 			if($this->request->data["MediasGlobales"]){
 				$_SESSION["grafica_medias_globales"] = true;
 				$graficas_controller->generarGraficaMedias();
-				//$this->__calcularMediaIntentos();
-				//$this->__calcularMediaViolaciones();
-				//$this->__generarGraficaMedias();
 			}
 			if($this->request->data["MediaViolacionesErrores"]){
 				$_SESSION["grafica_promedio_errores_violaciones"] = true;
 				$graficas_controller->generarGraficaLineaPromedioErroresUnitariosViolaciones();
-				//$this->__generarGraficaLineaPromedioErroresUnitariosViolaciones();
 			}
 			if($this->request->data["MediaErrores"]){
 				$_SESSION["grafica_media_errores"] = true;
 				$graficas_controller->generarGraficaMediaErrores();
-				//$this->__generarGraficaMediaErrores();
 			}
 			if($this->request->data["AlumnosViolaciones"]){
 				$_SESSION["grafica_alumnos_violaciones"] = true;
 				$graficas_controller->generarGraficaVerticalAlumnosViolacionesCometidas();
-				//$this->__generarGraficaVerticalAlumnosViolacionesCometidas();			
 			}
 			if($this->request->data["AlumnosIntentos"]){
 				$_SESSION["grafica_alumnos_intentos"] = true;
 				$graficas_controller->generarGraficaVerticalAlumnosIntentos();
-				//$this->__generarGraficaVerticalAlumnosIntentos();
 			}
 			if($this->request->data["AlumnosTest"]){
 				$_SESSION["grafica_alumnos_test"] = true;
 				$graficas_controller->generarGraficaAlumnosTest();
-				//$this->__generarGraficaAlumnosTest();
 			}
 			if($this->request->data["Todas"]){
 				$_SESSION["grafica_medias_globales"] = true;
@@ -258,23 +251,12 @@ class ProfesoresController extends AppController{
 				$graficas_controller->generarGraficaVerticalAlumnosIntentos();
 				$graficas_controller->generarGraficaAlumnosTest();
 				$graficas_controller->generarGraficaMediaErrores();
-				/*
-				$this->__calcularMediaIntentos();
-				$this->__calcularMediaViolaciones();
-				$this->__generarGraficaMedias();
-				$this->__generarGraficaLineaPromedioErroresUnitariosViolaciones();
-				$this->__generarGraficaVerticalAlumnosViolacionesCometidas();
-				$this->__generarGraficaVerticalAlumnosIntentos();
-				$this->__generarGraficaAlumnosTest();
-				$this->__generarGraficaMediaErrores();
-				*/
 			}
 			if($this->request->data["field"]){
 				$_SESSION["dropdown"] = true;
 				$id_alumno = $this->request->data["field"];
 				$this->set("id_alumno", $id_alumno);
-			}
-			
+			}	
 			if(!$_SESSION["grafica_medias_globales"] && !$_SESSION["grafica_promedio_errores_violaciones"] &&
 				!$_SESSION["grafica_alumnos_violaciones"] && !$_SESSION["grafica_alumnos_intentos"] &&
 				!$_SESSION["grafica_alumnos_test"] && !$_SESSION["dropdown"] && !$_SESSION["grafica_media_errores"]){
@@ -307,32 +289,6 @@ class ProfesoresController extends AppController{
 		echo json_encode($reportes);
 	
 	}
-	
-	/*
-	public function obtenerProfesorPorKeyCorreo($consumer_key, $correo){
-		
-		return $this->Profesores->find('all')
-					            ->where(['consumer_key' => $consumer_key, 'correo' => $correo])
-								->toArray();
-		
-	}
-	
-	public function obtenerProfesorPorKey($consumer_key){
-		
-		return $this->Profesores->find('all')
-								->where(['consumer_key' => $consumer_key])
-								->toArray();
-		
-	}
-	
-	public function obtenerProfesorPorCorreo($correo){
-		
-		return $this->Profesores->find('all')
-								->where(['correo' => $correo])
-								->toArray();
-		
-	}
-	*/
 	
 }
 

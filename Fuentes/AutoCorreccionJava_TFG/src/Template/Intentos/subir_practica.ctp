@@ -13,7 +13,8 @@ else{
 
 <div class="jumbotron">
   <h3>Subida de Prácticas</h3>
-  <p>Suba la práctica en un fichero zip que contenga la estructura de carpetas correcta correspondiente al paquete.
+  <p>Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
+  	 Es decir: si el paquete es "uni.ubu", la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java. <br>
   	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes.</p>
 </div>
 
@@ -69,6 +70,7 @@ else{
 		?>
 		
 		<h4 class="page-header">Reportes del último intento realizado</h4>
+		<div class="div-reportes">
 		<a href=<?= $ruta."javancss.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">JAVANCSS</a>
 		<a href=<?= $ruta."jdepend-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">JDEPEND</a>
 		<?php if(file_exists($ruta_local."pmd.html")){ ?>
@@ -81,32 +83,32 @@ else{
 			  	<a href=<?= $ruta."surefire-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">ERRORES UNITARIOS</a>
 		<?php } 
 		}?>
-		
+		</div>
 
 <?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png")){ ?>
 	  	<h4 class="page-header">Gráfica Violaciones de código - Errores</h4>
 	  	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png"; ?>
-		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/>
+		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
 <?php }
 	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){ ?>
 	  	<h4 class="page-header">Gráfica Errores</h4>
 	  	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png"; ?>
-		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/>
+		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
 <?php }
 	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){?>
 		<h4 class="page-header">Gráfica Violaciones de código</h4>
 		<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
-		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/>
+		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
 <?php }
 	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){?>
 		<h4 class="page-header">Gráfica Prioridades de las Violaciones de código del último intento realizado (barras)</h4>
 		<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png"; ?>
-		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/>
+		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
 <?php }
 	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){?>
 		<h4 class="page-header">Gráfica Prioridades de las Violaciones de código del último intento realizado (circular)</h4>
 		<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png"; ?>
-		<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/>
+		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
 <?php }
 
 }

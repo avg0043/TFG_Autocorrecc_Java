@@ -8,9 +8,10 @@ class ExcepcionesControllerTest extends IntegrationTestCase{
 	
 	public function testMostrarErrorAccesoLocal(){
 	
-		$excepciones_controller = new ExcepcionesController();
-		$excepciones_controller->mostrarErrorAccesoLocal();
-		$this->get('/excepciones/mostrarErrorAccesoLocal');
+		//$excepciones_controller = new ExcepcionesController();
+		//$excepciones_controller->mostrarErrorAccesoLocal();
+		//$this->get('/excepciones/mostrarErrorAccesoLocal');
+		$this->post('/excepciones/mostrarErrorAccesoLocal');
 		$this->assertResponseOk();
 		$this->assertNoRedirect();
 	

@@ -23,42 +23,10 @@ class AlumnosController extends AppController{
 		$nuevo_alumno->correo = $_SESSION['lti_correo'];
 		$this->Alumnos->save($nuevo_alumno);
 		
-		$this->Flash->success(__('Primer acceso, ha sido registrado'));
+		$this->Flash->success(__('Primer acceso, has sido registrado'));
 		return $this->redirect(['controller' => 'Intentos', 'action' => 'subirPractica']);
 		
 	}
-	
-	/**
-	 * Función que guarda en una variable todos los alumnos que están
-	 * registrados en base de datos, para que puedan ser mostrados
-	 * desde la vista asociada.
-	 */
-	/*
-	public function mostrarAlumnos(){
-		
-		session_start();
-		$this->comprobarSesion();
-		
-		$this->set('alumnos', $this->obtenerAlumnos());
-		
-	}
-	*/
-	
-	/*
-	public function obtenerAlumnos(){
-		
-		return $this->Alumnos->find('all');
-		
-	}
-	
-	public function obtenerAlumnoPorId($id){
-		
-		return $this->Alumnos->find('all')
-							 ->where(['id' => $id])
-							 ->toArray();
-		
-	}
-	*/
 	
 }
 

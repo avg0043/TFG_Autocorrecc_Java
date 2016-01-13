@@ -2,18 +2,18 @@
 namespace App\Test\TestCase\Controller;
 
 use Cake\TestSuite\IntegrationTestCase;
+use App\Controller\FicherosXmlController;
 use Cake\ORM\TableRegistry;
-use App\Controller\ViolacionesController;
 
-class ViolacionesControllerTest extends IntegrationTestCase{
+class FicherosXmlControllerTest extends IntegrationTestCase{
 	
 	private $profesores_tabla;
 	private $alumnos_tabla;
 	private $tareas_tabla;
 	private $intentos_tabla;
 	private $violaciones_tabla;
-	private $violaciones_controller;
-	private $datos;
+	private $errores_tabla;
+	private $ficherosXml_controller;
 	
 	public function setUp(){
 		
@@ -22,26 +22,19 @@ class ViolacionesControllerTest extends IntegrationTestCase{
 		$this->tareas_tabla = TableRegistry::get("Tareas");
 		$this->intentos_tabla = TableRegistry::get("Intentos");
 		$this->violaciones_tabla = TableRegistry::get('Violaciones');
+		$this->errores_tabla = TableRegistry::get("Errores");
 		$this->__crearProfesor(1, "Luis", "Izquierdo", "ck1", "s1", "li@ubu.es");
 		$this->__crearAlumno(3, 9, "Ivan", "Izquierdo", "ii@alu.ubu.es");
 		$this->__crearTarea(18, 9, 1, "practica1", 20, "es.ubu", new \DateTime(date("Y-m-d H:i:s")),
 							new \DateTime(date("Y-m-d H:i:s")));
 		$this->__crearIntento(1, 18, 3, "practica.zip", 1, 0, "../1/", new \DateTime(date("Y-m-d H:i:s")));
-		$this->violaciones_controller = new ViolacionesController();
-		$this->datos = [
-				'intento_id' => 1,
-				'nombre_fichero' => 'Operaciones.java',
-				'tipo' => 'UnusedPrivateMethod',
-				'descripcion' => 'Avoid unused private methods such as foo()',
-				'prioridad' => 3,
-				'linea_inicio' => 11,
-				'linea_fin' => 15
-		];
+		$this->ficherosXml_controller = new FicherosXmlController();
 		
 	}
 	
 	public function tearDown(){
 		
+		$this->errores_tabla->deleteAll(['1 = 1']);
 		$this->violaciones_tabla->deleteAll(['1 = 1']);
 		$this->intentos_tabla->deleteAll(['1 = 1']);
 		$this->tareas_tabla->deleteAll(['1 = 1']);
@@ -50,22 +43,64 @@ class ViolacionesControllerTest extends IntegrationTestCase{
 		
 	}
 	
-	public function testGuardarViolacion(){
+	public function testEditarPom(){
 		
-		$this->violaciones_controller->guardarViolacion($this->datos["intento_id"], $this->datos["nombre_fichero"], $this->datos["tipo"],
-											 	 		$this->datos["descripcion"], $this->datos["prioridad"], $this->datos["linea_inicio"],
-												 	 	$this->datos["linea_fin"]);	
-		$query = $this->violaciones_tabla->find()->where(['intento_id' => $this->datos['intento_id'], 'nombre_fichero' => $this->datos['nombre_fichero']]);
+		$this->ficherosXml_controller->editarPomArquetipoMaven("ficheros_test/");
+		$this->assertXmlFileEqualsXmlFile("ficheros_test/pom.xml", "ficheros_test/pom_nuevo.xml");
+	
+	}
+	
+	public function testGuardarDatosXmlPluginPmd(){
 		
-		$this->assertEquals(1, $query->count());
+		$this->ficherosXml_controller->guardarDatosXmlPluginPmd("ficheros_test/", 1, 1);
+		$query = $this->violaciones_tabla->find('all')->where(['intento_id' => 1]);
+		
 		foreach ($query as $violacion){
-			$this->assertEquals($this->datos["intento_id"], $violacion->intento_id);
-			$this->assertEquals($this->datos["nombre_fichero"], $violacion->nombre_fichero);
-			$this->assertEquals($this->datos["tipo"], $violacion->tipo);
-			$this->assertEquals($this->datos["descripcion"], $violacion->descripcion);
-			$this->assertEquals($this->datos["prioridad"], $violacion->prioridad);
-			$this->assertEquals($this->datos["linea_inicio"], $violacion->linea_inicio);
-			$this->assertEquals($this->datos["linea_fin"], $violacion->linea_fin);
+			$this->assertEquals(1, $violacion->intento_id);
+			$this->assertEquals("Controller.java", $violacion->nombre_fichero);
+			$this->assertEquals("UnusedPrivateField", $violacion->tipo);
+			$this->assertEquals(3, $violacion->prioridad);
+			$this->assertEquals(10, $violacion->linea_inicio);
+			$this->assertEquals(10, $violacion->linea_fin);
+		}
+		
+	}
+	
+	public function testGuardarDatosXmlPluginFindbugs(){
+		
+		$this->ficherosXml_controller->guardarDatosXmlPluginFindbugs("ficheros_test/", 1, 1);
+		$query = $this->violaciones_tabla->find('all')->where(['intento_id' => 1]);
+		
+		foreach ($query as $violacion){
+			$this->assertEquals(1, $violacion->intento_id);
+			$this->assertEquals("Controller.java", $violacion->nombre_fichero);
+			$this->assertEquals("UUF_UNUSED_FIELD", $violacion->tipo);
+			$this->assertEquals(2, $violacion->prioridad);
+			$this->assertNull($violacion->linea_inicio);
+			$this->assertNull($violacion->linea_fin);
+		}
+	}
+	
+	public function testGuardarDatosXmlErrores(){
+		
+		$this->ficherosXml_controller->guardarDatosXmlErrores("ficheros_test/", 1, 1);
+		$query_error_unitario = $this->errores_tabla->find('all')->where(['intento_id' => 1, 'tipo_error' => 'failure']);
+		$query_error_excepcion = $this->errores_tabla->find('all')->where(['intento_id' => 1, 'tipo_error' => 'error']);	
+		
+		foreach ($query_error_unitario as $error_unitario){
+			$this->assertEquals(1, $error_unitario->intento_id);
+			$this->assertEquals("es.ubu.ControllerTest", $error_unitario->nombre_clase);
+			$this->assertEquals("test10Ficheros", $error_unitario->nombre_test);
+			$this->assertEquals("failure", $error_unitario->tipo_error);
+			$this->assertEquals("junit.framework.AssertionFailedError", $error_unitario->tipo);
+		}
+		
+		foreach ($query_error_excepcion as $error_excepcion){
+			$this->assertEquals(1, $error_excepcion->intento_id);
+			$this->assertEquals("es.ubu.ControllerTest", $error_excepcion->nombre_clase);
+			$this->assertEquals("test10Ficheros", $error_excepcion->nombre_test);
+			$this->assertEquals("error", $error_excepcion->tipo_error);
+			$this->assertEquals("java.lang.ArrayIndexOutOfBoundsException", $error_excepcion->tipo);
 		}
 		
 	}
@@ -134,5 +169,5 @@ class ViolacionesControllerTest extends IntegrationTestCase{
 		$this->intentos_tabla->save($nuevo_intento);
 	
 	}
-
+	
 }

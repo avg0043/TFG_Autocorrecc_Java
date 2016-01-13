@@ -6,9 +6,9 @@
 </nav>
  
 <div class="jumbotron">
-  <h3>Configuración de los parámetros</h3>
-  <p>El <i>número máximo de intentos</i> debe de estar comprendido entre 1 y 20. El <i>paquete</i> únicamente podrá ser
-  	 configurado la primera vez.</p>
+  <h3>Configuración de los parámetros de la tarea</h3>
+  <p>El <i>número máximo de intentos</i> debe de estar comprendido entre 1 y 20. <br>
+     El <i>paquete</i> únicamente podrá ser configurado la primera vez que se accede a la aplicación web.</p>
 </div>
 
 <div class="container">

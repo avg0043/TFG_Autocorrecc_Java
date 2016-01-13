@@ -15,10 +15,13 @@ class TestsControllerTest extends IntegrationTestCase{
 	
 	public function setUp(){
 		
-		$this->__crearProfesor();
-		$this->__crearTarea();
-		$this->tests_controller = new TestsController();
+		$this->profesores_tabla = TableRegistry::get("Profesores");
+		$this->tareas_tabla = TableRegistry::get("Tareas");
 		$this->tests_tabla = TableRegistry::get('Tests');
+		$this->__crearProfesor(1, "Luis", "Izquierdo", "ck1", "s1", "li@ubu.es");
+		$this->__crearTarea(18, 9, 1, "practica1", 20, "es.ubu", new \DateTime(date("Y-m-d H:i:s")), 
+							new \DateTime(date("Y-m-d H:i:s")));
+		$this->tests_controller = new TestsController();
 		$this->datos = [
 				'tarea_id' => 18,
 				'nombre' => 'test.zip',
@@ -48,35 +51,34 @@ class TestsControllerTest extends IntegrationTestCase{
 		
 	}
 	
-	private function __crearProfesor(){
+	private function __crearProfesor($id, $nombre, $apellidos, $consumer_key, $secret, $correo){
 		
-		$this->profesores_tabla = TableRegistry::get("Profesores");
 		$nuevo_profesor = $this->profesores_tabla->newEntity();
 		
-		$nuevo_profesor->id = 1;
-		$nuevo_profesor->nombre = "Luis";
-		$nuevo_profesor->apellidos = "Izquierdo";
-		$nuevo_profesor->consumer_key = "ck1";
-		$nuevo_profesor->secret = "s1";
-		$nuevo_profesor->correo = "li@ubu.es";
+		$nuevo_profesor->id = $id;
+		$nuevo_profesor->nombre = $nombre;
+		$nuevo_profesor->apellidos = $apellidos;
+		$nuevo_profesor->consumer_key = $consumer_key;
+		$nuevo_profesor->secret = $secret;
+		$nuevo_profesor->correo = $correo;
 		
 		$this->profesores_tabla->save($nuevo_profesor);
 		
 	}
 	
-	private function __crearTarea(){
+	private function __crearTarea($id, $curso_id, $profesor_id, $nombre, $num_max_intentos, $paquete,
+								  $fecha_limite, $fecha_modificacion){
 		
-		$this->tareas_tabla = TableRegistry::get("Tareas");
 		$nueva_tarea = $this->tareas_tabla->newEntity();
 		
-		$nueva_tarea->id = 18;
-		$nueva_tarea->curso_id = 9;
-		$nueva_tarea->profesor_id = 1;
-		$nueva_tarea->nombre = "practica1";
-		$nueva_tarea->num_max_intentos = 20;
-		$nueva_tarea->paquete = "es.ubu";
-		$nueva_tarea->fecha_limite = new \DateTime(date("Y-m-d H:i:s"));
-		$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s"));
+		$nueva_tarea->id = $id;
+		$nueva_tarea->curso_id = $curso_id;
+		$nueva_tarea->profesor_id = $profesor_id;
+		$nueva_tarea->nombre = $nombre;
+		$nueva_tarea->num_max_intentos = $num_max_intentos;
+		$nueva_tarea->paquete = $paquete;
+		$nueva_tarea->fecha_limite = $fecha_limite;
+		$nueva_tarea->fecha_modificacion = $fecha_modificacion;
 		
 		$this->tareas_tabla->save($nueva_tarea);
 		

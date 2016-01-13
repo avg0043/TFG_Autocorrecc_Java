@@ -11,6 +11,7 @@ class ProfesoresControllerTest extends IntegrationTestCase{
 	
 	public function setUp(){
 	
+		error_reporting(0);
 		@session_start();
 		$this->profesores_tabla = TableRegistry::get("Profesores");
 	
@@ -50,6 +51,7 @@ class ProfesoresControllerTest extends IntegrationTestCase{
 	public function testErrorMostrarPanel(){
 		
 		$this->post('/profesores/mostrarPanel');
+		$this->assertResponseSuccess();
 		$this->assertRedirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		
 	}
@@ -57,6 +59,7 @@ class ProfesoresControllerTest extends IntegrationTestCase{
 	public function testErrorGenerarReportePlagiosPracticas(){
 		
 		$this->post('/profesores/generarReportePlagiosPracticas');
+		$this->assertResponseSuccess();
 		$this->assertRedirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		
 	}
@@ -64,6 +67,7 @@ class ProfesoresControllerTest extends IntegrationTestCase{
 	public function testErrorDescargarPracticasAlumnos(){
 		
 		$this->post('/profesores/descargarPracticasAlumnos');
+		$this->assertResponseSuccess();
 		$this->assertRedirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		
 	}
@@ -73,6 +77,7 @@ class ProfesoresControllerTest extends IntegrationTestCase{
 		$_SESSION["lti_userId"] = 3;
 		$_SESSION["lti_idTarea"] = 18;
 		$this->post('/profesores/descargarPracticasAlumnos');
+		$this->assertResponseOk();
 		$this->assertNoRedirect();
 	
 	}
@@ -80,6 +85,7 @@ class ProfesoresControllerTest extends IntegrationTestCase{
 	public function testErrorGenerarGraficas(){
 		
 		$this->post('/profesores/generarGraficas');
+		$this->assertResponseSuccess();
 		$this->assertRedirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		
 	}

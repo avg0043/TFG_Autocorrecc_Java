@@ -20,30 +20,21 @@ class ConexionesController extends AppController{
 		
 		session_start();		
 		$consumer_key = $_REQUEST['oauth_consumer_key'];
-		//$profesores_controller = new ProfesoresController();
+		$profesores_tabla = TableRegistry::get("Profesores");
 		
 		// Comprobar consumer_key
 		if($_REQUEST['roles'] == "Instructor"){
 			$correo = $_REQUEST['lis_person_contact_email_primary'];
-			//$bd_controller = new BaseDeDatosController();
-			$query = $this->obtenerProfesorPorKeyCorreo($consumer_key, $correo);
-			//$query = $profesores_controller->obtenerProfesorPorKeyCorreo($consumer_key, $correo);
-			/*
-			$profesores_tabla = TableRegistry::get("Profesores");
+			//$query = $this->obtenerProfesorPorKeyCorreo($consumer_key, $correo);
 			$query = $profesores_tabla->find('all')
-						               ->where(['consumer_key' => $consumer_key, 'correo' => $correo])
-									   ->toArray();
-			*/
+								      ->where(['consumer_key' => $consumer_key, 'correo' => $correo])
+								      ->toArray();
 		}
 		else{
-			//$query = $profesores_controller->obtenerProfesorPorKey($consumer_key);
-			$query = $this->obtenerProfesorPorKey($consumer_key);
-			/*
-			$profesores_tabla = TableRegistry::get("Profesores");
+			//$query = $this->obtenerProfesorPorKey($consumer_key);
 			$query = $profesores_tabla->find('all')
-									  ->where(['consumer_key' => $consumer_key])
-									  ->toArray();
-			*/
+								      ->where(['consumer_key' => $consumer_key])
+								      ->toArray();
 		}
 		
 		if(!empty($query)){	// consumer_key correcto		
@@ -52,8 +43,6 @@ class ConexionesController extends AppController{
 			$this->__redirigirPaginaUsuario();
 		}
 		else{
-			//$this->Flash->error(__('La consumer key no es la correcta!!'));
-			//throw new NotFoundException();
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorConsumerKey', $consumer_key]);
 		}
 	}
@@ -77,9 +66,11 @@ class ConexionesController extends AppController{
 	private function __redirigirPaginaUsuario(){
 		
 		if($_REQUEST['roles'] == 'Instructor'){
-			//$tareas_controller = new TareasController();
-			//$tarea = $tareas_controller->obtenerTareaPorId($_SESSION['lti_idTarea']);
-			$tarea = $this->obtenerTareaPorId($_SESSION['lti_idTarea']);
+			//$tarea = $this->obtenerTareaPorId($_SESSION['lti_idTarea']);
+			$tareas_tabla = TableRegistry::get("Tareas");
+			$tarea = $tareas_tabla->find('all')
+							      ->where(['id' => $_SESSION['lti_idTarea']])
+							      ->toArray();
 		
 			if(!empty($tarea)){	// Tarea registrada
 				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
@@ -89,9 +80,11 @@ class ConexionesController extends AppController{
 			}
 		}
 		else{
-			//$alumnos_controller = new AlumnosController();
-			//$query = $alumnos_controller->obtenerAlumnoPorId($_SESSION['lti_userId']);
-			$query = $this->obtenerAlumnoPorId($_SESSION['lti_userId']);
+			//$query = $this->obtenerAlumnoPorId($_SESSION['lti_userId']);
+			$alumnos_tabla = TableRegistry::get("Alumnos");
+			$query = $alumnos_tabla->find('all')
+							       ->where(['id' => $_SESSION['lti_userId']])
+							       ->toArray();
 			
 			if(!empty($query)){	// Alumno registrado
 				return $this->redirect(['controller' => 'Intentos', 'action' => 'subirPractica']);

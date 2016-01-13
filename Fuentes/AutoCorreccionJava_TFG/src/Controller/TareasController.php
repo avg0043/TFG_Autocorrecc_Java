@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Cake\ORM\TableRegistry;
 class TareasController extends AppController{
 	
 	/**
@@ -11,10 +12,9 @@ class TareasController extends AppController{
 	public function configurarParametrosTarea(){
 		
 		session_start();
-		$this->comprobarSesion();
-		
-		//$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));	
-		$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));
+		$this->comprobarSesion();	
+		//$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));
+		$this->set("tarea_actual", $this->Tareas->find('all')->where(['id' => $_SESSION["lti_idTarea"]])->toArray());
 		$nueva_tarea = $this->Tareas->newEntity();
 		
 		if ($this->request->is('post')) {			
@@ -24,14 +24,13 @@ class TareasController extends AppController{
 			$nueva_tarea->nombre = $_SESSION['lti_tituloTarea'];
 			date_default_timezone_set("Europe/Madrid");
 			$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s")); // fecha actual
-			
-			// Obtención del id del profesor
-			/* -- AppController
-			$profesores_controller = new ProfesoresController();		
-			$nueva_tarea->profesor_id = $profesores_controller->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
-			*/
-			$nueva_tarea->profesor_id = $this->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
-			
+			//$nueva_tarea->profesor_id = $this->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
+			$profesores_tabla = TableRegistry::get("Profesores");
+			$query = $profesores_tabla->find('all')
+    								  ->where(['correo' => $_SESSION['lti_correo']])
+    								  ->toArray();
+    		$nueva_tarea->profesor_id = $query[0]->id;
+    								  
 			if ($this->Tareas->save($nueva_tarea)) {
 				$this->Flash->success(__('La tarea ha sido configurada correctamente'));
 				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
@@ -43,16 +42,6 @@ class TareasController extends AppController{
 		$this->set('nueva_tarea', $nueva_tarea);
 		
 	}
-	
-	/*
-	public function obtenerTareaPorId($id){
-		
-		return $this->Tareas->find('all')
-							->where(['id' => $id])
-							->toArray();
-		
-	}
-	*/
 	
 }
 

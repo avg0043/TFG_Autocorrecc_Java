@@ -7,13 +7,13 @@
 
 <div class="jumbotron">
   <h3>Subida de Tests</h3>
-  <p>Se deberá de subir un único fichero .zip que contenga los ficheros test con extensión .java. Es importante que los test
-     pertenezcan al paquete establecido previamente en la configuración de parámetros.</p>
+  <p>Se deberá de subir un fichero .zip que contenga el test de extensión .java. Es importante que el test
+     pertenezcan al paquete establecido previamente en la configuración de parámetros de la tarea.</p>
 </div>
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-6 col-md-offset-3">
 			<?php 
 			echo $this->Form->create('Post', ['type' => 'file']);
 			echo $this->Form->input('ficheroAsubir', ['type' => 'file', 'label' => 'Fichero a subir:', 'class' => 'form-control']);

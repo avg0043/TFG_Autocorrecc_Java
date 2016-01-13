@@ -7,69 +7,67 @@ use Cake\ORM\TableRegistry;
 class ConexionesControllerTest extends IntegrationTestCase{
 	
 	private $profesores_tabla;
-	private $tareas_tabla;
 	
 	public function setUp(){
 	
-		error_reporting(0);		// ---- BIENNN??¿?¿?¿?¿?¿?
+		error_reporting(0);
+		@session_start();
 		$this->profesores_tabla = TableRegistry::get("Profesores");
-		$this->tareas_tabla = TableRegistry::get("Tareas");
 		
 	}
 	
 	public function tearDown(){
 	
-		$this->tareas_tabla->deleteAll(['1 = 1']);
 		$this->profesores_tabla->deleteAll(['1 = 1']);
 	
 	}
 	
 	public function testErrorProfesorEstablecerConexion(){
 	
-		@session_start();
 		$this->__crearProfesor(1, "Luis", "Izquierdo", "ck1", "s1", "li@ubu.es");
 		$_REQUEST['oauth_consumer_key'] = "mal";
 		$_REQUEST['roles'] = "Instructor";
 		$_REQUEST['lis_person_contact_email_primary'] = "mal";
 		
 		$this->post('/conexiones/establecerConexion');
+		$this->assertResponseSuccess();
 		$this->assertRedirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorConsumerKey', "mal"]);
 	
 	}
 	
 	public function testErrorAlumnoEstablecerConexion(){
 	
-		@session_start();
 		$this->__crearProfesor(1, "Luis", "Izquierdo", "ck1", "s1", "li@ubu.es");
 		$_REQUEST['oauth_consumer_key'] = "mal";
 		$_REQUEST['roles'] = "Learner";
 		
 		$this->post('/conexiones/establecerConexion');
+		$this->assertResponseSuccess();
 		$this->assertRedirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorConsumerKey', "mal"]);
 	
 	}
 	
 	public function testProfesorPrimerAccesoEstablecerConexion(){
 	
-		@session_start();
 		$this->__crearProfesor(1, "Luis", "Izquierdo", "ck1", "s1", "li@ubu.es");
 		$_REQUEST['oauth_consumer_key'] = "ck1";
 		$_REQUEST['roles'] = "Instructor";
 		$_REQUEST['lis_person_contact_email_primary'] = "li@ubu.es";
 	
 		$this->post('/conexiones/establecerConexion');
+		$this->assertResponseSuccess();
 		$this->assertRedirect(['controller' => 'Tareas', 'action' => 'configurarParametrosTarea']);
 	
 	}
 	
-	public function testAlumnoEstablecerConexion(){
+	public function testAlumnoPrimerAccesoEstablecerConexion(){
 	
-		@session_start();
 		$this->__crearProfesor(1, "Luis", "Izquierdo", "ck1", "s1", "li@ubu.es");
 		$_REQUEST['oauth_consumer_key'] = "ck1";
 		$_REQUEST['roles'] = "Learner";
 	
 		$this->post('/conexiones/establecerConexion');
+		$this->assertResponseSuccess();
 		$this->assertRedirect(['controller' => 'Alumnos', 'action' => 'registrarAlumno']);
 	
 	}
@@ -89,20 +87,4 @@ class ConexionesControllerTest extends IntegrationTestCase{
 	
 	}
 	
-	private function __crearTarea(){
-	
-		$nueva_tarea = $this->tareas_tabla->newEntity();
-	
-		$nueva_tarea->id = 18;
-		$nueva_tarea->curso_id = 9;
-		$nueva_tarea->profesor_id = 1;
-		$nueva_tarea->nombre = "practica1";
-		$nueva_tarea->num_max_intentos = 20;
-		$nueva_tarea->paquete = "es.ubu";
-		$nueva_tarea->fecha_limite = new \DateTime(date("Y-m-d H:i:s"));
-		$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s"));
-	
-		$this->tareas_tabla->save($nueva_tarea);
-	
-	}
 }

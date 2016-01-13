@@ -1,0 +1,167 @@
+
+<BugCollection sequence='0' release='' analysisTimestamp='1452619456564' version='3.0.1' timestamp='1452619422507'>
+	<Project projectName='arquetipo'>
+		<Jar>C:\wamp\www\9\18\Learner\3\arquetipo\target\classes</Jar>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\mojo\findbugs-maven-plugin\3.0.3\findbugs-maven-plugin-3.0.3.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\com\google\code\findbugs\findbugs\3.0.1\findbugs-3.0.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\net\jcip\jcip-annotations\1.0\jcip-annotations-1.0.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\com\google\code\findbugs\jsr305\2.0.1\jsr305-2.0.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\com\google\code\findbugs\bcel-findbugs\6.0\bcel-findbugs-6.0.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\com\google\code\findbugs\jFormatString\2.0.1\jFormatString-2.0.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\dom4j\dom4j\1.6.1\dom4j-1.6.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\xml-apis\xml-apis\1.0.b2\xml-apis-1.0.b2.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\ow2\asm\asm-debug-all\5.0.2\asm-debug-all-5.0.2.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\ow2\asm\asm-commons\5.0.2\asm-commons-5.0.2.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\ow2\asm\asm-tree\5.0.2\asm-tree-5.0.2.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\ow2\asm\asm\5.0.2\asm-5.0.2.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-lang\commons-lang\2.6\commons-lang-2.6.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\com\apple\AppleJavaExtensions\1.4\AppleJavaExtensions-1.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\jaxen\jaxen\1.1.6\jaxen-1.1.6.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\ant\ant\1.9.4\ant-1.9.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\ant\ant-launcher\1.9.4\ant-launcher-1.9.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\groovy\groovy-all\2.4.3\groovy-all-2.4.3.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\reporting\maven-reporting-impl\2.1\maven-reporting-impl-2.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-project\2.0.10\maven-project-2.0.10.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-settings\2.0.10\maven-settings-2.0.10.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-profile\2.0.10\maven-profile-2.0.10.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-plugin-registry\2.0.10\maven-plugin-registry-2.0.10.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\plexus\plexus-interpolation\1.1\plexus-interpolation-1.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-validator\commons-validator\1.2.0\commons-validator-1.2.0.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-beanutils\commons-beanutils\1.7.0\commons-beanutils-1.7.0.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-digester\commons-digester\1.6\commons-digester-1.6.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-logging\commons-logging\1.0.4\commons-logging-1.0.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\oro\oro\2.0.8\oro-2.0.8.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-plugin-api\2.0\maven-plugin-api-2.0.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-plugin-descriptor\2.2.1\maven-plugin-descriptor-2.2.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-artifact\2.2.1\maven-artifact-2.2.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\doxia\doxia-core\1.4\doxia-core-1.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\doxia\doxia-logging-api\1.4\doxia-logging-api-1.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\plexus\plexus-component-annotations\1.5.5\plexus-component-annotations-1.5.5.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\xerces\xercesImpl\2.9.1\xercesImpl-2.9.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\httpcomponents\httpclient\4.0.2\httpclient-4.0.2.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-codec\commons-codec\1.3\commons-codec-1.3.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\httpcomponents\httpcore\4.0.1\httpcore-4.0.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\doxia\doxia-decoration-model\1.4\doxia-decoration-model-1.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\doxia\doxia-module-xhtml\1.4\doxia-module-xhtml-1.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\doxia\doxia-module-fml\1.4\doxia-module-fml-1.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\plexus\plexus-i18n\1.0-beta-7\plexus-i18n-1.0-beta-7.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\plexus\plexus-velocity\1.1.7\plexus-velocity-1.1.7.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\velocity\velocity\1.5\velocity-1.5.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\velocity\velocity-tools\2.0\velocity-tools-2.0.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-chain\commons-chain\1.1\commons-chain-1.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\sslext\sslext\1.2-0\sslext-1.2-0.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\struts\struts-core\1.3.8\struts-core-1.3.8.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\antlr\antlr\2.7.2\antlr-2.7.2.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\struts\struts-taglib\1.3.8\struts-taglib-1.3.8.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\struts\struts-tiles\1.3.8\struts-tiles-1.3.8.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-collections\commons-collections\3.2.1\commons-collections-3.2.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\shared\maven-doxia-tools\1.2.1\maven-doxia-tools-1.2.1.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\commons-io\commons-io\1.4\commons-io-1.4.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-artifact-manager\2.0.6\maven-artifact-manager-2.0.6.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-repository-metadata\2.0.6\maven-repository-metadata-2.0.6.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\apache\maven\maven-model\2.0.6\maven-model-2.0.6.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\plexus\plexus-container-default\1.0-alpha-9\plexus-container-default-1.0-alpha-9.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\classworlds\classworlds\1.1-alpha-2\classworlds-1.1-alpha-2.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\plexus\plexus-resources\1.0-alpha-7\plexus-resources-1.0-alpha-7.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\codehaus\plexus\plexus-utils\1.5.6\plexus-utils-1.5.6.jar</AuxClasspathEntry>
+		<AuxClasspathEntry>C:\Windows\system32\config\systemprofile\.m2\repository\org\sonatype\plexus\plexus-build-api\0.0.7\plexus-build-api-0.0.7.jar</AuxClasspathEntry>
+		<SrcDir>C:\wamp\www\9\18\Learner\3\arquetipo\src\main\java</SrcDir>
+		<WrkDir>C:\wamp\www\9\18\Learner\3\arquetipo\target</WrkDir>
+	</Project>
+	<BugInstance instanceOccurrenceNum='0' instanceHash='58437ef1189d33aa9223db859fba2fbe' rank='18' abbrev='UuF' category='PERFORMANCE' priority='2' type='UUF_UNUSED_FIELD' instanceOccurrenceMax='0'>
+		<ShortMessage>Unused field</ShortMessage>
+		<LongMessage>Unused field: es.ubu.controller.Controller.a</LongMessage>
+		<Class classname='es.ubu.controller.Controller' primary='true'>
+			<SourceLine classname='es.ubu.controller.Controller' start='8' end='42' sourcepath='es/ubu/controller/Controller.java' sourcefile='Controller.java'>
+				<Message>At Controller.java:[lines 8-42]</Message>
+			</SourceLine>
+			<Message>In class es.ubu.controller.Controller</Message>
+		</Class>
+		<Field isStatic='false' classname='es.ubu.controller.Controller' signature='I' name='a' primary='true'>
+			<SourceLine classname='es.ubu.controller.Controller' sourcepath='es/ubu/controller/Controller.java' sourcefile='Controller.java'>
+				<Message>In Controller.java</Message>
+			</SourceLine>
+			<Message>Field es.ubu.controller.Controller.a</Message>
+		</Field>
+		<SourceLine synthetic='true' classname='es.ubu.controller.Controller' sourcepath='es/ubu/controller/Controller.java' sourcefile='Controller.java'>
+			<Message>In Controller.java</Message>
+		</SourceLine>
+	</BugInstance>
+	<BugCategory category='CORRECTNESS'>
+		<Description>Correctness</Description>
+	</BugCategory>
+	<BugCategory category='PERFORMANCE'>
+		<Description>Performance</Description>
+	</BugCategory>
+	<BugCategory category='STYLE'>
+		<Description>Dodgy code</Description>
+	</BugCategory>
+	<BugPattern abbrev='RANGE' category='CORRECTNESS' type='RANGE_ARRAY_INDEX'>
+		<ShortDescription>Array index is out of bounds</ShortDescription>
+		<Details>
+
+   &lt;p&gt; Array operation is performed, but array index is out of bounds, which will result in ArrayIndexOutOfBoundsException at runtime.&lt;/p&gt;
+
+		</Details>
+	</BugPattern>
+	<BugPattern abbrev='UuF' category='PERFORMANCE' type='UUF_UNUSED_FIELD'>
+		<ShortDescription>Unused field</ShortDescription>
+		<Details>
+
+  &lt;p&gt; This field is never used.&amp;nbsp; Consider removing it from the class.&lt;/p&gt;
+
+		</Details>
+	</BugPattern>
+	<BugPattern abbrev='UC' category='STYLE' type='UC_USELESS_OBJECT'>
+		<ShortDescription>Useless object created</ShortDescription>
+		<Details>
+
+&lt;p&gt;Our analysis shows that this object is useless. 
+It's created and modified, but its value never go outside of the method or produce any side-effect.
+Either there is a mistake and object was intended to be used or it can be removed.&lt;/p&gt;
+&lt;p&gt;This analysis rarely produces false-positives. Common false-positive cases include:&lt;/p&gt;
+&lt;p&gt;- This object used to implicitly throw some obscure exception.&lt;/p&gt;
+&lt;p&gt;- This object used as a stub to generalize the code.&lt;/p&gt;
+&lt;p&gt;- This object used to hold strong references to weak/soft-referenced objects.&lt;/p&gt;
+
+		</Details>
+	</BugPattern>
+	<BugCode abbrev='UuF'>
+		<Description>Unused field</Description>
+	</BugCode>
+	<BugCode abbrev='UC'>
+		<Description>Useless code</Description>
+	</BugCode>
+	<BugCode abbrev='RANGE'>
+		<Description>Range checks</Description>
+	</BugCode>
+	<Errors missingClasses='0' errors='0'/>
+	<FindBugsSummary num_packages='2' total_classes='2' priority_2='4' total_size='51' clock_seconds='3.85' referenced_classes='13' vm_version='25.60-b23' total_bugs='4' java_version='1.8.0_60' gc_seconds='0.04' alloc_mbytes='455.50' cpu_seconds='8.58' peak_mbytes='108.53' timestamp='Tue, 12 Jan 2016 18:23:42 +0100'>
+		<FileStats path='es/ubu/controller/Controller.java' size='30' bugHash='1e974909f1da14464a5fbd62233e92b3' bugCount='4'/>
+		<FileStats path='es/ubu/model/Fichero.java' size='21' bugCount='0'/>
+		<PackageStats package='es.ubu.controller' total_bugs='4' priority_2='4' total_size='30' total_types='1'>
+			<ClassStats bugs='4' size='30' priority_2='4' interface='false' sourceFile='Controller.java' class='es.ubu.controller.Controller'/>
+		</PackageStats>
+		<PackageStats package='es.ubu.model' total_bugs='0' total_size='21' total_types='1'>
+			<ClassStats bugs='0' size='21' interface='false' sourceFile='Fichero.java' class='es.ubu.model.Fichero'/>
+		</PackageStats>
+		<FindBugsProfile>
+			<ClassProfile avgMicrosecondsPerInvocation='1173' totalMilliseconds='379' name='edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine' standardDeviationMircosecondsPerInvocation='2780' maxMicrosecondsPerInvocation='31188' invocations='323'/>
+			<ClassProfile avgMicrosecondsPerInvocation='1003' totalMilliseconds='322' name='edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine' standardDeviationMircosecondsPerInvocation='2798' maxMicrosecondsPerInvocation='40529' invocations='322'/>
+			<ClassProfile avgMicrosecondsPerInvocation='10065' totalMilliseconds='130' name='edu.umd.cs.findbugs.detect.FieldItemSummary' standardDeviationMircosecondsPerInvocation='16053' maxMicrosecondsPerInvocation='60122' invocations='13'/>
+			<ClassProfile avgMicrosecondsPerInvocation='1056' totalMilliseconds='87' name='edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory' standardDeviationMircosecondsPerInvocation='1120' maxMicrosecondsPerInvocation='6131' invocations='83'/>
+			<ClassProfile avgMicrosecondsPerInvocation='2581' totalMilliseconds='77' name='edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine' standardDeviationMircosecondsPerInvocation='8779' maxMicrosecondsPerInvocation='46959' invocations='30'/>
+			<ClassProfile avgMicrosecondsPerInvocation='6567' totalMilliseconds='72' name='edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory' standardDeviationMircosecondsPerInvocation='19717' maxMicrosecondsPerInvocation='68900' invocations='11'/>
+			<ClassProfile avgMicrosecondsPerInvocation='232' totalMilliseconds='67' name='edu.umd.cs.findbugs.util.TopologicalSort' standardDeviationMircosecondsPerInvocation='725' maxMicrosecondsPerInvocation='11099' invocations='290'/>
+			<ClassProfile avgMicrosecondsPerInvocation='4876' totalMilliseconds='63' name='edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical' standardDeviationMircosecondsPerInvocation='12859' maxMicrosecondsPerInvocation='49185' invocations='13'/>
+			<ClassProfile avgMicrosecondsPerInvocation='28895' totalMilliseconds='57' name='edu.umd.cs.findbugs.detect.DumbMethods' standardDeviationMircosecondsPerInvocation='28168' maxMicrosecondsPerInvocation='57063' invocations='2'/>
+			<ClassProfile avgMicrosecondsPerInvocation='4375' totalMilliseconds='56' name='edu.umd.cs.findbugs.detect.FindNoSideEffectMethods' standardDeviationMircosecondsPerInvocation='6492' maxMicrosecondsPerInvocation='24220' invocations='13'/>
+			<ClassProfile avgMicrosecondsPerInvocation='4343' totalMilliseconds='56' name='edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures' standardDeviationMircosecondsPerInvocation='7492' maxMicrosecondsPerInvocation='24803' invocations='13'/>
+			<ClassProfile avgMicrosecondsPerInvocation='3225' totalMilliseconds='41' name='edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers' standardDeviationMircosecondsPerInvocation='4923' maxMicrosecondsPerInvocation='16883' invocations='13'/>
+			<ClassProfile avgMicrosecondsPerInvocation='3580' totalMilliseconds='39' name='edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory' standardDeviationMircosecondsPerInvocation='6495' maxMicrosecondsPerInvocation='19798' invocations='11'/>
+			<ClassProfile avgMicrosecondsPerInvocation='3348' totalMilliseconds='36' name='edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory' standardDeviationMircosecondsPerInvocation='6363' maxMicrosecondsPerInvocation='22718' invocations='11'/>
+		</FindBugsProfile>
+	</FindBugsSummary>
+	<ClassFeatures/>
+	<History/>
+</BugCollection>

@@ -10,6 +10,8 @@ class AlumnosControllerTest extends IntegrationTestCase{
 	
 	public function setUp(){
 		
+		error_reporting(0);
+		@session_start();
 		$this->alumnos_tabla = TableRegistry::get("Alumnos");
 		
 	}
@@ -22,7 +24,6 @@ class AlumnosControllerTest extends IntegrationTestCase{
 	
 	public function testRegistrarAlumno(){
 		
-		@session_start();
 		$datos = [
 				'id' => 3,
 				'curso_id' => 9,

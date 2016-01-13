@@ -11,11 +11,12 @@
   	 posibles por las que no ha podido generarse el reporte.</p>
 </div>
 
+<div class="col-md-4 col-md-offset-4">
 <?php
 if($reporte_generado){
 ?>
 	<ul>
-		<li>La comprobación de plagios se ha realizado entre <?= $numero_practicas_subidas ?> prácticas</li>
+		<li>La comprobación de plagios se ha realizado entre <?= $numero_practicas_subidas ?> prácticas.</li>
 		<li>Las prácticas pertenecen a los siguientes Alumnos:
 			<ul>
 			<?php foreach($alumnos_con_practicas as $alumno):?>
@@ -24,16 +25,18 @@ if($reporte_generado){
 			</ul>
 		</li>
 	</ul>
-	<a href="../../plagios/reporte/index.html" class="btn btn-default btn-lg" role="button">Reporte Plagios</a>
+	<a href="../../plagios/reporte/index.html" class="btn btn-default btn-lg" role="button" target="_blank">Reporte Plagios</a>
 <?php
 }else{
 ?>
 	<h5>Posibles razones:</h5>
 	<ol>
-		<li>No hay alumnos registrados</li>
-		<li>Los alumnos no han subido ninguna práctica</li>
-		<li>Solo hay un alumno que haya subido su práctica</li>	
+		<li>No hay alumnos registrados.</li>
+		<li>Los alumnos no han subido ninguna práctica.</li>
+		<li>Solo hay un alumno que haya subido su práctica.</li>	
 	</ol>
 <?php 
 }
 ?>
+
+</div>
