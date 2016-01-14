@@ -2,6 +2,16 @@
   <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
 </nav>
 
+<!--  
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    <a href="#" class="thumbnail">
+      <h3>eeeeeeee</h3>
+      <img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/tuerca3.jpg" alt="...">
+    </a>
+  </div>
+</div>
+-->
 
 <div class="row">
 

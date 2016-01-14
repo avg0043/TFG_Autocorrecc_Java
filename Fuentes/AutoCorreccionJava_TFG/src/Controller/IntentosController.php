@@ -23,18 +23,20 @@ class IntentosController extends AppController{
 	 * 
 	 * @param string $tipo_usuario	puede ser profesor o alumno.
 	 */
-	public function subirPractica($intento_realizado = null){
-		
+	//public function subirPractica($intento_realizado = null){
+	public function subirPractica(){
+	
 		session_start();
 		$this->comprobarSesion();	
-		$this->set("intento", $intento_realizado);		
+		//$this->set("intento", $intento_realizado);		
 		$this->__comprobarTestSubido();
 		
 		//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
 		$intentos_alumno = $this->Intentos->find('all')
     									  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $_SESSION["lti_userId"]]);
 		
-		$num_ultimo_intento = 0;
+		//$num_ultimo_intento = 0;
+    	$num_ultimo_intento = null;
 		if(!$intentos_alumno->isEmpty()){
 			//$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
 			$ultimo_intento = $this->Intentos->find('all')
@@ -72,7 +74,8 @@ class IntentosController extends AppController{
 					$this->id_profesor = $query[0]->profesor_id;
 										
 					$this->__copiarArquetipoMaven();
-					return $this->redirect(['action' => 'subirPractica', $this->intento_realizado]);
+					//return $this->redirect(['action' => 'subirPractica', $this->intento_realizado]);
+					return $this->redirect(['action' => 'subirPractica']);
 				}
 			}
 		}

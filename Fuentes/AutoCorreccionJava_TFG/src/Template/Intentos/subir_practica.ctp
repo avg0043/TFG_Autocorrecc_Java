@@ -31,6 +31,10 @@ else{
 	</div>
 </div>
  -->
+ 
+<!-- 
+<a href="#" data-toggle="tooltip" title="Hooray!">Hover over me</a>
+-->
 
 <div class="container">
 	<div class="row">
@@ -53,13 +57,16 @@ else{
 					<li class="list-group-item"><b>Fecha límite de entrega</b><span class="badge"><?= $fecha_limite ?></span></li>
 					<li class="list-group-item"><b>Número de intentos realizados</b><span class="badge"><?= $num_intentos_realizados ?></span></li>
 					<li class="list-group-item"><b>Número de intentos restantes</b><span class="badge"><?= ($num_maximo_intentos - $num_intentos_realizados) ?></span></li>
+					<li class="list-group-item"><b>Comentarios</b><span class="badge">Holaaaaaaaaaaaaaaaaaaaaa...............</span></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 </div>
 
-<?php if($intento != null || $num_ultimo_intento != 0){
+<?php //if($intento != null || $num_ultimo_intento != 0){
+	  if($num_ultimo_intento != null){
+	  	/*
 		if($intento == null){
 			$intento = $num_ultimo_intento;
 		}
@@ -67,49 +74,59 @@ else{
 				"/".$_SESSION['lti_userId']."/".$intento."/site/"; 
 		$ruta_local = "../../".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
 				"/".$_SESSION['lti_userId']."/".$intento."/site/";
+		*/
+		
+		$ruta = "http://localhost/".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
+					"/".$_SESSION['lti_userId']."/".$num_ultimo_intento."/site/";
+		$ruta_local = "../../".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
+					"/".$_SESSION['lti_userId']."/".$num_ultimo_intento."/site/";
 		?>
 		
 		<h4 class="page-header">Reportes del último intento realizado</h4>
 		<div class="div-reportes">
-		<a href=<?= $ruta."javancss.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">JAVANCSS</a>
-		<a href=<?= $ruta."jdepend-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">JDEPEND</a>
-		<?php if(file_exists($ruta_local."pmd.html")){ ?>
-				<a href=<?= $ruta."pmd.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">PMD</a>
-		<?php } ?>
-		<?php if(file_exists($ruta_local."findbugs.html")){ ?>
-				<a href=<?= $ruta."findbugs.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">FINDBUGS</a>
-		<?php } 
-			  if(file_exists($ruta_local."surefire-report.html")){ ?>
-			  	<a href=<?= $ruta."surefire-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">ERRORES UNITARIOS</a>
-		<?php } 
-		}?>
+			<a href=<?= $ruta."javancss.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">JAVANCSS</a>
+			<a href=<?= $ruta."jdepend-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">JDEPEND</a>
+			<?php if(file_exists($ruta_local."pmd.html")){ ?>
+					<a href=<?= $ruta."pmd.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">PMD</a>
+			<?php } ?>
+			<?php if(file_exists($ruta_local."findbugs.html")){ ?>
+					<a href=<?= $ruta."findbugs.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">FINDBUGS</a>
+			<?php } 
+				  if(file_exists($ruta_local."surefire-report.html")){ ?>
+				  	<a href=<?= $ruta."surefire-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">ERRORES UNITARIOS</a>
+			<?php } ?>
 		</div>
+		
+		
+		<?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png")){ ?>
+			  	<h4 class="page-header">Gráfica Violaciones de código - Errores</h4>
+			  	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png"; ?>
+				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
+		<?php }
+			  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){ ?>
+			  	<h4 class="page-header">Gráfica Errores</h4>
+			  	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png"; ?>
+				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
+		<?php }
+			  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){?>
+				<h4 class="page-header">Gráfica Violaciones de código</h4>
+				<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
+				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
+		<?php }
+			  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){?>
+				<h4 class="page-header">Gráfica Prioridades de las Violaciones de código del último intento realizado (barras)</h4>
+				<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png"; ?>
+				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
+		<?php }
+			  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){?>
+				<h4 class="page-header">Gráfica Prioridades de las Violaciones de código del último intento realizado (circular)</h4>
+				<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png"; ?>
+				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
+		<?php }
+		
+		
+	 }
 
-<?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png")){ ?>
-	  	<h4 class="page-header">Gráfica Violaciones de código - Errores</h4>
-	  	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png"; ?>
-		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-<?php }
-	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){ ?>
-	  	<h4 class="page-header">Gráfica Errores</h4>
-	  	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png"; ?>
-		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-<?php }
-	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){?>
-		<h4 class="page-header">Gráfica Violaciones de código</h4>
-		<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
-		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-<?php }
-	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){?>
-		<h4 class="page-header">Gráfica Prioridades de las Violaciones de código del último intento realizado (barras)</h4>
-		<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png"; ?>
-		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-<?php }
-	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){?>
-		<h4 class="page-header">Gráfica Prioridades de las Violaciones de código del último intento realizado (circular)</h4>
-		<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png"; ?>
-		<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-<?php }
 
 }
 ?>

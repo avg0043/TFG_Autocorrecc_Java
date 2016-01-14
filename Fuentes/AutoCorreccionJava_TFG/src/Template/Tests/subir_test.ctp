@@ -16,6 +16,7 @@
 		<div class="col-md-6 col-md-offset-3">
 			<?php 
 			echo $this->Form->create('Post', ['type' => 'file']);
+			echo $this->Form->input('Comentarios', ['type' => 'textarea', 'label' => 'Comentarios', 'rows' => '5', 'cols' => '5', 'class' => 'form-control']);
 			echo $this->Form->input('ficheroAsubir', ['type' => 'file', 'label' => 'Fichero a subir:', 'class' => 'form-control']);
 			//echo $this->Form->button(__('Subir'));
 			?>

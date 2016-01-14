@@ -13,13 +13,15 @@ class GraficasController extends AppController{
 		$intentos_tabla = TableRegistry::get("Intentos");
 		$query_violaciones = $intentos_tabla->find('all')
 									    	->contain(['Violaciones'])
-									    	->where(['alumno_id' => $_SESSION["lti_userId"]]);
+									    	//->where(['alumno_id' => $_SESSION["lti_userId"]]);
+									    	->where(['alumno_id' => $_SESSION["lti_userId"], 'tarea_id' => $_SESSION["lti_idTarea"]]);
 		
 		//$query_errores = $this->obtenerIntentosConErrores();
 		$query_errores = $intentos_tabla->find('all')
 								    	->contain(['Errores'])
-								    	->where(['alumno_id' => $_SESSION["lti_userId"]]);
-	
+								    	//->where(['alumno_id' => $_SESSION["lti_userId"]]);
+										->where(['alumno_id' => $_SESSION["lti_userId"], 'tarea_id' => $_SESSION["lti_idTarea"]]);
+		
 		// Línea
 		$chart_linea = new \LineChart(800, 350);
 		$serie1 = new \XYDataSet();
