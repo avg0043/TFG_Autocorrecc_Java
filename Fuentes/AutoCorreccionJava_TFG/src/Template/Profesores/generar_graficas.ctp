@@ -13,35 +13,68 @@
 
 <div class="jumbotron">
   <h3>Gráficas</h3>
-  <p>Selecciona las gráficas que deseas visualizar.</p>
 </div>
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
-			<?php 
-			echo $this->Form->create('Post');
-			echo $this->Form->input('MediasGlobales', ['type' => 'checkbox', 'value' => true, 'label' => 'Medias Globales']);
-			//echo "<br>";
-			echo $this->Form->input('MediaViolacionesErrores', ['type' => 'checkbox', 'value' => true, 'label' => 'Media Violaciones-Errores']);
-			//echo "<br>";
-			echo $this->Form->input('MediaErrores', ['type' => 'checkbox', 'value' => true, 'label' => 'Media Errores']);
-			//echo "<br>";
-			echo $this->Form->input('AlumnosViolaciones', ['type' => 'checkbox', 'value' => true, 'label' => 'Violaciones']);
-			//echo "<br>";
-			echo $this->Form->input('AlumnosIntentos', ['type' => 'checkbox', 'value' => true, 'label' => 'Intentos realizados']);
-			//echo "<br>";
-			echo $this->Form->input('AlumnosTest', ['type' => 'checkbox', 'value' => true, 'label' => 'Alumnos test']);
-			//echo "<br>";
+		<!--  <div class="col-md-4 col-md-offset-4"> -->
+		<?php 
+		echo $this->Form->create('Post');
+		?>
+		<div class="col-xs-12 col-md-10">
+		<?php 
 			echo $this->Form->input('Todas', ['type' => 'checkbox', 'value' => true, 'label' => 'Todas']);
-			//echo "<br>";
-			echo $this->Form->input('field', ['options' => $alumnos_intentos, 'type' => 'select', 'empty' => '-- Selecciona el alumno --', 'label' => 'Mostrar gráficas alumno']);
-			?>
-			<br>
-			<?php echo $this->Form->button('Generar Gráficas', ['type' => 'submit', 'class' => 'btn btn-success']); ?>
-			<?php echo $this->Form->end(); ?>
-			<br>
+		?>
 		</div>
+		<div class="col-xs-6 col-md-4">
+		<?php 
+			echo $this->Form->input('MediasGlobales', ['type' => 'checkbox', 'value' => true, 'label' => 'Medias Globales']);
+		?>
+		</div>
+		<div class="col-xs-6 col-md-4">
+		<?php 
+			echo $this->Form->input('MediaViolacionesErrores', ['type' => 'checkbox', 'value' => true, 'label' => 'Media Violaciones-Errores']);
+		?>
+		</div>
+		<div class="col-xs-6 col-md-4">
+		<?php 
+			echo $this->Form->input('MediaErrores', ['type' => 'checkbox', 'value' => true, 'label' => 'Media Errores']);
+		?>
+		</div>
+		<div class="col-xs-6 col-md-4">
+		<?php 
+			echo $this->Form->input('AlumnosViolaciones', ['type' => 'checkbox', 'value' => true, 'label' => 'Violaciones']);
+		?>
+		</div>
+		<div class="col-xs-6 col-md-4">
+		<?php 
+			echo $this->Form->input('AlumnosIntentos', ['type' => 'checkbox', 'value' => true, 'label' => 'Intentos realizados']);
+		?>
+		</div>
+		<div class="col-xs-6 col-md-4">
+		<?php 
+			echo $this->Form->input('AlumnosTest', ['type' => 'checkbox', 'value' => true, 'label' => 'Alumnos test']);
+		?>
+		<?php
+		//echo $this->Form->input('Todas', ['type' => 'checkbox', 'value' => true, 'label' => 'Todas']);
+		//echo "<br>";
+		//echo $this->Form->input('field', ['options' => $alumnos_intentos, 'type' => 'select', 'empty' => '-- Selecciona el alumno --', 'label' => 'Mostrar gráficas alumno']);
+		?>
+		</div>
+		<div class="col-xs-12 col-md-10">
+		<br>
+		<?php 
+			echo $this->Form->input('field', ['options' => $alumnos_intentos, 'type' => 'select', 'empty' => '-- Selecciona el alumno --', 'label' => 'Mostrar gráficas alumno']);
+		?>
+		</div>
+		<div class="col-xs-6 col-md-4">
+		<br>
+		<?php
+			echo $this->Form->button('Generar Gráficas', ['type' => 'submit', 'class' => 'btn btn-success']);
+		?>
+		</div>
+		<?php echo $this->Form->end(); ?>
+		<!-- </div> -->
 	</div>
 </div>
 

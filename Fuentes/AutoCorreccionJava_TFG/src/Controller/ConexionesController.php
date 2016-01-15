@@ -23,6 +23,7 @@ class ConexionesController extends AppController{
 		$profesores_tabla = TableRegistry::get("Profesores");
 		
 		// Comprobar consumer_key
+		/*
 		if($_REQUEST['roles'] == "Instructor"){
 			$correo = $_REQUEST['lis_person_contact_email_primary'];
 			//$query = $this->obtenerProfesorPorKeyCorreo($consumer_key, $correo);
@@ -35,6 +36,20 @@ class ConexionesController extends AppController{
 			$query = $profesores_tabla->find('all')
 								      ->where(['consumer_key' => $consumer_key])
 								      ->toArray();
+		}
+		*/
+		
+		// Comprobar consumer_key
+		if($_REQUEST['roles'] == "Learner"){
+			$query = $profesores_tabla->find('all')
+									  ->where(['consumer_key' => $consumer_key])
+									  ->toArray();
+		}
+		else{
+			$correo = $_REQUEST['lis_person_contact_email_primary'];
+			$query = $profesores_tabla->find('all')
+									  ->where(['consumer_key' => $consumer_key, 'correo' => $correo])
+									  ->toArray();
 		}
 		
 		if(!empty($query)){	// consumer_key correcto		
@@ -55,7 +70,13 @@ class ConexionesController extends AppController{
 		$_SESSION['lti_idTarea'] = $context->info['resource_link_id'];
 		$_SESSION['lti_nombreCompleto'] = $context->info['lis_person_name_full'];
 		$_SESSION['lti_correo'] = $context->info['lis_person_contact_email_primary'];
-		$_SESSION['lti_rol'] = $context->info['roles'];
+		
+		if($context->info['roles'] == "Learner"){
+			$_SESSION['lti_rol'] = $context->info['roles'];
+		}else{
+			$_SESSION['lti_rol'] = "Instructor";
+		}
+		
 		$_SESSION['lti_userId'] = $context->info['user_id'];
 		$_SESSION['lti_idCurso'] = $context->info['context_id'];
 		$_SESSION['lti_nombre'] = $context->info['lis_person_name_given'];
@@ -65,7 +86,8 @@ class ConexionesController extends AppController{
 	
 	private function __redirigirPaginaUsuario(){
 		
-		if($_REQUEST['roles'] == 'Instructor'){
+		/*
+		if($_REQUEST['roles'] == 'Instructor'){				
 			//$tarea = $this->obtenerTareaPorId($_SESSION['lti_idTarea']);
 			$tareas_tabla = TableRegistry::get("Tareas");
 			$tarea = $tareas_tabla->find('all')
@@ -91,6 +113,35 @@ class ConexionesController extends AppController{
 			}
 			else{
 				return $this->redirect(['controller' => 'Alumnos', 'action' => 'registrarAlumno']);
+			}
+		}
+		*/
+		
+		
+		if($_REQUEST['roles'] == 'Learner'){
+			$alumnos_tabla = TableRegistry::get("Alumnos");
+			$query = $alumnos_tabla->find('all')
+								   ->where(['id' => $_SESSION['lti_userId']])
+								   ->toArray();
+				
+			if(!empty($query)){	// Alumno registrado
+				return $this->redirect(['controller' => 'Intentos', 'action' => 'subirPractica']);
+			}
+			else{
+				return $this->redirect(['controller' => 'Alumnos', 'action' => 'registrarAlumno']);
+			}
+		}
+		else{
+			$tareas_tabla = TableRegistry::get("Tareas");
+			$tarea = $tareas_tabla->find('all')
+								  ->where(['id' => $_SESSION['lti_idTarea']])
+								  ->toArray();
+			
+			if(!empty($tarea)){	// Tarea registrada
+				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
+			}
+			else{
+				return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametrosTarea']);
 			}
 		}
 		

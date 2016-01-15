@@ -7,6 +7,10 @@ include('/../../vendor/libchart/libchart/classes/libchart.php');
 
 class GraficasController extends AppController{
 	
+	public function mostrar(){
+		
+	}
+	
 	public function generarGraficasViolacionesErroresAlumno(){
 	
 		//$query_violaciones = $this->obtenerIntentosConViolaciones();

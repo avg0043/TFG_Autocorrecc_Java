@@ -12,30 +12,15 @@ else{
 ?>
 
 <div class="jumbotron">
-  <h3>Subida de Prácticas</h3>
+  <h3>Subida de Prácticas <a id="popover" class="btn btn-default btn-info" rel="popover" data-content="Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
+  	 Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java.
+  	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes." title="Info">Información</a>
+  </h3>
   <p>Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
   	 Es decir: si el paquete es "uni.ubu", la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java. <br>
   	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes.</p>
 </div>
-
-<!-- 
-<div class="panel panel-primary, col-md-6">
- 	<div class="panel-body">
-		<ul class="list-group">
-			<li class="list-group-item"><b>Nombre del paquete</b><span class="badge"><?= $paquete ?></span></li>
-			<li class="list-group-item"><b>Número máximo de intentos posibles</b><span class="badge"><?= $num_maximo_intentos ?></span></li>
-			<li class="list-group-item"><b>Fecha límite de entrega</b><span class="badge"><?= $fecha_limite ?></span></li>
-			<li class="list-group-item"><b>Número de intentos realizados</b><span class="badge"><?= $num_intentos_realizados ?></span></li>
-			<li class="list-group-item"><b>Número de intentos restantes</b><span class="badge"><?= ($num_maximo_intentos - $num_intentos_realizados) ?></span></li>
-		</ul>
-	</div>
-</div>
- -->
  
-<!-- 
-<a href="#" data-toggle="tooltip" title="Hooray!">Hover over me</a>
--->
-
 <div class="container">
 	<div class="row">
 		<div class="col-md-6">
@@ -64,18 +49,9 @@ else{
 	</div>
 </div>
 
-<?php //if($intento != null || $num_ultimo_intento != 0){
+<?php 
 	  if($num_ultimo_intento != null){
-	  	/*
-		if($intento == null){
-			$intento = $num_ultimo_intento;
-		}
-		$ruta = "http://localhost/".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
-				"/".$_SESSION['lti_userId']."/".$intento."/site/"; 
-		$ruta_local = "../../".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
-				"/".$_SESSION['lti_userId']."/".$intento."/site/";
-		*/
-		
+	
 		$ruta = "http://localhost/".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
 					"/".$_SESSION['lti_userId']."/".$num_ultimo_intento."/site/";
 		$ruta_local = "../../".$_SESSION['lti_idCurso']."/".$_SESSION['lti_idTarea']."/".$_SESSION['lti_rol'].
@@ -97,39 +73,50 @@ else{
 			<?php } ?>
 		</div>
 		
+		<div class="container">
+		  <h4 class="page-header">Gráficas disponibles</h4>
+		  <ul class="nav nav-tabs">
+		    <li class="active"><a data-toggle="tab" href="#violaciones">Violaciones</a></li>
+		    <li><a data-toggle="tab" href="#errores">Errores</a></li>
+		    <?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png")){ ?> 
+		    <li><a data-toggle="tab" href="#violacionesErrores">Violaciones - Errores</a></li>
+		    <?php }
+		    	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){?>
+		    <li><a data-toggle="tab" href="#violacionesPrioridades">Violaciones - Prioridades</a></li>
+		    <?php }?>
+		  </ul>
 		
-		<?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png")){ ?>
-			  	<h4 class="page-header">Gráfica Violaciones de código - Errores</h4>
-			  	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png"; ?>
-				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-		<?php }
-			  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png")){ ?>
-			  	<h4 class="page-header">Gráfica Errores</h4>
-			  	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png"; ?>
-				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-		<?php }
-			  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png")){?>
-				<h4 class="page-header">Gráfica Violaciones de código</h4>
-				<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
-				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-		<?php }
-			  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){?>
-				<h4 class="page-header">Gráfica Prioridades de las Violaciones de código del último intento realizado (barras)</h4>
-				<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png"; ?>
-				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-		<?php }
-			  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){?>
-				<h4 class="page-header">Gráfica Prioridades de las Violaciones de código del último intento realizado (circular)</h4>
-				<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png"; ?>
-				<center><img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>" style="border: 1px solid gray;"/></center>
-		<?php }
-		
-		
-	 }
+		  <div class="tab-content">
+		    <div id="violaciones" class="divGraficas tab-pane fade in active">
+		    	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
+				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
+			</div>
+		    <div id="errores" class="divGraficas tab-pane fade">
+				<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-errores_unitarios.png"; ?>
+				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
+		    </div>
+		    <div id="violacionesErrores" class="divGraficas tab-pane fade">
+				<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png"; ?>
+				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
+		    </div>
+		    <div id="violacionesPrioridades" class="divGraficas tab-pane fade">
+		      	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png"; ?>
+				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
+		    	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png"; ?>
+				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
+		    </div>
+		  </div>
+		</div>
 
+		
+		<?php
+	 	}
 
 }
 ?>
 
+<script type="text/javascript">
+	$('#popover').popover();
+</script>
 
 
