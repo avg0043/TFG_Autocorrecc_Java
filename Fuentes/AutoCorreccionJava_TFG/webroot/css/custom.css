@@ -46,3 +46,12 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
 .nav-tabs, .nav-pills {
     text-align:center;
 }
+
+.listTitulo {
+  text-align: center;
+  background-color: #B8BFBF;
+}
+
+table thead tr th {
+  text-align: center;
+}

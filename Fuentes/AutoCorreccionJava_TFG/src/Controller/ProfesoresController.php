@@ -171,6 +171,7 @@ class ProfesoresController extends AppController{
 		$alumnos_tabla = TableRegistry::get("Alumnos");
 		$intentos_tabla = TableRegistry::get("Intentos");
 		
+		$this->set('intentos_todos', $intentos_tabla->find('all'));
 		//$this->set('alumnos', $this->obtenerAlumnos());
 		$this->set('alumnos', $alumnos_tabla->find('all'));
 		//$this->set('intentos', $this->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));

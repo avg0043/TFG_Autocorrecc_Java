@@ -12,13 +12,17 @@ else{
 ?>
 
 <div class="jumbotron">
-  <h3>Subida de Prácticas <a id="popover" class="btn btn-default btn-info" rel="popover" data-content="Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
+  <h3>Subida de Prácticas 
+  	<img class="mensajeInfo" data-content="Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
   	 Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java.
-  	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes." title="Info">Información</a>
+  	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes." data-placement="auto" title="INFORMACIÓN DE LA SUBIDA" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info.png"/>
+  	
+  	<!-- Verificar si existe Enunciado o no -->
+  	<?php if($enunciado != null){ ?>	
+  	<img class="mensajeInfo" data-content="Se deberán de crear 2 subpaquetes adicionales: es.ubu.model y 
+  	 es.ubu.controller. En el primero se deberá de crear la clase Ficheros.java, la cual debe permitir crear un Fichero gracias a sus métodos 'set' y 'get'.. ETC ETC" data-placement="auto" title="ENUNCIADO DE LA PRÁCTICA" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/enunciado.png"/>
+  	<?php }?>
   </h3>
-  <p>Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
-  	 Es decir: si el paquete es "uni.ubu", la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java. <br>
-  	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes.</p>
 </div>
  
 <div class="container">
@@ -26,23 +30,28 @@ else{
 		<div class="col-md-6">
 			<?php 
 			echo $this->Form->create('Post', ['type' => 'file']);
+			echo $this->Form->input('comentarios', ['type' => 'textarea', 'label' => 'Comentarios', 'rows' => '6', 'cols' => '5', 'class' => 'form-control']);
 			echo $this->Form->input('ficheroAsubir', ['type' => 'file', 'label' => 'Fichero a subir:', 'class' => 'form-control']);
-			echo $this->Form->input('Comentarios', ['type' => 'textarea', 'label' => 'Comentarios', 'rows' => '5', 'cols' => '5', 'class' => 'form-control']);
 			?>
 			<br>
-			<?php echo $this->Form->button('Subir', ['type' => 'submit', 'class' => 'btn btn-success']); ?>
-			<?php echo $this->Form->end(); ?>
+			<?php 
+			echo $this->Form->button('Subir', ['type' => 'submit', 'class' => 'btn btn-success']);
+			echo " ";
+			echo $this->Form->button('Resetear campos', ['type' => 'reset', 'class' => 'btn btn-danger']);
+			echo $this->Form->end(); 
+			?>
 			<br>
 		</div>
 		<div class="col-md-6">
 	 		<div class="panel-body">
 				<ul class="list-group">
+					<li class="listTitulo list-group-item"><b>Parámetros de la tarea</b><span class="badge"></span></li>
 					<li class="list-group-item"><b>Nombre del paquete</b><span class="badge"><?= $paquete ?></span></li>
 					<li class="list-group-item"><b>Número máximo de intentos posibles</b><span class="badge"><?= $num_maximo_intentos ?></span></li>
 					<li class="list-group-item"><b>Fecha límite de entrega</b><span class="badge"><?= $fecha_limite ?></span></li>
 					<li class="list-group-item"><b>Número de intentos realizados</b><span class="badge"><?= $num_intentos_realizados ?></span></li>
 					<li class="list-group-item"><b>Número de intentos restantes</b><span class="badge"><?= ($num_maximo_intentos - $num_intentos_realizados) ?></span></li>
-					<li class="list-group-item"><b>Comentarios</b><span class="badge">Holaaaaaaaaaaaaaaaaaaaaa...............</span></li>
+	
 				</ul>
 			</div>
 		</div>
@@ -73,9 +82,9 @@ else{
 			<?php } ?>
 		</div>
 		
-		<div class="container">
-		  <h4 class="page-header">Gráficas disponibles</h4>
-		  <ul class="nav nav-tabs">
+		<!--  <div class="container"> -->
+		<h4 class="page-header">Gráficas disponibles</h4>
+		<ul class="nav nav-tabs">
 		    <li class="active"><a data-toggle="tab" href="#violaciones">Violaciones</a></li>
 		    <li><a data-toggle="tab" href="#errores">Errores</a></li>
 		    <?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png")){ ?> 
@@ -84,9 +93,9 @@ else{
 		    	  if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){?>
 		    <li><a data-toggle="tab" href="#violacionesPrioridades">Violaciones - Prioridades</a></li>
 		    <?php }?>
-		  </ul>
+		</ul>
 		
-		  <div class="tab-content">
+		<div class="tab-content">
 		    <div id="violaciones" class="divGraficas tab-pane fade in active">
 		    	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
 				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
@@ -105,8 +114,8 @@ else{
 		    	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png"; ?>
 				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
 		    </div>
-		  </div>
 		</div>
+		<!--  </div> -->
 
 		
 		<?php
@@ -116,7 +125,9 @@ else{
 ?>
 
 <script type="text/javascript">
-	$('#popover').popover();
+	//$('#popoverData').popover();
+	$('.mensajeInfo').popover({ trigger: "hover" });
+	$('.mensajeInfo').popover();
 </script>
 
 

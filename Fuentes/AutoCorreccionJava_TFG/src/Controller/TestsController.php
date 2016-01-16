@@ -16,23 +16,48 @@ class TestsController extends AppController{
 		
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
+			$enunciado = $this->request->data['enunciado'];
+			$tareas_tabla = TableRegistry::get("Tareas");
 			
-			if($extension != "zip"){				
-				$this->Flash->error(__('El fichero debe tener extensión .zip'));				
+			if($enunciado == null && $extension == null){
+				$this->Flash->error(__('Debes de rellenar el enunciado o subir un test'));		
+			}
+			elseif($enunciado != null && $extension == null){
+				$tareas_tabla->query()
+							 ->update()
+							 ->set(['enunciado' => $enunciado])
+							 ->where(['id' => $_SESSION['lti_idTarea']])
+							 ->execute();
+				$this->Flash->success(__('Enunciado guardado correctamente'));
+			}
+			elseif($extension != "zip"){
+				$this->Flash->error(__('El fichero debe tener extensión .zip'));
 			}
 			else{		
-				//$this->id_profesor = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;
-				$tareas_tabla = TableRegistry::get("Tareas");
-				$query = $tareas_tabla->find('all')
-								      ->where(['id' => $_SESSION['lti_idTarea']])
-								      ->toArray();
-				$this->id_profesor = $query[0]->profesor_id;
+				//$tareas_tabla = TableRegistry::get("Tareas");
+				// Guardar enunciado en la BD Tareas
+				//$enunciado = $this->request->data['enunciado'];
+				if($enunciado != null){
+					$tareas_tabla->query()
+								 ->update()
+								 ->set(['enunciado' => $enunciado])
+								 ->where(['id' => $_SESSION['lti_idTarea']])
+								 ->execute();
+				}
+				//
 				
+				$query = $tareas_tabla->find('all')
+									  ->where(['id' => $_SESSION['lti_idTarea']])
+									  ->toArray();
+								      
+				$this->id_profesor = $query[0]->profesor_id;
 				$this->ruta_carpeta_id = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
 										. $_SESSION["lti_rol"] . "/" . $this->id_profesor . "/";					
 				$this->__crearArquetipoMaven();					
 				$this->Flash->success(__('Test subido correctamente'));
+				//return $this->redirect(['action' => 'subirTest']);
 			}
+			return $this->redirect(['action' => 'subirTest']);
 		}
 	}
 	

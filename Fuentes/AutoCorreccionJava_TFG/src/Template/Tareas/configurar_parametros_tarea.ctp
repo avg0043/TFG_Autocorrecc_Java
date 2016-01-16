@@ -25,8 +25,12 @@
 			//echo $this->Form->button(__('Guardar configuración'));
 			?>
 			<br>
-			<?php echo $this->Form->button('Guardar configuración', ['type' => 'submit', 'class' => 'btn btn-success']); ?>
-			<?php echo $this->Form->end(); ?>
+			<?php 
+			echo $this->Form->button('Guardar', ['type' => 'submit', 'class' => 'btn btn-success']);
+			echo " ";
+			echo $this->Form->button('Resetear campos', ['type' => 'reset', 'class' => 'btn btn-danger']);
+			echo $this->Form->end(); 
+			?>
 			<br>
 		</div>
 	</div>

@@ -50,6 +50,13 @@ class IntentosController extends AppController{
 		}
 		$this->set("num_ultimo_intento", $num_ultimo_intento);
 		
+		// Se pasa a la vista el enunciado de la tarea
+		$tareas_tabla = TableRegistry::get("Tareas");
+		$query = $tareas_tabla->find('all')
+							  ->where(['id' => $_SESSION['lti_idTarea']])
+							  ->toArray();
+		$this->set("enunciado", $query[0]->enunciado);
+		
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);
 			
@@ -218,6 +225,12 @@ class IntentosController extends AppController{
 		$nuevo_intento->ruta = $this->ruta_carpeta_id . $this->intento_realizado . "/";
 		date_default_timezone_set("Europe/Madrid");
 		$nuevo_intento->fecha_intento = new \DateTime(date("Y-m-d H:i:s"));	// fecha actual
+		//
+		$comentarios = $this->request->data['comentarios'];
+		if($comentarios != null){
+			$nuevo_intento->comentarios = $comentarios;
+		}
+		//
 		$this->Intentos->save($nuevo_intento);
 		
 		$this->__generarReportes();

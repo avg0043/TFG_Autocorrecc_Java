@@ -20,8 +20,12 @@
 			echo $this->Form->input('confirmar_contraseña', ['type' => 'password', 'label' => 'Confirmar contraseña', 'class' => 'form-control', 'placeholder' => 'Asegúrese que sea la misma']);
 			?>
 			<br>
-			<?php echo $this->Form->button('Registrar', ['type' => 'submit', 'class' => 'btn btn-success']); ?>
-			<?php echo $this->Form->end(); ?>
+			<?php
+			echo $this->Form->button('Registrar', ['type' => 'submit', 'class' => 'btn btn-success']);
+			echo " ";
+			echo $this->Form->button('Resetear campos', ['type' => 'reset', 'class' => 'btn btn-danger']);
+			echo $this->Form->end(); 
+			?>
 			<br>
 		</div>
 	</div>

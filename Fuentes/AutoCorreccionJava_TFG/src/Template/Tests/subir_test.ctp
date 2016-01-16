@@ -16,13 +16,17 @@
 		<div class="col-md-6 col-md-offset-3">
 			<?php 
 			echo $this->Form->create('Post', ['type' => 'file']);
-			echo $this->Form->input('Comentarios', ['type' => 'textarea', 'label' => 'Comentarios', 'rows' => '5', 'cols' => '5', 'class' => 'form-control']);
+			echo $this->Form->input('enunciado', ['type' => 'textarea', 'label' => 'Enunciado de la práctica', 'rows' => '5', 'cols' => '5', 'class' => 'form-control']);
 			echo $this->Form->input('ficheroAsubir', ['type' => 'file', 'label' => 'Fichero a subir:', 'class' => 'form-control']);
 			//echo $this->Form->button(__('Subir'));
 			?>
 			<br>
-			<?php echo $this->Form->button('Subir', ['type' => 'submit', 'class' => 'btn btn-success']); ?>
-			<?php echo $this->Form->end(); ?>
+			<?php 
+			echo $this->Form->button('Subir', ['type' => 'submit', 'class' => 'btn btn-success']);
+			echo " ";
+			echo $this->Form->button('Resetear campos', ['type' => 'reset', 'class' => 'btn btn-danger']);
+			echo $this->Form->end(); 
+			?>
 			<br>
 		</div>
 	</div>

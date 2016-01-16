@@ -10,6 +10,16 @@ use Cake\ORM\TableRegistry;
   <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
 </nav>
 
+<?php
+if($intentos_todos->isEmpty()){
+?>
+	<h4>Las estadísticas no están disponibles: ningún alumno ha subido su práctica. </h4>
+<?php 
+}
+else{
+?>
+
+
 <div class="jumbotron">
   <h3>Estadísticas de los intentos de subida de prácticas de los alumnos</h3>
   <p>Tabla con las estadísticas referentes a cada uno de los intentos de subida de práctica
@@ -18,6 +28,8 @@ use Cake\ORM\TableRegistry;
      de cada uno de los intentos.</p>
 </div>
 
+<a class="mensajeInfo btn" rel="popover" data-content="Se deberán de crear 2 su" data-placement="auto" title="ENUNCIADO DE LA PRÁCTICA">Enunciado</a>
+
 <?php 
 if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 	$intentos_controller = new IntentosController();
@@ -25,11 +37,12 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 <table id="tablaAlumnos" class="display">
 	<thead>
 		<tr>
-			<th>Select</th>
-			<th>Nombre completo</th>
-			<th>Número del intento</th>
-			<th>Test pasado</th>
-			<th>Fecha de subida</th>
+			<th style="width: 10px;"></th>
+			<th style="width: 190px;">Nombre</th>
+			<th style="width: 50px;">Intento</th>
+			<th style="width: 90px;">Test pasado</th>
+			<th style="width: 85px;">Comentarios</th>
+			<th style="width: 120px;">Fecha subida</th>
 			<th>Práctica</th>
 		</tr>
 	</thead>
@@ -55,6 +68,13 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 			        <td><b><?= $alumno->nombre." ".$alumno->apellidos ?></b></td>
 					<td align="center"><?= $intento->numero_intento ?></td>
 					<td><?= ($intento->resultado == true ? "sí" : "no") ?></td>
+					<td>
+						<?php if($intento->comentarios != null){ ?>
+							<img class="mensajeInfo" data-content="<?= $intento->comentarios ?>" data-placement="auto" title="COMENTARIOS DE LA PRÁCTICA" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/comentarios.png"/>
+						<?php }else{?>
+							<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/no_comentario.png"/>
+						<?php }?>
+					</td>
 					<td><?= $intento->fecha_intento ?></td>
 					<td><a href=<?= $intento->ruta.$intento->nombre ?> ><?= $intento->nombre?></a></td>
 				</tr>
@@ -73,14 +93,10 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 <button id="btn_findbugs" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('findbugs.html')">Reporte FindBugs</button>
 <button id="btn_errores" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('surefire-report.html')">Reporte Errores</button>
 
-<!-- local
-<link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.min.css">
- -->
-<!--  
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
--->
+<?php
+}
+?>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 	    $('#tablaAlumnos').DataTable( {
@@ -90,6 +106,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 		    	"search": "Buscar:",
 		    	"info": "Mostrando _START_ a _END_ de _TOTAL_ intentos",
 		    	"infoFiltered": "(filtrado de _MAX_ total de intentos)",
+		    	"zeroRecords": "No se encontraron intentos concidentes",
 			    "paginate": {
 				    "first": "Primera",
 				    "previous": "Anterior",
@@ -164,4 +181,8 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 		});
 				
 	}
+
+	$('.mensajeInfo').popover({ trigger: "hover" });
+	$('.mensajeInfo').popover();
+
 </script>
