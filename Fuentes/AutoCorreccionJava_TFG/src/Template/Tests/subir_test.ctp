@@ -1,9 +1,14 @@
+<!--  
 <nav class="navbar navbar-inverse">
   <ul class="nav navbar-nav">
   	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
   </ul>
   <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
 </nav>
+-->
+
+<?= $this->Html->css('custom.css') ?>
+
 
 <div class="jumbotron">
   <h3>Subida de Tests</h3>
@@ -13,7 +18,7 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
+		<div class="col-md-8 col-md-offset-2">
 			<?php 
 			echo $this->Form->create('Post', ['type' => 'file']);
 			echo $this->Form->input('enunciado', ['type' => 'textarea', 'label' => 'Enunciado de la práctica', 'rows' => '5', 'cols' => '5', 'class' => 'form-control']);

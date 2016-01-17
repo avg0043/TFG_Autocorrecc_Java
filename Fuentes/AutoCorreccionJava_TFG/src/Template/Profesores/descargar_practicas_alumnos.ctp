@@ -3,12 +3,17 @@ use App\Controller\IntentosController;
 use Cake\ORM\TableRegistry;
 ?>
 
+<!--  
 <nav class="navbar navbar-inverse">
   <ul class="nav navbar-nav">
   	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
   </ul>
   <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
 </nav>
+-->
+
+<?= $this->Html->css('custom.css') ?>
+
 
 <?php
 if($intentos_todos->isEmpty()){
@@ -28,8 +33,6 @@ else{
      de cada uno de los intentos.</p>
 </div>
 
-<a class="mensajeInfo btn" rel="popover" data-content="Se deberán de crear 2 su" data-placement="auto" title="ENUNCIADO DE LA PRÁCTICA">Enunciado</a>
-
 <?php 
 if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 	$intentos_controller = new IntentosController();
@@ -43,7 +46,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 			<th style="width: 90px;">Test pasado</th>
 			<th style="width: 85px;">Comentarios</th>
 			<th style="width: 120px;">Fecha subida</th>
-			<th>Práctica</th>
+			<th style="width: 140px;">Práctica</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -65,7 +68,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 					<td scope="col">
 			            <input name="radioAlumno" id="usuarioSeleccionado_1" type="radio" value="1" onclick="radioBtnFuncion()">
 			        </td>
-			        <td><b><?= $alumno->nombre." ".$alumno->apellidos ?></b></td>
+			        <td><?= $alumno->nombre." ".$alumno->apellidos ?></td>
 					<td align="center"><?= $intento->numero_intento ?></td>
 					<td><?= ($intento->resultado == true ? "sí" : "no") ?></td>
 					<td>
@@ -87,11 +90,13 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 </table>
 <?php }?>
 
-<button id="btn_javancss" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('javancss.html')">Reporte JavanCSS</button>
-<button id="btn_jdepend" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('jdepend-report.html')">Reporte JDepend</button>
-<button id="btn_pmd" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('pmd.html')">Reporte PMD</button>
-<button id="btn_findbugs" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('findbugs.html')">Reporte FindBugs</button>
-<button id="btn_errores" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('surefire-report.html')">Reporte Errores</button>
+<div class="botonesReportes">
+	<button id="btn_javancss" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('javancss.html')">Reporte JavanCSS</button>
+	<button id="btn_jdepend" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('jdepend-report.html')">Reporte JDepend</button>
+	<button id="btn_pmd" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('pmd.html')">Reporte PMD</button>
+	<button id="btn_findbugs" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('findbugs.html')">Reporte FindBugs</button>
+	<button id="btn_errores" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('surefire-report.html')">Reporte Errores</button>
+</div>
 
 <?php
 }

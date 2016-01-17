@@ -4,7 +4,11 @@
 
 .page-header {
   text-align: center;
-  background-color: #eee;
+  /*
+  background-color: white;
+  border-radius: 40px;
+  */
+  border-bottom: 1px solid #01545B;
 }
 
 .div-reportes {
@@ -19,12 +23,13 @@ a:focus, a:hover {
     text-decoration: none;
 }
 
-h3 {
+h3, h4 {
   text-align: center;
+  color: #01545B;
 }
 
 a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
-    border-color: #337ab7;
+    border-color: #116D76;
     border-radius: 50px;
 }
 
@@ -49,9 +54,82 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
 
 .listTitulo {
   text-align: center;
-  background-color: #B8BFBF;
+  /* background-color: #B8BFBF; */
+}
+
+.list-group-item {
+  color: #116D76;
 }
 
 table thead tr th {
   text-align: center;
+  color: #01545B;
+}
+
+.container .jumbotron, .container-fluid .jumbotron {
+    border-radius: 40px;
+}
+
+.jumbotron {
+  margin-top: 20px;
+  background-color: white;
+  /* border-radius: 40px; */
+}
+
+body {
+  background: #e9eaed;
+}
+
+form {
+  background-color: white;
+  padding-left: 5em;
+  padding-right: 5em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  border-radius: 40px;
+}
+
+label {
+  color: #116D76;
+}
+
+.thumbnail {
+  border-radius: 40px;
+}
+
+b {
+  color: #116D76;
+}
+
+.btn-success {
+  background-image: linear-gradient(to bottom,#116D76 0,#116D76 100%);
+  border-color: #116D76;
+}
+
+.btn-danger {
+  background-image: linear-gradient(to bottom,#01545B 0,#01545B 100%);
+  border-color: #01545B;
+}
+
+.btn-success:focus, .btn-success:hover {
+    background-color: #419641;
+    background-position: 0 -35px;
+}
+
+.btn-danger:focus, .btn-danger:hover {
+    background-color: #c12e2a;
+    background-position: 0 -35px;
+}
+
+.botonesReportes {
+  margin-bottom: 50px;
+}
+
+
+.labelInline {
+  display: inline;
+}
+
+.tab-content {
+  margin-bottom: 40px;
 }

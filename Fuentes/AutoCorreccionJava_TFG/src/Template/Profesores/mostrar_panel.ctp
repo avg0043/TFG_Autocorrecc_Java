@@ -1,6 +1,10 @@
+<!--  
 <nav class="navbar navbar-inverse">
   <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
 </nav>
+-->
+
+<?= $this->Html->css('custom.css') ?>
 
 <!-- 
 <div class="row">

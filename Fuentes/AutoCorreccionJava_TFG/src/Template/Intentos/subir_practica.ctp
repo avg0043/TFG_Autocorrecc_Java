@@ -1,6 +1,11 @@
+<!--  
 <nav class="navbar navbar-inverse">
   <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
 </nav>
+-->
+
+<?= $this->Html->css('custom.css') ?>
+
 
 <?php
 if(!$test_subido){
@@ -12,7 +17,7 @@ else{
 ?>
 
 <div class="jumbotron">
-  <h3>Subida de Prácticas 
+  <h3>SUBIDA DE PRÁCTICAS 
   	<img class="mensajeInfo" data-content="Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
   	 Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java.
   	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes." data-placement="auto" title="INFORMACIÓN DE LA SUBIDA" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info.png"/>
@@ -24,12 +29,14 @@ else{
   	<?php }?>
   </h3>
 </div>
- 
+
 <div class="container">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-8 col-md-offset-2">
 			<?php 
 			echo $this->Form->create('Post', ['type' => 'file']);
+			echo "<label class='labelInline'>Parámetros de la tarea </label><button type='button' class='btn btn-info btn-sm dropdown-toggle' data-toggle='modal' data-target='#myModal'>Ver</button>";
+			echo "<br>";
 			echo $this->Form->input('comentarios', ['type' => 'textarea', 'label' => 'Comentarios', 'rows' => '6', 'cols' => '5', 'class' => 'form-control']);
 			echo $this->Form->input('ficheroAsubir', ['type' => 'file', 'label' => 'Fichero a subir:', 'class' => 'form-control']);
 			?>
@@ -42,20 +49,48 @@ else{
 			?>
 			<br>
 		</div>
+		<!--  
 		<div class="col-md-6">
 	 		<div class="panel-body">
 				<ul class="list-group">
 					<li class="listTitulo list-group-item"><b>Parámetros de la tarea</b><span class="badge"></span></li>
-					<li class="list-group-item"><b>Nombre del paquete</b><span class="badge"><?= $paquete ?></span></li>
-					<li class="list-group-item"><b>Número máximo de intentos posibles</b><span class="badge"><?= $num_maximo_intentos ?></span></li>
-					<li class="list-group-item"><b>Fecha límite de entrega</b><span class="badge"><?= $fecha_limite ?></span></li>
-					<li class="list-group-item"><b>Número de intentos realizados</b><span class="badge"><?= $num_intentos_realizados ?></span></li>
-					<li class="list-group-item"><b>Número de intentos restantes</b><span class="badge"><?= ($num_maximo_intentos - $num_intentos_realizados) ?></span></li>
-	
+					<li class="list-group-item">Nombre del paquete<span class="badge"><?= $paquete ?></span></li>
+					<li class="list-group-item">Número máximo de intentos posibles<span class="badge"><?= $num_maximo_intentos ?></span></li>
+					<li class="list-group-item">Fecha límite de entrega<span class="badge"><?= $fecha_limite ?></span></li>
+					<li class="list-group-item">Número de intentos realizados<span class="badge"><?= $num_intentos_realizados ?></span></li>
+					<li class="list-group-item">Número de intentos restantes<span class="badge"><?= ($num_maximo_intentos - $num_intentos_realizados) ?></span></li>
 				</ul>
 			</div>
 		</div>
+		-->
 	</div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Parámetros de la tarea</h4>
+      </div>
+      <div class="modal-body">
+				<ul class="list-group">
+					<li class="list-group-item">Nombre del paquete<span class="badge"><?= $paquete ?></span></li>
+					<li class="list-group-item">Número máximo de intentos posibles<span class="badge"><?= $num_maximo_intentos ?></span></li>
+					<li class="list-group-item">Fecha límite de entrega<span class="badge"><?= $fecha_limite ?></span></li>
+					<li class="list-group-item">Número de intentos realizados<span class="badge"><?= $num_intentos_realizados ?></span></li>
+					<li class="list-group-item">Número de intentos restantes<span class="badge"><?= ($num_maximo_intentos - $num_intentos_realizados) ?></span></li>
+				</ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <?php 
@@ -85,7 +120,7 @@ else{
 		<!--  <div class="container"> -->
 		<h4 class="page-header">Gráficas disponibles</h4>
 		<ul class="nav nav-tabs">
-		    <li class="active"><a data-toggle="tab" href="#violaciones">Violaciones</a></li>
+		    <li><a data-toggle="tab" href="#violaciones">Violaciones</a></li>
 		    <li><a data-toggle="tab" href="#errores">Errores</a></li>
 		    <?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-linea.png")){ ?> 
 		    <li><a data-toggle="tab" href="#violacionesErrores">Violaciones - Errores</a></li>
@@ -96,7 +131,7 @@ else{
 		</ul>
 		
 		<div class="tab-content">
-		    <div id="violaciones" class="divGraficas tab-pane fade in active">
+		    <div id="violaciones" class="divGraficas tab-pane fade">
 		    	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-violaciones.png"; ?>
 				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
 			</div>
@@ -109,10 +144,12 @@ else{
 				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
 		    </div>
 		    <div id="violacionesPrioridades" class="divGraficas tab-pane fade">
+		    	<?php if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png")){?>
 		      	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento_barras.png"; ?>
 				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
 		    	<?php $nombre_grafica = $_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png"; ?>
 				<img class="imgGraficas" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/<?= $nombre_grafica ?>"/>
+				<?php }?>
 		    </div>
 		</div>
 		<!--  </div> -->

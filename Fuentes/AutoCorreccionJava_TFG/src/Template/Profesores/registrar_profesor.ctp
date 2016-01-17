@@ -1,6 +1,10 @@
+<!-- 
 <nav class="navbar navbar-inverse">
   <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
 </nav>
+-->
+
+<?= $this->Html->css('custom.css') ?>
 
 <div class="jumbotron">
   <h3>Registro Autocorrección de prácticas Java</h3>
@@ -10,7 +14,7 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
+		<div class="col-md-8 col-md-offset-2">
 			<?php
 			echo $this->Form->create($nuevo_profesor);
 			echo $this->Form->input('nombre', ['type' => 'text', 'label' => 'Nombre', 'class' => 'form-control']);

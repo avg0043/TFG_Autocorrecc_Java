@@ -69,11 +69,27 @@ class AppController extends Controller
      * @throws NotFoundException excepción.
      */
     public function comprobarSesion(){
-    
+    	
     	if(!isset($_SESSION["lti_userId"])){
     		return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
     	}
     
+    }
+    
+    public function comprobarRolProfesor(){
+	
+    	if($_SESSION["lti_rol"] != "Instructor"){
+    		return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoIncorrectoAlumno']);
+    	}
+    	
+    }
+    
+    public function comprobarRolAlumno(){
+    
+    	if($_SESSION["lti_rol"] != "Learner"){
+    		return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoIncorrectoProfesor']);
+    	}
+    	 
     }
     
 }

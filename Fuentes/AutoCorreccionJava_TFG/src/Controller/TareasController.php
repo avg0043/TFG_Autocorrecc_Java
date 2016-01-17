@@ -12,7 +12,9 @@ class TareasController extends AppController{
 	public function configurarParametrosTarea(){
 		
 		session_start();
-		$this->comprobarSesion();	
+		$this->comprobarSesion();
+		$this->comprobarRolProfesor();
+		
 		//$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));
 		$this->set("tarea_actual", $this->Tareas->find('all')->where(['id' => $_SESSION["lti_idTarea"]])->toArray());
 		$nueva_tarea = $this->Tareas->newEntity();

@@ -27,7 +27,12 @@ class IntentosController extends AppController{
 	public function subirPractica(){
 	
 		session_start();
-		$this->comprobarSesion();	
+		//$this->comprobarSesion();
+		if(!isset($_SESSION["lti_userId"])){
+			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
+		}
+		$this->comprobarRolAlumno();
+		
 		//$this->set("intento", $intento_realizado);		
 		$this->__comprobarTestSubido();
 		
@@ -82,7 +87,8 @@ class IntentosController extends AppController{
 										
 					$this->__copiarArquetipoMaven();
 					//return $this->redirect(['action' => 'subirPractica', $this->intento_realizado]);
-					return $this->redirect(['action' => 'subirPractica']);
+					//return $this->redirect(['action' => 'subirPractica']);
+					return $this->redirect($this->here);
 				}
 			}
 		}

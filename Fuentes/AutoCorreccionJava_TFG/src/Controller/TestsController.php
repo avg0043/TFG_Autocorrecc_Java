@@ -13,6 +13,7 @@ class TestsController extends AppController{
 		
 		session_start();
 		$this->comprobarSesion();
+		$this->comprobarRolProfesor();
 		
 		if ($this->request->is('post')) {	
 			$extension = pathinfo($_FILES['ficheroAsubir']['name'], PATHINFO_EXTENSION);

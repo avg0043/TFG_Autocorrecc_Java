@@ -89,6 +89,7 @@ class ProfesoresController extends AppController{
 	
 		session_start();
 		$this->comprobarSesion();
+		$this->comprobarRolProfesor();
 		
 	}
 	
@@ -99,6 +100,7 @@ class ProfesoresController extends AppController{
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
 		//$this->__comprobarSesion();
+		$this->comprobarRolProfesor();
 		
 		//$paquete = $this->obtenerTareaPorId($_SESSION["lti_idTarea"])[0]->paquete;
 		$tareas_tabla = TableRegistry::get("Tareas");
@@ -167,6 +169,7 @@ class ProfesoresController extends AppController{
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
 		//$this->comprobarSesion();
+		$this->comprobarRolProfesor();
 		
 		$alumnos_tabla = TableRegistry::get("Alumnos");
 		$intentos_tabla = TableRegistry::get("Intentos");
@@ -188,6 +191,7 @@ class ProfesoresController extends AppController{
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
 		//$this->comprobarSesion();
+		$this->comprobarRolProfesor();
 		
 		$graficas_controller = new GraficasController();
 		//$alumnos = $this->obtenerAlumnos();

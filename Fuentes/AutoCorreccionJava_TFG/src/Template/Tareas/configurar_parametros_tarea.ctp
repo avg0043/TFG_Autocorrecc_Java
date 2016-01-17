@@ -1,9 +1,22 @@
+<!--  
 <nav class="navbar navbar-inverse">
   <ul class="nav navbar-nav">
   	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
   </ul>
   <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
 </nav>
+-->
+
+<?= $this->Html->css('custom.css') ?>
+
+<!-- 
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <ul class="nav navbar-nav">
+  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
+  </ul>
+  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
+</nav>
+-->
  
 <div class="jumbotron">
   <h3>Configuración de los parámetros de la tarea</h3>
@@ -13,7 +26,7 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
+		<div class="col-md-8 col-md-offset-2">
 			<?php
 			echo $this->Form->create($nueva_tarea);
 			echo $this->Form->input('num_max_intentos', ['label' => 'Número máximo de intentos', 'class' => 'form-control']);

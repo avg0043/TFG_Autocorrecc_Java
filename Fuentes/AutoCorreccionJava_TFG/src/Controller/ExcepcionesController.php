@@ -12,6 +12,14 @@ class ExcepcionesController extends AppController{
 		$this->set("consumer_key", $consumer_key);
 	}
 	
+	public function mostrarErrorAccesoIncorrectoAlumno(){
+		$this->set("hora_actual", date("Y-m-d H:i:s"));
+	}
+	
+	public function mostrarErrorAccesoIncorrectoProfesor(){
+		$this->set("hora_actual", date("Y-m-d H:i:s"));
+	}
+	
 }
 
 ?>
