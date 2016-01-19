@@ -1,15 +1,11 @@
-<!-- 
-<nav class="navbar navbar-inverse">
-  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
-</nav>
--->
 
 <?= $this->Html->css('custom.css') ?>
 
 <div class="jumbotron">
-  <h3>Registro Autocorrección de prácticas Java</h3>
-  <p>Rellena el siguiente formulario para registrarte en la aplicación web y poder empezar
-  a utilizarla.</p>
+  <h3>Registro del profesor en la Aplicación
+     <img class="mensajeInfo iconos" data-content="Tras rellenar el formulario se mostrarán los parámetros LTI
+     necesarios para poder crear una tarea de Moodle que enlace con la aplicación web." data-placement="auto" title="INFORMACIÓN" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
+  </h3>
 </div>
 
 <div class="container">
@@ -35,15 +31,9 @@
 	</div>
 </div>
 
-<?php
-/*
-echo $this->Form->create($nuevo_profesor, ['class' => 'form-horizontal col-md-6']);
-echo $this->Form->input('nombre_completo', ['type' => 'text', 'label' => 'Nombre y apellido', 'class' => 'form-control']);
-echo $this->Form->input('correo', ['type' => 'email', 'label' => 'Correo electrónico', 'class' => 'form-control', 'placeholder' => 'Tiene que ser el de Moodle']);
-echo $this->Form->input('contraseña', ['type' => 'password', 'label' => 'Contraseña', 'class' => 'form-control']);
-echo $this->Form->input('confirmar_contraseña', ['type' => 'password', 'label' => 'Confirmar contraseña', 'class' => 'form-control', 'placeholder' => 'Asegúrese que sea la misma']);
-//echo $this->Form->button(__('Registrar', ['class' => 'btn btn-primary btn-xs']));
-echo $this->Form->button('Registrar', ['type' => 'submit', 'class' => 'btn btn-success']);
-echo $this->Form->end();
-*/
-?>
+<script type="text/javascript">
+
+	$('.mensajeInfo').popover({ trigger: "hover" });
+	$('.mensajeInfo').popover();
+	
+</script>

@@ -133,3 +133,17 @@ b {
 .tab-content {
   margin-bottom: 40px;
 }
+
+select {
+  padding-right: 1.5rem;
+  padding-left: 0.5rem;
+}
+
+.iconos {
+  padding-left: 2em;
+}
+
+#botonVer{
+  margin-left: 10em;
+  width: 15%;
+}

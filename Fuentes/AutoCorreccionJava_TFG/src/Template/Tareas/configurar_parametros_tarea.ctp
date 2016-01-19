@@ -1,27 +1,12 @@
-<!--  
-<nav class="navbar navbar-inverse">
-  <ul class="nav navbar-nav">
-  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
-  </ul>
-  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
-</nav>
--->
 
 <?= $this->Html->css('custom.css') ?>
 
-<!-- 
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <ul class="nav navbar-nav">
-  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
-  </ul>
-  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
-</nav>
--->
- 
+
 <div class="jumbotron">
-  <h3>Configuración de los parámetros de la tarea</h3>
-  <p>El <i>número máximo de intentos</i> debe de estar comprendido entre 1 y 20. <br>
-     El <i>paquete</i> únicamente podrá ser configurado la primera vez que se accede a la aplicación web.</p>
+  <h3>Configuración de los parámetros de la tarea
+     <img class="mensajeInfo iconos" data-content="El 'número máximo de intentos' debe de estar comprendido entre 1 y 20.
+     El 'paquete' únicamente podrá ser configurado la primera vez que el profesor accede a la aplicación web." data-placement="auto" title="INFORMACIÓN" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
+  </h3>
 </div>
 
 <div class="container">
@@ -48,3 +33,10 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+
+	$('.mensajeInfo').popover({ trigger: "hover" });
+	$('.mensajeInfo').popover();
+	
+</script>

@@ -27,10 +27,9 @@ class ProfesoresController extends AppController{
 			if ($this->Profesores->save($nuevo_profesor)) {	
 				return $this->redirect(['action' => 'mostrarParametrosLti', $this->request->data['correo']]);
 			}
-			$this->Flash->error(__('No ha sido posible registrar al profesor.'));		
+			$this->Flash->error(__('No ha sido posible registrar al profesor.'));
 		}
 		$this->set('nuevo_profesor', $nuevo_profesor);
-		
 	}
 	
 	/**
@@ -99,10 +98,8 @@ class ProfesoresController extends AppController{
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
-		//$this->__comprobarSesion();
 		$this->comprobarRolProfesor();
 		
-		//$paquete = $this->obtenerTareaPorId($_SESSION["lti_idTarea"])[0]->paquete;
 		$tareas_tabla = TableRegistry::get("Tareas");
 		$query = $tareas_tabla->find('all')
 							  ->where(['id' => $_SESSION["lti_idTarea"]])
@@ -110,7 +107,6 @@ class ProfesoresController extends AppController{
 		$paquete = $query[0]->paquete;
 		
 		$paquete_ruta = str_replace('.', '\\', $paquete);
-		//$alumnos = $this->obtenerAlumnos();
 		$alumnos_tabla = TableRegistry::get("Alumnos");
 		$alumnos = $alumnos_tabla->find('all');
 		$reporte_jplag_generado = false;
@@ -125,13 +121,10 @@ class ProfesoresController extends AppController{
 		$intentos_tabla = TableRegistry::get("Intentos");
 		$alumnos_con_practicas = [];
 		foreach ($alumnos as $alumno):
-			//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			$intentos_alumno = $intentos_tabla->find('all')
     										  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
 		
 			if(!$intentos_alumno->isEmpty()){
-				//$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
-				//$intentos_tabla = TableRegistry::get("Intentos");
 				$ultimo_intento = $intentos_tabla->find('all')
 										    	 ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id])
 										    	 ->last()
@@ -140,10 +133,10 @@ class ProfesoresController extends AppController{
 				if(!empty($ultimo_intento)){
 					array_push($alumnos_con_practicas, $alumno->nombre." ".$alumno->apellidos);
 					$numero_practicas_subidas++;
-					mkdir("../../plagios/practicas/".utf8_decode($alumno->nombre.$alumno->apellidos), 0777, true);
+					mkdir("../../plagios/practicas/".utf8_decode($alumno->nombre.str_replace(' ', '', $alumno->apellidos)), 0777, true);
 					exec('xcopy ' . str_replace('/', '\\', $ruta_carpeta_tarea)."Learner\\"
 							      . $ultimo_intento['alumno_id']."\\". $ultimo_intento['numero_intento']."\\".$paquete_ruta . ' '
-								  . "..\\..\\plagios\\practicas\\".utf8_decode($alumno->nombre.$alumno->apellidos)."\\" . ' /s /e');
+								  . "..\\..\\plagios\\practicas\\".utf8_decode($alumno->nombre.str_replace(' ', '', $alumno->apellidos))."\\" . ' /s /e');
 				}
 			}
 		endforeach;
@@ -168,16 +161,13 @@ class ProfesoresController extends AppController{
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
-		//$this->comprobarSesion();
 		$this->comprobarRolProfesor();
 		
 		$alumnos_tabla = TableRegistry::get("Alumnos");
 		$intentos_tabla = TableRegistry::get("Intentos");
 		
 		$this->set('intentos_todos', $intentos_tabla->find('all'));
-		//$this->set('alumnos', $this->obtenerAlumnos());
 		$this->set('alumnos', $alumnos_tabla->find('all'));
-		//$this->set('intentos', $this->obtenerIntentosPorIdTarea($_SESSION["lti_idTarea"]));
 		$this->set('intentos', $intentos_tabla->find('all')->where(['tarea_id' => $_SESSION["lti_idTarea"]]));
 		
 	}
@@ -190,16 +180,13 @@ class ProfesoresController extends AppController{
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
-		//$this->comprobarSesion();
 		$this->comprobarRolProfesor();
 		
 		$graficas_controller = new GraficasController();
-		//$alumnos = $this->obtenerAlumnos();
 		$alumnos_tabla = TableRegistry::get("Alumnos");
 		$alumnos = $alumnos_tabla->find('all');
 		$alumnos_intentos = array();
 		foreach ($alumnos as $alumno){
-			//$intentos = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			$intentos_tabla = TableRegistry::get("Intentos");
 			$intentos = $intentos_tabla->find('all')
     								   ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
@@ -243,6 +230,7 @@ class ProfesoresController extends AppController{
 				$_SESSION["grafica_alumnos_test"] = true;
 				$graficas_controller->generarGraficaAlumnosTest();
 			}
+			/*
 			if($this->request->data["Todas"]){
 				$_SESSION["grafica_medias_globales"] = true;
 				$_SESSION["grafica_promedio_errores_violaciones"] = true;
@@ -257,6 +245,7 @@ class ProfesoresController extends AppController{
 				$graficas_controller->generarGraficaAlumnosTest();
 				$graficas_controller->generarGraficaMediaErrores();
 			}
+			*/
 			if($this->request->data["field"]){
 				$_SESSION["dropdown"] = true;
 				$id_alumno = $this->request->data["field"];

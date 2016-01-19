@@ -1,17 +1,4 @@
-<!--  
-<div class="page-header">
-	<h3>Gráficas</h3>
-</div>
--->
 
-<!-- 
-<nav class="navbar navbar-inverse">
-  <ul class="nav navbar-nav">
-  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
-  </ul>
-  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
-</nav>
- -->
  
 <?= $this->Html->css('custom.css') ?>
  
@@ -22,15 +9,9 @@
 
 <div class="jumbotron">
 	<div class="row">
-		<!--  <div class="col-md-4 col-md-offset-4"> -->
 		<?php 
 		echo $this->Form->create('Post');
 		?>
-		<div class="col-xs-12 col-md-10">
-		<?php 
-			echo $this->Form->input('Todas', ['type' => 'checkbox', 'value' => true, 'label' => 'Todas']);
-		?>
-		</div>
 		<div class="col-xs-6 col-md-4">
 		<?php 
 			echo $this->Form->input('MediasGlobales', ['type' => 'checkbox', 'value' => true, 'label' => 'Medias Globales']);
@@ -60,11 +41,6 @@
 		<?php 
 			echo $this->Form->input('AlumnosTest', ['type' => 'checkbox', 'value' => true, 'label' => 'Alumnos test']);
 		?>
-		<?php
-		//echo $this->Form->input('Todas', ['type' => 'checkbox', 'value' => true, 'label' => 'Todas']);
-		//echo "<br>";
-		//echo $this->Form->input('field', ['options' => $alumnos_intentos, 'type' => 'select', 'empty' => '-- Selecciona el alumno --', 'label' => 'Mostrar gráficas alumno']);
-		?>
 		</div>
 		<div class="col-xs-12 col-md-10">
 		<br>
@@ -79,7 +55,6 @@
 		?>
 		</div>
 		<?php echo $this->Form->end(); ?>
-		<!-- </div> -->
 	</div>
 </div>
 

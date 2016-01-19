@@ -23,23 +23,6 @@ class ConexionesController extends AppController{
 		$profesores_tabla = TableRegistry::get("Profesores");
 		
 		// Comprobar consumer_key
-		/*
-		if($_REQUEST['roles'] == "Instructor"){
-			$correo = $_REQUEST['lis_person_contact_email_primary'];
-			//$query = $this->obtenerProfesorPorKeyCorreo($consumer_key, $correo);
-			$query = $profesores_tabla->find('all')
-								      ->where(['consumer_key' => $consumer_key, 'correo' => $correo])
-								      ->toArray();
-		}
-		else{
-			//$query = $this->obtenerProfesorPorKey($consumer_key);
-			$query = $profesores_tabla->find('all')
-								      ->where(['consumer_key' => $consumer_key])
-								      ->toArray();
-		}
-		*/
-		
-		// Comprobar consumer_key
 		if($_REQUEST['roles'] == "Learner"){
 			$query = $profesores_tabla->find('all')
 									  ->where(['consumer_key' => $consumer_key])
@@ -84,39 +67,7 @@ class ConexionesController extends AppController{
 	
 	}
 	
-	private function __redirigirPaginaUsuario(){
-		
-		/*
-		if($_REQUEST['roles'] == 'Instructor'){				
-			//$tarea = $this->obtenerTareaPorId($_SESSION['lti_idTarea']);
-			$tareas_tabla = TableRegistry::get("Tareas");
-			$tarea = $tareas_tabla->find('all')
-							      ->where(['id' => $_SESSION['lti_idTarea']])
-							      ->toArray();
-		
-			if(!empty($tarea)){	// Tarea registrada
-				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
-			}
-			else{
-				return $this->redirect(['controller' => 'Tareas', 'action' => 'configurarParametrosTarea']);
-			}
-		}
-		else{
-			//$query = $this->obtenerAlumnoPorId($_SESSION['lti_userId']);
-			$alumnos_tabla = TableRegistry::get("Alumnos");
-			$query = $alumnos_tabla->find('all')
-							       ->where(['id' => $_SESSION['lti_userId']])
-							       ->toArray();
-			
-			if(!empty($query)){	// Alumno registrado
-				return $this->redirect(['controller' => 'Intentos', 'action' => 'subirPractica']);
-			}
-			else{
-				return $this->redirect(['controller' => 'Alumnos', 'action' => 'registrarAlumno']);
-			}
-		}
-		*/
-		
+	private function __redirigirPaginaUsuario(){	
 		
 		if($_REQUEST['roles'] == 'Learner'){
 			$alumnos_tabla = TableRegistry::get("Alumnos");

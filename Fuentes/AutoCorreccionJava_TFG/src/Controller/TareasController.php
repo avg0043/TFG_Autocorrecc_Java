@@ -15,7 +15,6 @@ class TareasController extends AppController{
 		$this->comprobarSesion();
 		$this->comprobarRolProfesor();
 		
-		//$this->set("tarea_actual", $this->obtenerTareaPorId($_SESSION["lti_idTarea"]));
 		$this->set("tarea_actual", $this->Tareas->find('all')->where(['id' => $_SESSION["lti_idTarea"]])->toArray());
 		$nueva_tarea = $this->Tareas->newEntity();
 		
@@ -26,7 +25,6 @@ class TareasController extends AppController{
 			$nueva_tarea->nombre = $_SESSION['lti_tituloTarea'];
 			date_default_timezone_set("Europe/Madrid");
 			$nueva_tarea->fecha_modificacion = new \DateTime(date("Y-m-d H:i:s")); // fecha actual
-			//$nueva_tarea->profesor_id = $this->obtenerProfesorPorCorreo($_SESSION['lti_correo'])[0]->id;
 			$profesores_tabla = TableRegistry::get("Profesores");
 			$query = $profesores_tabla->find('all')
     								  ->where(['correo' => $_SESSION['lti_correo']])
@@ -35,7 +33,12 @@ class TareasController extends AppController{
     								  
 			if ($this->Tareas->save($nueva_tarea)) {
 				$this->Flash->success(__('La tarea ha sido configurada correctamente'));
-				return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
+				$tarea_actual = $this->Tareas->find('all')->where(['id' => $_SESSION["lti_idTarea"]]);
+				if($tarea_actual->isEmpty()){
+					return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
+				}else{
+					return $this->redirect(['action' => 'configurarParametrosTarea']);
+				}
 			}
 			
 			$this->Flash->error(__('No ha sido posible registrar la tarea.'));

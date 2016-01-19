@@ -35,9 +35,6 @@ class TestsController extends AppController{
 				$this->Flash->error(__('El fichero debe tener extensión .zip'));
 			}
 			else{		
-				//$tareas_tabla = TableRegistry::get("Tareas");
-				// Guardar enunciado en la BD Tareas
-				//$enunciado = $this->request->data['enunciado'];
 				if($enunciado != null){
 					$tareas_tabla->query()
 								 ->update()
@@ -45,7 +42,6 @@ class TestsController extends AppController{
 								 ->where(['id' => $_SESSION['lti_idTarea']])
 								 ->execute();
 				}
-				//
 				
 				$query = $tareas_tabla->find('all')
 									  ->where(['id' => $_SESSION['lti_idTarea']])
@@ -56,7 +52,6 @@ class TestsController extends AppController{
 										. $_SESSION["lti_rol"] . "/" . $this->id_profesor . "/";					
 				$this->__crearArquetipoMaven();					
 				$this->Flash->success(__('Test subido correctamente'));
-				//return $this->redirect(['action' => 'subirTest']);
 			}
 			return $this->redirect(['action' => 'subirTest']);
 		}
@@ -65,7 +60,6 @@ class TestsController extends AppController{
 	private function __crearArquetipoMaven(){
 		
 		// Obtención del nombre del paquete de la tarea
-		//$paquete = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
 		$tareas_tabla = TableRegistry::get("Tareas");
 		$query = $tareas_tabla->find('all')
 							  ->where(['id' => $_SESSION['lti_idTarea']])
@@ -98,7 +92,6 @@ class TestsController extends AppController{
 			$zip->close();
 			
 			// El pom.xml sólo se edita la primera vez que se sube un test
-			//$test_query = $this->obtenerTestPorIdTarea($_SESSION["lti_idTarea"]);
 			$test_query = $this->Tests->find('all')
 								      ->where(['tarea_id' => $_SESSION["lti_idTarea"]])
 								      ->toArray();

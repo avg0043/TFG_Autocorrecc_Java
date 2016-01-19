@@ -3,17 +3,7 @@ use App\Controller\IntentosController;
 use Cake\ORM\TableRegistry;
 ?>
 
-<!--  
-<nav class="navbar navbar-inverse">
-  <ul class="nav navbar-nav">
-  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
-  </ul>
-  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
-</nav>
--->
-
 <?= $this->Html->css('custom.css') ?>
-
 
 <?php
 if($intentos_todos->isEmpty()){
@@ -26,11 +16,7 @@ else{
 
 
 <div class="jumbotron">
-  <h3>Estadísticas de los intentos de subida de prácticas de los alumnos</h3>
-  <p>Tabla con las estadísticas referentes a cada uno de los intentos de subida de práctica
-     realizados por los alumnos. <br>
-     Se tiene la opción de descargar las prácticas .zip y también de ver los reportes 
-     de cada uno de los intentos.</p>
+  <h3>Estadísticas de las prácticas de los alumnos</h3>
 </div>
 
 <?php 
@@ -54,8 +40,6 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 		$_SESSION["map_alumnos_id"] = array();
 		foreach ($alumnos as $alumno):
 			$_SESSION["map_alumnos_id"][$alumno->nombre." ".$alumno->apellidos] = $alumno->id;
-			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdAlumno($alumno->id);
-			//$intentos_alumno = $intentos_controller->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $alumno->id);
 			$intentos_tabla = TableRegistry::get("Intentos");
 			$intentos_alumno = $intentos_tabla->find('all')
     										  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
@@ -123,15 +107,11 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 	} );
 	
 	function btnFuncion(nombre_reporte) {
+		
 	    var selected_radioButton = $('input[name=radioAlumno]:checked', '#tablaAlumnos');
 	    var $row = $(selected_radioButton).closest("tr"),
 		    $nombre_completo = $row.find("td:nth-child(2)").text(),
 		    $numero_intento = $row.find("td:nth-child(3)").text();
-        /*
-	    $.each($id_alumno, function() {
-	        console.log($(this).text());
-	    });
-	    */
 	    var map_alumnos = <?php echo json_encode($_SESSION["map_alumnos_id"]) ?>;
 	    var ruta = "http://localhost/"+<?=$_SESSION['lti_idCurso']?>+"/"  +
 	    			<?=$_SESSION['lti_idTarea']?>+"/Learner"			  +
@@ -141,9 +121,11 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
     		  ruta,
     		  '_blank'
     	);
+    	
 	}
 
 	function radioBtnFuncion(){
+		
 	    var selected_radioButton = $('input[name=radioAlumno]:checked', '#tablaAlumnos');
 	     	$row = $(selected_radioButton).closest("tr"),
 		    $nombre_completo = $row.find("td:nth-child(2)").text(),
@@ -156,12 +138,11 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 
 		$.ajax({
 		    data: 'id=' + map_alumnos[$nombre_completo] + '&num_intento=' + $numero_intento,
-		    //url: 'http://localhost/AutoCorreccionJava_TFG/Pruebas/recibeValor',
 		    url: 'http://localhost/AutoCorreccionJava_TFG/Profesores/compruebaExistenciaReportes',
-		    method: 'POST', // or GET
+		    method: 'POST', 
 		    success: function(respuesta) {
+			    
 		    	var respuesta_reportes = $.parseJSON(respuesta);
-		    	//console.log(respuesta_reportes);
 		    	
 		    	// Los reportes JavanCSS y JDepend siempre están disponibles
 		    	$('#btn_javancss').prop('disabled', false);

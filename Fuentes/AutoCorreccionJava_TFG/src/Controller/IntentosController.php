@@ -23,32 +23,27 @@ class IntentosController extends AppController{
 	 * 
 	 * @param string $tipo_usuario	puede ser profesor o alumno.
 	 */
-	//public function subirPractica($intento_realizado = null){
 	public function subirPractica(){
 	
-		session_start();
-		//$this->comprobarSesion();
+		session_start();	
+		$finalizado = false;
+		$this->set("finalizado", $finalizado);	
+		
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
-		$this->comprobarRolAlumno();
 		
-		//$this->set("intento", $intento_realizado);		
-		$this->__comprobarTestSubido();
-		
-		//$intentos_alumno = $this->obtenerIntentosPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
+		$this->comprobarRolAlumno();	
+		$this->__comprobarTestSubido();	
 		$intentos_alumno = $this->Intentos->find('all')
     									  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $_SESSION["lti_userId"]]);
 		
-		//$num_ultimo_intento = 0;
     	$num_ultimo_intento = null;
 		if(!$intentos_alumno->isEmpty()){
-			//$ultimo_intento = $this->obtenerUltimoIntentoPorIdTareaAlumno($_SESSION["lti_idTarea"], $_SESSION["lti_userId"]);
 			$ultimo_intento = $this->Intentos->find('all')
 										     ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $_SESSION["lti_userId"]])
 										     ->last()
-										     ->toArray();
-			
+										     ->toArray();	
 			if(!empty($ultimo_intento)){
 				$num_ultimo_intento = $ultimo_intento["numero_intento"];
 			}
@@ -78,7 +73,6 @@ class IntentosController extends AppController{
 				else{									
 					$this->ruta_carpeta_id = "../../" . $_SESSION["lti_idCurso"] . "/" . $_SESSION["lti_idTarea"] . "/"
 										. $_SESSION["lti_rol"] . "/" . $_SESSION["lti_userId"] . "/";				
-					//$this->id_profesor = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->profesor_id;
 					$tareas_tabla = TableRegistry::get("Tareas");
 					$query = $tareas_tabla->find('all')
 									      ->where(['id' => $_SESSION['lti_idTarea']])
@@ -86,8 +80,8 @@ class IntentosController extends AppController{
 					$this->id_profesor = $query[0]->profesor_id;
 										
 					$this->__copiarArquetipoMaven();
-					//return $this->redirect(['action' => 'subirPractica', $this->intento_realizado]);
-					//return $this->redirect(['action' => 'subirPractica']);
+					$finalizado = true;
+					$this->set("finalizado", $finalizado);
 					return $this->redirect($this->here);
 				}
 			}
@@ -96,7 +90,6 @@ class IntentosController extends AppController{
 	
 	private function __comprobarTestSubido(){
 
-		//$query = $this->obtenerTestPorIdTarea($_SESSION['lti_idTarea']);
 		$tests_tabla = TableRegistry::get("Tests");
 		$query = $tests_tabla->find('all')
 					    	 ->where(['tarea_id' => $_SESSION['lti_idTarea']])
@@ -117,21 +110,18 @@ class IntentosController extends AppController{
 	
 	private function __establecerDatosVista(){
 			
-		//$this->paquete = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->paquete;
 		$tareas_tabla = TableRegistry::get("Tareas");
 		$query_tarea = $tareas_tabla->find('all')
 							  		->where(['id' => $_SESSION['lti_idTarea']])
 							  		->toArray();
 		$this->paquete = $query_tarea[0]->paquete;
 		
-		//$this->numero_maximo_intentos = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->num_max_intentos;
 		$this->numero_maximo_intentos = $query_tarea[0]->num_max_intentos;
 		
 		$query = $this->Intentos->find('all')
 								->where(['tarea_id' => $_SESSION['lti_idTarea'], 'alumno_id' => $_SESSION['lti_userId']])
 								->toArray();
 		$this->total_intentos_realizados = count($query);		
-		//$this->fecha_limite = $this->obtenerTareaPorId($_SESSION['lti_idTarea'])[0]->fecha_limite;
 		$this->fecha_limite = $query_tarea[0]->fecha_limite;
 		$this->fecha_limite = (new \DateTime($this->fecha_limite))->format('Y-m-d');
 		$this->fecha_actual = (new \DateTime(date("Y-m-d H:i:s")))->format('Y-m-d');
@@ -285,7 +275,6 @@ class IntentosController extends AppController{
 																						   $this->intento_realizado);
 		}
 		
-		//if(empty($this->obtenerViolacionPorIntentoTipo($this->id_intento, "IL_INFINITE_LOOP"))){
 		$violaciones_tabla = TableRegistry::get("Violaciones");
 		$query = $violaciones_tabla->find('all')
 							       ->where(['intento_id' => $this->id_intento, 'tipo' => "IL_INFINITE_LOOP"])

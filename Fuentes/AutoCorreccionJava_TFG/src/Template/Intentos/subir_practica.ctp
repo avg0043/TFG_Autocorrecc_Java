@@ -1,10 +1,6 @@
-<!--  
-<nav class="navbar navbar-inverse">
-  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
-</nav>
--->
 
 <?= $this->Html->css('custom.css') ?>
+<?= $this->Html->script('waitingDialog') ?> <!-- new -->
 
 
 <?php
@@ -17,15 +13,14 @@ else{
 ?>
 
 <div class="jumbotron">
-  <h3>SUBIDA DE PRÁCTICAS 
-  	<img class="mensajeInfo" data-content="Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
+  <h3>SUBIDA DE PRÁCTICAS   
+  	<img class="mensajeInfo iconos" data-content="Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
   	 Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java.
-  	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes." data-placement="auto" title="INFORMACIÓN DE LA SUBIDA" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info.png"/>
+  	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes." data-placement="auto" title="INFORMACIÓN" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
   	
   	<!-- Verificar si existe Enunciado o no -->
   	<?php if($enunciado != null){ ?>	
-  	<img class="mensajeInfo" data-content="Se deberán de crear 2 subpaquetes adicionales: es.ubu.model y 
-  	 es.ubu.controller. En el primero se deberá de crear la clase Ficheros.java, la cual debe permitir crear un Fichero gracias a sus métodos 'set' y 'get'.. ETC ETC" data-placement="auto" title="ENUNCIADO DE LA PRÁCTICA" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/enunciado.png"/>
+  	<img class="mensajeInfo" data-content="<?= $enunciado ?>" data-placement="auto" title="ENUNCIADO DE LA PRÁCTICA" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/enunciado_2.png"/>
   	<?php }?>
   </h3>
 </div>
@@ -34,8 +29,8 @@ else{
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<?php 
-			echo $this->Form->create('Post', ['type' => 'file']);
-			echo "<label class='labelInline'>Parámetros de la tarea </label><button type='button' class='btn btn-info btn-sm dropdown-toggle' data-toggle='modal' data-target='#myModal'>Ver</button>";
+			echo $this->Form->create('Post', ['type' => 'file', 'id' => 'login_form']);
+			echo "<label class='labelInline'>Parámetros de la tarea </label><button type='button' class='btn btn-info btn-sm dropdown-toggle' id='botonVer' data-toggle='modal' data-target='#myModal'>Ver</button>";
 			echo "<br>";
 			echo $this->Form->input('comentarios', ['type' => 'textarea', 'label' => 'Comentarios', 'rows' => '6', 'cols' => '5', 'class' => 'form-control']);
 			echo $this->Form->input('ficheroAsubir', ['type' => 'file', 'label' => 'Fichero a subir:', 'class' => 'form-control']);
@@ -49,20 +44,6 @@ else{
 			?>
 			<br>
 		</div>
-		<!--  
-		<div class="col-md-6">
-	 		<div class="panel-body">
-				<ul class="list-group">
-					<li class="listTitulo list-group-item"><b>Parámetros de la tarea</b><span class="badge"></span></li>
-					<li class="list-group-item">Nombre del paquete<span class="badge"><?= $paquete ?></span></li>
-					<li class="list-group-item">Número máximo de intentos posibles<span class="badge"><?= $num_maximo_intentos ?></span></li>
-					<li class="list-group-item">Fecha límite de entrega<span class="badge"><?= $fecha_limite ?></span></li>
-					<li class="list-group-item">Número de intentos realizados<span class="badge"><?= $num_intentos_realizados ?></span></li>
-					<li class="list-group-item">Número de intentos restantes<span class="badge"><?= ($num_maximo_intentos - $num_intentos_realizados) ?></span></li>
-				</ul>
-			</div>
-		</div>
-		-->
 	</div>
 </div>
 
@@ -117,7 +98,6 @@ else{
 			<?php } ?>
 		</div>
 		
-		<!--  <div class="container"> -->
 		<h4 class="page-header">Gráficas disponibles</h4>
 		<ul class="nav nav-tabs">
 		    <li><a data-toggle="tab" href="#violaciones">Violaciones</a></li>
@@ -152,19 +132,27 @@ else{
 				<?php }?>
 		    </div>
 		</div>
-		<!--  </div> -->
 
 		
 		<?php
 	 	}
 
+	 	if($finalizado){?>
+	 			waitingDialog.hide();
+	 	<?php }
+	 	
 }
 ?>
 
 <script type="text/javascript">
-	//$('#popoverData').popover();
+
+	$('#login_form').submit(function() {
+		waitingDialog.show("Subiendo práctica. El proceso podría durar varios segundos.");
+	});
+
 	$('.mensajeInfo').popover({ trigger: "hover" });
 	$('.mensajeInfo').popover();
+	
 </script>
 
 

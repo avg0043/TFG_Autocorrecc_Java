@@ -1,35 +1,26 @@
-<!-- 
-<nav class="navbar navbar-inverse">
-  <ul class="nav navbar-nav">
-  	<li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Inicio</a></li>
-  </ul>
-  <p class="navbar-text pull-right">TFG - Autocorrección de prácticas en Java</p>
-</nav>
--->
 
 <?= $this->Html->css('custom.css') ?>
 
-
 <div class="jumbotron">
-  <h3>Plagios</h3>
-  <p>Selecciona el botón <i>Reporte Plagios</i> para comprobar los posibles plagios existentes u observe la lista de razones
-  	 posibles por las que no ha podido generarse el reporte.</p>
+  <h3>Comprobación de plagios de las prácticas
+      <img class="mensajeInfo iconos" data-content="La comprobación de plagios es realizada entre la última práctica subida de todos los alumnos." 
+      data-placement="auto" title="INFORMACIÓN" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
+  </h3>
 </div>
 
 <div class="jumbotron col-md-6 col-md-offset-3">
 <?php
 if($reporte_generado){
 ?>
-	<ul>
-		<li>La comprobación de plagios se ha realizado entre <?= $numero_practicas_subidas ?> prácticas.</li>
-		<li>Las prácticas pertenecen a los siguientes Alumnos:
-			<ul>
+	<h5>La comprobación de plagios se ha realizado entre <?= $numero_practicas_subidas ?> prácticas.</h5>
+	<h5>Alumnos que han subido prácticas:</h5>
+	<div style="width:400px;height:150px;overflow-y: scroll;">
+		<ul>
 			<?php foreach($alumnos_con_practicas as $alumno):?>
 			<li><?= $alumno ?></li>
 			<?php endforeach;?>
-			</ul>
-		</li>
-	</ul>
+		</ul>
+	</div>
 	<a href="../../plagios/reporte/index.html" class="btn btn-default btn-lg" role="button" target="_blank">Reporte Plagios</a>
 <?php
 }else{
@@ -45,3 +36,11 @@ if($reporte_generado){
 ?>
 
 </div>
+
+
+<script type="text/javascript">
+
+	$('.mensajeInfo').popover({ trigger: "hover" });
+	$('.mensajeInfo').popover();
+	
+</script>
