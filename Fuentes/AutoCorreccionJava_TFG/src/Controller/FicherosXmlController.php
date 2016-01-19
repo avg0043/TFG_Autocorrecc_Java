@@ -4,20 +4,6 @@ namespace App\Controller;
 
 class FicherosXmlController extends AppController{
 	
-	public function probando(){
-		simplexml_load_file('pmd.xml');
-		if(file_exists("index.php")){
-			return 1;
-		}else{
-			return 3;
-		}
-	}
-	
-	public function probandoNuevo(){
-		exec('dir', $salida);
-		return $salida;
-	}
-	
 	public function editarPomArquetipoMaven($ruta_carpeta_id){
 		
 		$pom_xml = simplexml_load_file($ruta_carpeta_id . 'arquetipo/pom.xml');

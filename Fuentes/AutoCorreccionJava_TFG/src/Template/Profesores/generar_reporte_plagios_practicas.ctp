@@ -4,7 +4,7 @@
  
 
 <div class="jumbotron">
-  <h3>Comprobación de Plagios de prácticas</h3>
+  <h3><?= __('Comprobación de Plagios de prácticas') ?></h3>
 </div>
 
 <div class="container">
@@ -15,7 +15,7 @@
 		?>
 		<div style="width:400px;height:150px;overflow-y: scroll;">
 		<?php
-		echo $this->Form->input("TodosConTodos", ['type' => 'checkbox', 'value' => true, 'label' => 'TODOS CON TODOS']);
+		echo $this->Form->input("TodosConTodos", ['type' => 'checkbox', 'value' => true, 'label' => __('TODOS CON TODOS')]);
 		$clave = key($alumnos);
 		foreach ($alumnos as $alumno):
 			echo $this->Form->input($clave, ['type' => 'checkbox', 'value' => true, 'label' => $alumno]);
@@ -26,7 +26,7 @@
 		</div>
 		<?php
 		echo "<br>";
-		echo $this->Form->button('Generar Gráficas', ['type' => 'submit', 'class' => 'btn btn-success']);
+		echo $this->Form->button(__('Generar Gráficas'), ['type' => 'submit', 'class' => 'btn btn-success']);
 		echo $this->Form->end(); 
 		?>
 		</div>
@@ -37,12 +37,12 @@
 <?php
 if($reporte_generado){
 ?>
-	<h4 class="page-header">Reporte de plagios</h4>
+	<h4 class="page-header"><?= __('Reporte de plagios') ?></h4>
 	<div class="container">
 		<div class="row">
 			<div class="jumbotron col-md-8 col-md-offset-2">
-				<h6>La comprobación de plagios se ha realizado entre <?= $numero_practicas_subidas ?> prácticas.</h6>
-				<a href="../../plagios/reporte/index.html" class="btn btn-default btn-lg" role="button" target="_blank">Ver Reporte</a>
+				<h6><?= __('La comprobación de plagios se ha realizado entre') ?> <?= $numero_practicas_subidas ?> <?= __('prácticas.') ?></h6>
+				<a href="../../plagios/reporte/index.html" class="btn btn-default btn-lg" role="button" target="_blank"><?= __('Ver Reporte') ?></a>
 			</div>
 		</div>
 	</div>

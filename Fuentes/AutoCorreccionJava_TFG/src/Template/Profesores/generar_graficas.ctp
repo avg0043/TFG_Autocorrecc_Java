@@ -4,7 +4,7 @@
  
 
 <div class="jumbotron">
-  <h3>Gráficas</h3>
+  <h3><?= __('Gráficas') ?></h3>
 </div>
 
 <div class="jumbotron">
@@ -14,44 +14,44 @@
 		?>
 		<div class="col-xs-6 col-md-4">
 		<?php 
-			echo $this->Form->input('MediasGlobales', ['type' => 'checkbox', 'value' => true, 'label' => 'Medias Globales']);
+			echo $this->Form->input('MediasGlobales', ['type' => 'checkbox', 'value' => true, 'label' => __('Medias Globales')]);
 		?>
 		</div>
 		<div class="col-xs-6 col-md-4">
 		<?php 
-			echo $this->Form->input('MediaViolacionesErrores', ['type' => 'checkbox', 'value' => true, 'label' => 'Media Violaciones-Errores']);
+			echo $this->Form->input('MediaViolacionesErrores', ['type' => 'checkbox', 'value' => true, 'label' => __('Media Violaciones-Errores')]);
 		?>
 		</div>
 		<div class="col-xs-6 col-md-4">
 		<?php 
-			echo $this->Form->input('MediaErrores', ['type' => 'checkbox', 'value' => true, 'label' => 'Media Errores']);
+			echo $this->Form->input('MediaErrores', ['type' => 'checkbox', 'value' => true, 'label' => __('Media Errores')]);
 		?>
 		</div>
 		<div class="col-xs-6 col-md-4">
 		<?php 
-			echo $this->Form->input('AlumnosViolaciones', ['type' => 'checkbox', 'value' => true, 'label' => 'Violaciones']);
+			echo $this->Form->input('AlumnosViolaciones', ['type' => 'checkbox', 'value' => true, 'label' => __('Violaciones')]);
 		?>
 		</div>
 		<div class="col-xs-6 col-md-4">
 		<?php 
-			echo $this->Form->input('AlumnosIntentos', ['type' => 'checkbox', 'value' => true, 'label' => 'Intentos realizados']);
+			echo $this->Form->input('AlumnosIntentos', ['type' => 'checkbox', 'value' => true, 'label' => __('Intentos realizados')]);
 		?>
 		</div>
 		<div class="col-xs-6 col-md-4">
 		<?php 
-			echo $this->Form->input('AlumnosTest', ['type' => 'checkbox', 'value' => true, 'label' => 'Alumnos test']);
+			echo $this->Form->input('AlumnosTest', ['type' => 'checkbox', 'value' => true, 'label' => __('Alumnos test')]);
 		?>
 		</div>
 		<div class="col-xs-12 col-md-10">
 		<br>
 		<?php 
-			echo $this->Form->input('field', ['options' => $alumnos_intentos, 'type' => 'select', 'empty' => '-- Selecciona el alumno --', 'label' => 'Mostrar gráficas alumno']);
+			echo $this->Form->input('field', ['options' => $alumnos_intentos, 'type' => 'select', 'empty' => '-- Selecciona el alumno --', 'label' => __('Mostrar gráficas alumno')]);
 		?>
 		</div>
 		<div class="col-xs-6 col-md-4">
 		<br>
 		<?php
-			echo $this->Form->button('Generar Gráficas', ['type' => 'submit', 'class' => 'btn btn-success']);
+			echo $this->Form->button(__('Generar Gráficas'), ['type' => 'submit', 'class' => 'btn btn-success']);
 		?>
 		</div>
 		<?php echo $this->Form->end(); ?>
@@ -62,28 +62,28 @@
 		 || $_SESSION["grafica_media_errores"] || $_SESSION["grafica_alumnos_intentos"] || $_SESSION["grafica_alumnos_violaciones"]
 		 || $_SESSION["dropdown"]){?>
 		 
-		<h4 class="page-header">Gráficas seleccionadas</h4>
+		<h4 class="page-header"><?= __('Gráficas seleccionadas') ?></h4>
 		<ul class="nav nav-tabs">
 			<?php if($_SESSION["grafica_medias_globales"]){?>
-		    	<li><a data-toggle="tab" href="#mediasGlobales">Medias Globales</a></li>
+		    	<li><a data-toggle="tab" href="#mediasGlobales"><?= __('Medias Globales') ?></a></li>
 		    <?php }?>
 		    <?php if($_SESSION["grafica_promedio_errores_violaciones"]){?>
-		   		<li><a data-toggle="tab" href="#mediaViolacionesErrores">Media Violaciones-Errores</a></li>
+		   		<li><a data-toggle="tab" href="#mediaViolacionesErrores"><?= __('Media Violaciones-Errores') ?></a></li>
 		    <?php }?>
 		    <?php if($_SESSION["grafica_media_errores"]){?>
-		    	<li><a data-toggle="tab" href="#mediaErrores">Media Errores</a></li>
+		    	<li><a data-toggle="tab" href="#mediaErrores"><?= __('Media Errores') ?></a></li>
 		    <?php }?>
 		    <?php if($_SESSION["grafica_alumnos_violaciones"]){?>
-		    	<li><a data-toggle="tab" href="#violaciones">Violaciones</a></li>
+		    	<li><a data-toggle="tab" href="#violaciones"><?= __('Violaciones') ?></a></li>
 		    <?php }?>
 		    <?php if($_SESSION["grafica_alumnos_intentos"]){?>
-	    		<li><a data-toggle="tab" href="#intentos">Intentos realizados</a></li>
+	    		<li><a data-toggle="tab" href="#intentos"><?= __('Intentos realizados') ?></a></li>
 	    	<?php }?>
 	    	<?php if($_SESSION["grafica_alumnos_test"]){?>
-	    		<li><a data-toggle="tab" href="#test">Alumnos test</a></li>
+	    		<li><a data-toggle="tab" href="#test"><?= __('Alumnos test') ?></a></li>
 	    	<?php }?>
 	    	<?php if($_SESSION["dropdown"]){?>
-	    		<li><a data-toggle="tab" href="#alumno">Alumno: <?= $alumnos_intentos[$id_alumno] ?></a></li>
+	    		<li><a data-toggle="tab" href="#alumno"><?= __('Alumno') ?>: <?= $alumnos_intentos[$id_alumno] ?></a></li>
 	    	<?php }?>
 		</ul>
 		

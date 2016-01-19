@@ -8,7 +8,7 @@ use Cake\ORM\TableRegistry;
 <?php
 if($intentos_todos->isEmpty()){
 ?>
-	<h4>Las estadísticas no están disponibles: ningún alumno ha subido su práctica. </h4>
+	<h4><?= __('Las estadísticas no están disponibles: ningún alumno ha subido su práctica.') ?></h4>
 <?php 
 }
 else{
@@ -16,7 +16,7 @@ else{
 
 
 <div class="jumbotron">
-  <h3>Estadísticas de las prácticas de los alumnos</h3>
+  <h3><?= __('Estadísticas de las prácticas de los alumnos') ?></h3>
 </div>
 
 <?php 
@@ -27,12 +27,12 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 	<thead>
 		<tr>
 			<th style="width: 10px;"></th>
-			<th style="width: 190px;">Nombre</th>
-			<th style="width: 50px;">Intento</th>
-			<th style="width: 90px;">Test pasado</th>
-			<th style="width: 85px;">Comentarios</th>
-			<th style="width: 120px;">Fecha subida</th>
-			<th style="width: 140px;">Práctica</th>
+			<th style="width: 190px;"><?= __('Nombre') ?></th>
+			<th style="width: 50px;"><?= __('Intento') ?></th>
+			<th style="width: 90px;"><?= __('Test pasado') ?></th>
+			<th style="width: 85px;"><?= __('Comentarios') ?></th>
+			<th style="width: 120px;"><?= __('Fecha subida') ?></th>
+			<th style="width: 140px;"><?= __('Práctica') ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -57,7 +57,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 					<td><?= ($intento->resultado == true ? "sí" : "no") ?></td>
 					<td>
 						<?php if($intento->comentarios != null){ ?>
-							<img class="mensajeInfo" data-content="<?= $intento->comentarios ?>" data-placement="auto" title="COMENTARIOS DE LA PRÁCTICA" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/comentarios.png"/>
+							<img class="mensajeInfo" data-content="<?= $intento->comentarios ?>" data-placement="auto" title="<?= __('COMENTARIOS DE LA PRÁCTICA') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/comentarios.png"/>
 						<?php }else{?>
 							<img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/no_comentario.png"/>
 						<?php }?>
@@ -75,11 +75,11 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 <?php }?>
 
 <div class="botonesReportes">
-	<button id="btn_javancss" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('javancss.html')">Reporte JavanCSS</button>
-	<button id="btn_jdepend" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('jdepend-report.html')">Reporte JDepend</button>
-	<button id="btn_pmd" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('pmd.html')">Reporte PMD</button>
-	<button id="btn_findbugs" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('findbugs.html')">Reporte FindBugs</button>
-	<button id="btn_errores" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('surefire-report.html')">Reporte Errores</button>
+	<button id="btn_javancss" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('javancss.html')"><?= __('Reporte JavanCSS') ?></button>
+	<button id="btn_jdepend" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('jdepend-report.html')"><?= __('Reporte JDepend') ?></button>
+	<button id="btn_pmd" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('pmd.html')"><?= __('Reporte PMD') ?></button>
+	<button id="btn_findbugs" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('findbugs.html')"><?= __('Reporte FindBugs') ?></button>
+	<button id="btn_errores" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('surefire-report.html')"><?= __('Reporte Errores') ?></button>
 </div>
 
 <?php

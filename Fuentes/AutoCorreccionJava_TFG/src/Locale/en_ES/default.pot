@@ -1,0 +1,474 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2016-01-19 19:32+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Controller/AlumnosController.php:26
+msgid "Primer acceso, has sido registrado"
+msgstr ""
+
+#: Controller/IntentosController.php:63
+#: Controller/TestsController.php:35
+msgid "El fichero debe tener extensión .zip"
+msgstr ""
+
+#: Controller/IntentosController.php:67
+msgid "La fecha límite de la entrega ha finalizado"
+msgstr ""
+
+#: Controller/IntentosController.php:70
+msgid "No puedes subir más veces la práctica"
+msgstr ""
+
+#: Controller/IntentosController.php:174
+msgid "El zip no contiene la estructura de carpetas correcta"
+msgstr ""
+
+#: Controller/IntentosController.php:201
+msgid "La práctica tiene errores de compilación"
+msgstr ""
+
+#: Controller/IntentosController.php:278
+msgid "Hay bucles infinitos. Test no ejecutado."
+msgstr ""
+
+#: Controller/IntentosController.php:293
+msgid "La práctica ha pasado los test"
+msgstr ""
+
+#: Controller/IntentosController.php:300
+msgid "La práctica no ha pasado los test"
+msgstr ""
+
+#: Controller/IntentosController.php:306
+msgid "error desconocido"
+msgstr ""
+
+#: Controller/IntentosController.php:327
+msgid "Práctica subida. Realizado intento número: {0}"
+msgstr ""
+
+#: Controller/ProfesoresController.php:30
+msgid "No ha sido posible registrar al profesor."
+msgstr ""
+
+#: Controller/ProfesoresController.php:168
+msgid "Debes de seleccionar una de las opciones"
+msgstr ""
+
+#: Controller/ProfesoresController.php:227
+msgid "Debes seleccionar al menos 2 alumnos o TODOS CON TODOS"
+msgstr ""
+
+#: Controller/ProfesoresController.php:245
+msgid "Debes de seleccionar al menos 2 alumnos"
+msgstr ""
+
+#: Controller/ProfesoresController.php:282
+msgid "El reporte de plagios ha sido generado"
+msgstr ""
+
+#: Controller/TareasController.php:35
+msgid "La tarea ha sido configurada correctamente"
+msgstr ""
+
+#: Controller/TareasController.php:44
+msgid "No ha sido posible registrar la tarea."
+msgstr ""
+
+#: Controller/TestsController.php:24
+msgid "Debes de rellenar el enunciado o subir un test"
+msgstr ""
+
+#: Controller/TestsController.php:32
+msgid "Enunciado guardado correctamente"
+msgstr ""
+
+#: Controller/TestsController.php:54
+msgid "Test subido correctamente"
+msgstr ""
+
+#: Controller/TestsController.php:119
+msgid "No ha sido posible registrar el test"
+msgstr ""
+
+#: Template/Excepciones/mostrar_error_acceso_incorrecto_alumno.ctp:1
+msgid "Por motivos de seguridad, no está permitido que un Alumno acceda al panel del Profesor"
+msgstr ""
+
+#: Template/Excepciones/mostrar_error_acceso_incorrecto_alumno.ctp:2
+msgid "Para acceder a la aplicación correctamente, deberá de acceder únicamente al panel del Alumno."
+msgstr ""
+
+#: Template/Excepciones/mostrar_error_acceso_incorrecto_alumno.ctp:3
+#: Template/Excepciones/mostrar_error_acceso_incorrecto_profesor.ctp:3
+#: Template/Excepciones/mostrar_error_acceso_local.ctp:4
+msgid "Momento del acceso:"
+msgstr ""
+
+#: Template/Excepciones/mostrar_error_acceso_incorrecto_profesor.ctp:1
+msgid "Por motivos de seguridad, no está permitido que un Profesor acceda al panel del Alumno"
+msgstr ""
+
+#: Template/Excepciones/mostrar_error_acceso_incorrecto_profesor.ctp:2
+msgid "Para acceder a la aplicación correctamente, deberá de acceder únicamente al panel del Profesor."
+msgstr ""
+
+#: Template/Excepciones/mostrar_error_acceso_local.ctp:1
+msgid "Por motivos de seguridad, no está permitido acceder a la aplicación desde un acceso local."
+msgstr ""
+
+#: Template/Excepciones/mostrar_error_acceso_local.ctp:2
+msgid "Para acceder a la aplicación correctamente, deberá de usar los enlaces de tareas\nexternas creadas en Moodle por el profesor."
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:9
+msgid "Todavía no puede subir la práctica porque el profesor no ha subido test"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:17
+msgid "Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.\n  \t Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java.\n  \t Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes."
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:19
+#: Template/Profesores/mostrar_parametros_lti.ctp:7
+#: Template/Profesores/registrar_profesor.ctp:7
+#: Template/Tareas/configurar_parametros_tarea.ctp:8
+#: Template/Tests/subir_test.ctp:9
+msgid "INFORMACIÓN"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:23
+msgid "ENUNCIADO DE LA PRÁCTICA"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:35
+#: Template/Profesores/descargar_practicas_alumnos.ctp:33
+msgid "Comentarios"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:36
+#: Template/Tests/subir_test.ctp:19
+msgid "Fichero a subir:"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:40
+#: Template/Tests/subir_test.ctp:23
+msgid "Subir"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:42
+#: Template/Profesores/registrar_profesor.ctp:26
+#: Template/Tareas/configurar_parametros_tarea.ctp:28
+#: Template/Tests/subir_test.ctp:25
+msgid "Resetear campos"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:58
+msgid "Parámetros de la tarea"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:62
+msgid "Nombre del paquete"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:63
+msgid "Número máximo de intentos posibles"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:64
+msgid "Fecha límite de entrega"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:65
+msgid "Número de intentos realizados"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:66
+msgid "Número de intentos restantes"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:70
+msgid "Cerrar"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:86
+msgid "Reportes del último intento realizado"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:101
+msgid "Gráficas disponibles"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:103
+#: Template/Profesores/generar_graficas.ctp:32;77
+msgid "Violaciones"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:104
+msgid "Errores"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:106
+msgid "Violaciones - Errores"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:109
+msgid "Violaciones - Prioridades"
+msgstr ""
+
+#: Template/Layout/default.ctp:52
+msgid "TFG - Autocorrección prácticas en Java"
+msgstr ""
+
+#: Template/Layout/default.ctp:58
+msgid "Panel Inicio"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:11
+msgid "Las estadísticas no están disponibles: ningún alumno ha subido su práctica."
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:19
+msgid "Estadísticas de las prácticas de los alumnos"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:30
+#: Template/Profesores/registrar_profesor.ctp:16
+msgid "Nombre"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:31
+msgid "Intento"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:32
+msgid "Test pasado"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:34
+msgid "Fecha subida"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:35
+msgid "Práctica"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:60
+msgid "COMENTARIOS DE LA PRÁCTICA"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:78
+msgid "Reporte JavanCSS"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:79
+msgid "Reporte JDepend"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:80
+msgid "Reporte PMD"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:81
+msgid "Reporte FindBugs"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:82
+msgid "Reporte Errores"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:7
+#: Template/Profesores/mostrar_panel.ctp:32
+msgid "Gráficas"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:17;68
+msgid "Medias Globales"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:22;71
+msgid "Media Violaciones-Errores"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:27;74
+msgid "Media Errores"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:37;80
+msgid "Intentos realizados"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:42;83
+msgid "Alumnos test"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:48
+msgid "Mostrar gráficas alumno"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:54
+#: Template/Profesores/generar_reporte_plagios_practicas.ctp:29
+msgid "Generar Gráficas"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:65
+msgid "Gráficas seleccionadas"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:86
+msgid "Alumno"
+msgstr ""
+
+#: Template/Profesores/generar_reporte_plagios_practicas.ctp:7
+msgid "Comprobación de Plagios de prácticas"
+msgstr ""
+
+#: Template/Profesores/generar_reporte_plagios_practicas.ctp:18
+msgid "TODOS CON TODOS"
+msgstr ""
+
+#: Template/Profesores/generar_reporte_plagios_practicas.ctp:40
+msgid "Reporte de plagios"
+msgstr ""
+
+#: Template/Profesores/generar_reporte_plagios_practicas.ctp:44
+msgid "La comprobación de plagios se ha realizado entre"
+msgstr ""
+
+#: Template/Profesores/generar_reporte_plagios_practicas.ctp:44
+msgid "prácticas."
+msgstr ""
+
+#: Template/Profesores/generar_reporte_plagios_practicas.ctp:45
+msgid "Ver Reporte"
+msgstr ""
+
+#: Template/Profesores/mostrar_panel.ctp:5
+msgid "PANEL DEL PROFESOR"
+msgstr ""
+
+#: Template/Profesores/mostrar_panel.ctp:11
+msgid "Configuración"
+msgstr ""
+
+#: Template/Profesores/mostrar_panel.ctp:18
+msgid "Subida"
+msgstr ""
+
+#: Template/Profesores/mostrar_panel.ctp:25
+msgid "Estadísticas"
+msgstr ""
+
+#: Template/Profesores/mostrar_panel.ctp:39
+msgid "Plagios"
+msgstr ""
+
+#: Template/Profesores/mostrar_parametros_lti.ctp:5
+msgid "Parámetros LTI"
+msgstr ""
+
+#: Template/Profesores/mostrar_parametros_lti.ctp:6
+msgid "Utiliza estos parámetros para poder crear desde Moodle una tarea de tipo 'herramienta externa'\n  que enlace con la aplicación web de Autocorrección de prácticas Java."
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:5
+msgid "Registro del profesor en la Aplicación"
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:6
+msgid "Tras rellenar el formulario se mostrarán los parámetros LTI\n     necesarios para poder crear una tarea de Moodle que enlace con la aplicación web."
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:17
+msgid "Apellidos"
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:18
+msgid "Correo electrónico"
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:18
+msgid "Tiene que ser el de Moodle"
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:19
+msgid "Contraseña"
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:20
+msgid "Confirmar contraseña"
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:20
+msgid "Asegúrese que sea la misma"
+msgstr ""
+
+#: Template/Profesores/registrar_profesor.ctp:24
+msgid "Registrar"
+msgstr ""
+
+#: Template/Tareas/configurar_parametros_tarea.ctp:6
+msgid "Configuración de los parámetros de la tarea"
+msgstr ""
+
+#: Template/Tareas/configurar_parametros_tarea.ctp:7
+msgid "El 'número máximo de intentos' debe de estar comprendido entre 1 y 20.\n     El 'paquete' únicamente podrá ser configurado la primera vez que el profesor accede a la aplicación web."
+msgstr ""
+
+#: Template/Tareas/configurar_parametros_tarea.ctp:17
+msgid "Número máximo de intentos"
+msgstr ""
+
+#: Template/Tareas/configurar_parametros_tarea.ctp:19;21
+msgid "paquete"
+msgstr ""
+
+#: Template/Tareas/configurar_parametros_tarea.ctp:19
+msgid "Separado por puntos en caso de ser varios"
+msgstr ""
+
+#: Template/Tareas/configurar_parametros_tarea.ctp:22
+msgid "fecha_limite"
+msgstr ""
+
+#: Template/Tareas/configurar_parametros_tarea.ctp:26
+msgid "Guardar"
+msgstr ""
+
+#: Template/Tests/subir_test.ctp:6
+msgid "Subida de Test"
+msgstr ""
+
+#: Template/Tests/subir_test.ctp:7
+msgid "Se deberá de subir un fichero .zip que contenga el test de extensión .java. Es importante que el test\n     pertenezca al paquete establecido en la configuración de parámetros de la tarea. Se podrá actualizar el enunciado aunque no se suban test."
+msgstr ""
+
+#: Template/Tests/subir_test.ctp:18
+msgid "Enunciado de la práctica"
+msgstr ""
+
+#: Template/Error/error400.ctp:33
+#: Template/Error/error500.ctp:35
+msgid "Error"
+msgstr ""
+
+#: Template/Error/error400.ctp:35
+msgid "The requested address %s was not found on this server."
+msgstr ""
+
+#: Template/Error/error500.ctp:33
+msgid "An Internal Error Has Occurred"
+msgstr ""
+

@@ -39,21 +39,11 @@ class ProfesoresController extends AppController{
 	 */
 	private function __encriptarCadena($cadena){
 	
-		$key='clave_codificacion';  // Una clave de codificacion, debe usarse la misma para encriptar y desencriptar
+		$key='clave_codificacion';
 		$encriptada = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $cadena, MCRYPT_MODE_CBC, md5(md5($key))));
 		return $encriptada; //Devuelve el string encriptado
 	
 	}
-	
-	/*
-	 private function __desencriptarCadena($cadena){
-	
-	 $key='clave_codificacion';  // Una clave de codificacion, debe usarse la misma para encriptar y desencriptar
-	 $desencriptada = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($cadena), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
-	 return $desencriptada;  //Devuelve el string desencriptado
-	
-	 }
-	 */
 	
 	/**
 	 * Función que crea un consumer_key aleatoriamente, que se le va a entregar al
@@ -91,71 +81,6 @@ class ProfesoresController extends AppController{
 		$this->comprobarRolProfesor();
 		
 	}
-	
-	/*
-	public function generarReportePlagiosPracticas(){
-		
-		session_start();	
-		if(!isset($_SESSION["lti_userId"])){
-			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
-		}
-		$this->comprobarRolProfesor();
-		
-		$tareas_tabla = TableRegistry::get("Tareas");
-		$query = $tareas_tabla->find('all')
-							  ->where(['id' => $_SESSION["lti_idTarea"]])
-							  ->toArray();
-		$paquete = $query[0]->paquete;
-		
-		$paquete_ruta = str_replace('.', '\\', $paquete);
-		$alumnos_tabla = TableRegistry::get("Alumnos");
-		$alumnos = $alumnos_tabla->find('all');
-		$reporte_jplag_generado = false;
-		$numero_practicas_subidas = 0;
-		$ruta_carpeta_tarea = "../../".$_SESSION["lti_idCurso"]."/".$_SESSION["lti_idTarea"]."/";
-		
-		if(is_dir("../../plagios/")){
-			exec('cd ' . "../../" . ' && rmdir plagios /s /q');	// borrar plagios
-		}
-		mkdir("../../plagios/practicas", 0777, true);
-		
-		$intentos_tabla = TableRegistry::get("Intentos");
-		$alumnos_con_practicas = [];
-		foreach ($alumnos as $alumno):
-			$intentos_alumno = $intentos_tabla->find('all')
-    										  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id]);
-		
-			if(!$intentos_alumno->isEmpty()){
-				$ultimo_intento = $intentos_tabla->find('all')
-										    	 ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $alumno->id])
-										    	 ->last()
-										    	 ->toArray();
-				
-				if(!empty($ultimo_intento)){
-					array_push($alumnos_con_practicas, $alumno->nombre." ".$alumno->apellidos);
-					$numero_practicas_subidas++;
-					mkdir("../../plagios/practicas/".utf8_decode($alumno->nombre.str_replace(' ', '', $alumno->apellidos)), 0777, true);
-					exec('xcopy ' . str_replace('/', '\\', $ruta_carpeta_tarea)."Learner\\"
-							      . $ultimo_intento['alumno_id']."\\". $ultimo_intento['numero_intento']."\\".$paquete_ruta . ' '
-								  . "..\\..\\plagios\\practicas\\".utf8_decode($alumno->nombre.str_replace(' ', '', $alumno->apellidos))."\\" . ' /s /e');
-				}
-			}
-		endforeach;
-		
-		if($numero_practicas_subidas >= 2){
-			$reporte_jplag_generado = true;
-			exec('cd ../../plagios && java -jar ../AutoCorreccionJava_TFG/vendor/jplag-2.11.8-SNAPSHOT-jar-with-dependencies.jar -l java17 -r reporte/ -s practicas/');
-			$this->Flash->success(__('El reporte de plagios ha sido generado'));
-		}else{
-			$this->Flash->error(__('No ha sido posible generar el reporte de los plagios'));
-		}
-		
-		$this->set('alumnos_con_practicas', $alumnos_con_practicas);
-		$this->set('numero_practicas_subidas', $numero_practicas_subidas);
-		$this->set('reporte_generado', $reporte_jplag_generado);
-		
-	}
-	*/
 	
 	public function descargarPracticasAlumnos(){
 		
@@ -232,22 +157,6 @@ class ProfesoresController extends AppController{
 				$_SESSION["grafica_alumnos_test"] = true;
 				$graficas_controller->generarGraficaAlumnosTest();
 			}
-			/*
-			if($this->request->data["Todas"]){
-				$_SESSION["grafica_medias_globales"] = true;
-				$_SESSION["grafica_promedio_errores_violaciones"] = true;
-				$_SESSION["grafica_media_errores"] = true;
-				$_SESSION["grafica_alumnos_violaciones"] = true;
-				$_SESSION["grafica_alumnos_intentos"] = true;
-				$_SESSION["grafica_alumnos_test"] = true;
-				$graficas_controller->generarGraficaMedias();
-				$graficas_controller->generarGraficaLineaPromedioErroresUnitariosViolaciones();
-				$graficas_controller->generarGraficaVerticalAlumnosViolacionesCometidas();
-				$graficas_controller->generarGraficaVerticalAlumnosIntentos();
-				$graficas_controller->generarGraficaAlumnosTest();
-				$graficas_controller->generarGraficaMediaErrores();
-			}
-			*/
 			if($this->request->data["field"]){
 				$_SESSION["dropdown"] = true;
 				$id_alumno = $this->request->data["field"];
@@ -377,7 +286,6 @@ class ProfesoresController extends AppController{
 				$num_alumnos_seleccionados = count($alumnos->toArray());
 			}
 			$this->set("numero_practicas_subidas", $num_alumnos_seleccionados);
-			//return $this->redirect(['action' => 'plagios']);
 		}
 		
 	}

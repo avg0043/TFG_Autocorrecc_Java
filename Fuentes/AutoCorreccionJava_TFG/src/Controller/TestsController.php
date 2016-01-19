@@ -72,7 +72,7 @@ class TestsController extends AppController{
 			mkdir($this->ruta_carpeta_id, 0777, true);
 			exec('SET PATH=%JAVA_HOME%\bin;%PATH% 2>&1');
 			exec('cd ' . $this->ruta_carpeta_id . ' && mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false -DgroupId='.$paquete.' -DartifactId=arquetipo 2>&1');
-			// Borrar App.java y AppTest.java
+			// Borrar App.java y AppTest.java (vienen por defecto en el arquetipo)
 			unlink($this->ruta_carpeta_id . 'arquetipo/src/main/java/' . $this->paquete_ruta . '/App.java');
 			unlink($this->ruta_carpeta_id . 'arquetipo/src/test/java/' . $this->paquete_ruta . '/AppTest.java');
 		}

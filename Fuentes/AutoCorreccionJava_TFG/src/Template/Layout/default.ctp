@@ -49,13 +49,13 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 	<nav class="top-bar expanded" data-topbar role="navigation">
 	  <ul class="right title-area large-4 medium-4 columns">
 	    <li class="name">
-	      <h1><a href="">TFG - Autocorrección prácticas en Java</a></h1>
+	      <h1><a href=""><?= __('TFG - Autocorrección prácticas en Java') ?></a></h1>
 	    </li>
 	  </ul>
 	  <?php if(isset($_SESSION["lti_userId"]) && $_SESSION["lti_rol"] == "Instructor"){?>
 	  <section class="top-bar-section">
 	    <ul class="left">
-	      <li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel">Panel Inicio</a></li>
+	      <li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel"><?= __('Panel Inicio') ?></a></li>
 	    </ul>
 	  </section>
 	  <?php }?>

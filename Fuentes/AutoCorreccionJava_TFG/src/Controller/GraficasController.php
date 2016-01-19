@@ -7,10 +7,6 @@ include('/../../vendor/libchart/libchart/classes/libchart.php');
 
 class GraficasController extends AppController{
 	
-	public function mostrar(){
-		
-	}
-	
 	public function generarGraficasViolacionesErroresAlumno(){
 	
 		$intentos_tabla = TableRegistry::get("Intentos");

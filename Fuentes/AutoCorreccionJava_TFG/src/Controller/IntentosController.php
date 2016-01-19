@@ -31,15 +31,14 @@ class IntentosController extends AppController{
 		
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
-		}
-		
+		}	
 		$this->comprobarRolAlumno();	
+	
 		$this->__comprobarTestSubido();	
 		$intentos_alumno = $this->Intentos->find('all')
     									  ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $_SESSION["lti_userId"]]);
-		
     	$num_ultimo_intento = null;
-		if(!$intentos_alumno->isEmpty()){
+		if(!$intentos_alumno->isEmpty()){	// Se obtiene el número del último intento realizado y se le pasa a la vista
 			$ultimo_intento = $this->Intentos->find('all')
 										     ->where(['tarea_id' => $_SESSION["lti_idTarea"], 'alumno_id' => $_SESSION["lti_userId"]])
 										     ->last()
@@ -77,8 +76,7 @@ class IntentosController extends AppController{
 					$query = $tareas_tabla->find('all')
 									      ->where(['id' => $_SESSION['lti_idTarea']])
 									      ->toArray();
-					$this->id_profesor = $query[0]->profesor_id;
-										
+					$this->id_profesor = $query[0]->profesor_id;							
 					$this->__copiarArquetipoMaven();
 					$finalizado = true;
 					$this->set("finalizado", $finalizado);
@@ -93,8 +91,7 @@ class IntentosController extends AppController{
 		$tests_tabla = TableRegistry::get("Tests");
 		$query = $tests_tabla->find('all')
 					    	 ->where(['tarea_id' => $_SESSION['lti_idTarea']])
-					    	 ->toArray();
-		
+					    	 ->toArray();		
 		$test_subido = true;
 		
 		if(empty($query)){
@@ -114,8 +111,7 @@ class IntentosController extends AppController{
 		$query_tarea = $tareas_tabla->find('all')
 							  		->where(['id' => $_SESSION['lti_idTarea']])
 							  		->toArray();
-		$this->paquete = $query_tarea[0]->paquete;
-		
+		$this->paquete = $query_tarea[0]->paquete;		
 		$this->numero_maximo_intentos = $query_tarea[0]->num_max_intentos;
 		
 		$query = $this->Intentos->find('all')
@@ -139,7 +135,7 @@ class IntentosController extends AppController{
 			mkdir($this->ruta_carpeta_id . "/", 0777, true);  // estructuras de carpetas del alumno
 		}
 		
-		// Copiar el arquetipo maven a la carpeta id alumno
+		// Copia del arquetipo maven a la carpeta id alumno
 		$ruta_dir_origen = "..\\..\\" . $_SESSION["lti_idCurso"] . "\\" . $_SESSION["lti_idTarea"] . "\\"
 							. "Instructor" . "\\" . $this->id_profesor;
 		exec('xcopy ' . $ruta_dir_origen . ' ' . str_replace('/', '\\', $this->ruta_carpeta_id) . ' /s /e /Y');
@@ -221,12 +217,10 @@ class IntentosController extends AppController{
 		$nuevo_intento->ruta = $this->ruta_carpeta_id . $this->intento_realizado . "/";
 		date_default_timezone_set("Europe/Madrid");
 		$nuevo_intento->fecha_intento = new \DateTime(date("Y-m-d H:i:s"));	// fecha actual
-		//
 		$comentarios = $this->request->data['comentarios'];
 		if($comentarios != null){
 			$nuevo_intento->comentarios = $comentarios;
 		}
-		//
 		$this->Intentos->save($nuevo_intento);
 		
 		$this->__generarReportes();
@@ -252,7 +246,6 @@ class IntentosController extends AppController{
 		exec('xcopy ' . str_replace('/', '\\', $this->ruta_carpeta_id)."\\arquetipo\\target" . ' ' .
 				str_replace('/', '\\', $this->ruta_carpeta_id)."\\".$this->intento_realizado . ' /s /e');
 		
-		//--- SIEMPRE SE GENERA EL FINDBUGS.html, AUNQUE NO HAYA FALLOS
 		$this->__guardarDatosXML();
 	
 	}
@@ -267,9 +260,8 @@ class IntentosController extends AppController{
 		if($_SESSION["pmd_generado"]){
 			$ficherosXml_controller->guardarDatosXmlPluginPmd($this->ruta_carpeta_id, $this->id_intento, 
 															  						  $this->intento_realizado);
-		}
-	
-		if($_SESSION["findbugs_generado"]){
+		}	
+		if($_SESSION["findbugs_generado"]){	// el findbugs.html siempre se genera aunque no haya fallos
 			$_SESSION["findbugs_generado"] = false;
 			$ficherosXml_controller->guardarDatosXmlPluginFindbugs($this->ruta_carpeta_id, $this->id_intento, 
 																						   $this->intento_realizado);
@@ -332,7 +324,7 @@ class IntentosController extends AppController{
 					   ->where(['id' => $id_intento])
 					   ->execute();
 	
-		$this->Flash->success(__('Práctica subida. Realizado intento número: ' . $this->intento_realizado));
+		$this->Flash->success(__('Práctica subida. Realizado intento número: {0}', $this->intento_realizado));
 	
 	}
 	

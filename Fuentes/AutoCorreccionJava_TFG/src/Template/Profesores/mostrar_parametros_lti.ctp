@@ -2,9 +2,9 @@
 <?= $this->Html->css('custom.css') ?>
 
 <div class="jumbotron">
-  <h3>Parámetros LTI
-     <img class="mensajeInfo iconos" data-content="Utiliza estos parámetros para poder crear desde Moodle una tarea de tipo 'herramienta externa'
-  que enlace con la aplicación web de Autocorrección de prácticas Java." data-placement="auto" title="INFORMACIÓN" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
+  <h3><?= __('Parámetros LTI') ?>
+     <img class="mensajeInfo iconos" data-content="<?= __("Utiliza estos parámetros para poder crear desde Moodle una tarea de tipo 'herramienta externa'
+  que enlace con la aplicación web de Autocorrección de prácticas Java.") ?>" data-placement="auto" title="<?= __('INFORMACIÓN') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
   </h3>
 </div>
 
