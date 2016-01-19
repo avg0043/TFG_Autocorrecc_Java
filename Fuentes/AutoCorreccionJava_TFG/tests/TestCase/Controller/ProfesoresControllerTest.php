@@ -76,8 +76,9 @@ class ProfesoresControllerTest extends IntegrationTestCase{
 	
 		$_SESSION["lti_userId"] = 3;
 		$_SESSION["lti_idTarea"] = 18;
+		$_SESSION["lti_rol"] = "Instructor";
 		$this->post('/profesores/descargarPracticasAlumnos');
-		$this->assertResponseOk();
+		$this->assertResponseSuccess();
 		$this->assertNoRedirect();
 	
 	}

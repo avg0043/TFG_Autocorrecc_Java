@@ -92,6 +92,7 @@ class ProfesoresController extends AppController{
 		
 	}
 	
+	/*
 	public function generarReportePlagiosPracticas(){
 		
 		session_start();	
@@ -154,6 +155,7 @@ class ProfesoresController extends AppController{
 		$this->set('reporte_generado', $reporte_jplag_generado);
 		
 	}
+	*/
 	
 	public function descargarPracticasAlumnos(){
 		
@@ -282,6 +284,102 @@ class ProfesoresController extends AppController{
 	
 		echo json_encode($reportes);
 	
+	}
+	
+	public function generarReportePlagiosPracticas(){
+		
+		session_start();		
+		if(!isset($_SESSION["lti_userId"])){
+			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
+		}
+		$this->comprobarRolProfesor();
+		
+		$alumnos_tabla = TableRegistry::get("Alumnos");
+		$alumnos = $alumnos_tabla->find('all');
+		$alumnos_intentos = array();
+		$reporte_generado = false;
+		
+		foreach ($alumnos as $alumno){	// Alumnos que han realizado intentos
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$intentos = $intentos_tabla->find('all')
+									   ->where(['tarea_id' => $_SESSION["lti_idTarea"], 
+									   			'alumno_id' => $alumno->id]);
+				
+			if(!$intentos->isEmpty()){
+				$alumnos_intentos[$alumno->id] = $alumno->nombre." ".$alumno->apellidos;
+			}
+		}
+		
+		$this->set("alumnos", $alumnos_intentos);
+		$this->set("reporte_generado", $reporte_generado);
+		
+		if($this->request->is('post')){	
+			if(!in_array(1, $this->request->data)){	// Ninguna opción seleccionada
+				$this->Flash->error(__('Debes seleccionar al menos 2 alumnos o TODOS CON TODOS'));
+				return $this->redirect(['action' => 'generarReportePlagiosPracticas']);
+			}
+			
+			$num_alumnos_seleccionados = 0;
+			$alumnos_seleccionados = array();
+			$id_alumno = key($this->request->data);
+			foreach ($this->request->data as $alumno):	// Obtención del id de los alumnos seleccionados
+				if($alumno){
+					$num_alumnos_seleccionados++;
+					array_push($alumnos_seleccionados, $id_alumno);
+				}
+				$id_alumno = key($this->request->data);
+				next($this->request->data);
+			endforeach;
+			
+			// Selección incorrecta
+			if(!$this->request->data["TodosConTodos"] && $num_alumnos_seleccionados == 1){
+				$this->Flash->error(__('Debes de seleccionar al menos 2 alumnos'));
+				return $this->redirect(['action' => 'generarReportePlagiosPracticas']);
+			}
+			
+			// Creación carpeta "plagios" en la que van a almacenarse las prácticas
+			if(is_dir("../../plagios/")){
+				exec('cd ' . "../../" . ' && rmdir plagios /s /q');
+			}
+			mkdir("../../plagios/practicas", 0777, true);
+			
+			$intentos_tabla = TableRegistry::get("Intentos");
+			$tareas_tabla = TableRegistry::get("Tareas");
+			$query = $tareas_tabla->find('all')
+								  ->where(['id' => $_SESSION["lti_idTarea"]])
+								  ->toArray();
+			$paquete = $query[0]->paquete;
+			$paquete_ruta = str_replace('.', '\\', $paquete);
+			$ruta_carpeta_tarea = "../../".$_SESSION["lti_idCurso"]."/".$_SESSION["lti_idTarea"]."/";
+					
+			// Copia de la última práctica de los alumnos a la carpeta "plagios" creada
+			foreach ($alumnos as $alumno):
+				if($this->request->data["TodosConTodos"] || in_array($alumno->id, $alumnos_seleccionados)){
+					$ultimo_intento = $intentos_tabla->find('all')
+													 ->where(['tarea_id' => $_SESSION["lti_idTarea"], 
+													 	      'alumno_id' => $alumno->id])
+													 ->last()
+													 ->toArray();
+					
+					mkdir("../../plagios/practicas/".utf8_decode($alumno->nombre.str_replace(' ', '', $alumno->apellidos)), 0777, true);
+					exec('xcopy ' . str_replace('/', '\\', $ruta_carpeta_tarea)."Learner\\"
+							. $ultimo_intento['alumno_id']."\\". $ultimo_intento['numero_intento']."\\".$paquete_ruta . ' '
+							. "..\\..\\plagios\\practicas\\".utf8_decode($alumno->nombre.str_replace(' ', '', $alumno->apellidos))."\\" . ' /s /e');
+				}
+			endforeach;
+			
+			// Generación del reporte de plagios (Llamada al plugin JPlag)
+			exec('cd ../../plagios && java -jar ../AutoCorreccionJava_TFG/vendor/jplag-2.11.8-SNAPSHOT-jar-with-dependencies.jar -l java17 -r reporte/ -s practicas/');
+			$this->Flash->success(__('El reporte de plagios ha sido generado'));
+			$reporte_generado = true;
+			$this->set("reporte_generado", $reporte_generado);
+			if($this->request->data["TodosConTodos"]){
+				$num_alumnos_seleccionados = count($alumnos->toArray());
+			}
+			$this->set("numero_practicas_subidas", $num_alumnos_seleccionados);
+			//return $this->redirect(['action' => 'plagios']);
+		}
+		
 	}
 	
 }

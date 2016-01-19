@@ -35,13 +35,15 @@ class TareasControllerTest extends IntegrationTestCase{
 		$_SESSION['lti_userId'] = 1;
 		$_SESSION['lti_idTarea'] = 18;
 		$_SESSION['lti_idCurso'] = 9;
+		$_SESSION['lti_rol'] = "Instructor";
 		$_SESSION['lti_tituloTarea'] = "practica1";
 		$_SESSION['lti_correo'] = "li@ubu.es";
 		
 		$this->__crearProfesor(1, "Luis", "Izquierdo", "ck1", "s1", "li@ubu.es");
 		$this->post('/tareas/configurarParametrosTarea', $datos);
 		$this->assertResponseSuccess();
-		$this->assertRedirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
+		//$this->assertRedirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
+		$this->assertRedirect(['controller' => 'Tareas', 'action' => 'configurarParametrosTarea']);
 		
 		$query = $this->tareas_tabla->find("all")->where(["id" => $_SESSION['lti_idTarea']])->toArray();
 		foreach ($query as $tarea){

@@ -73,7 +73,7 @@ class AppController extends Controller
     	if(!isset($_SESSION["lti_userId"])){
     		return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
     	}
-    
+
     }
     
     public function comprobarRolProfesor(){
