@@ -54,7 +54,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 			        </td>
 			        <td><?= $alumno->nombre." ".$alumno->apellidos ?></td>
 					<td align="center"><?= $intento->numero_intento ?></td>
-					<td><?= ($intento->resultado == true ? "sí" : "no") ?></td>
+					<td><?= ($intento->resultado == true ? __("sí") : __("no")) ?></td>
 					<td>
 						<?php if($intento->comentarios != null){ ?>
 							<img class="mensajeInfo" data-content="<?= $intento->comentarios ?>" data-placement="auto" title="<?= __('COMENTARIOS DE LA PRÁCTICA') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/comentarios.png"/>

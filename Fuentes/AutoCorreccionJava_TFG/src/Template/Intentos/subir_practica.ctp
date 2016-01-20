@@ -14,9 +14,8 @@ else{
 
 <div class="jumbotron">
   <h3><?= __('SUBIDA DE PRÁCTICAS') ?>   
-  	<img class="mensajeInfo iconos" data-content="<?= __("Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.
-  	 Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java.
-  	 Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes.") ?>" data-placement="auto" title="<?= __('INFORMACIÓN') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
+  	<img class="mensajeInfo iconos" data-content="<?= __("Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete. Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java. Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes.") ?>" 
+  		 data-placement="auto" title="<?= __('INFORMACIÓN') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
   	
   	<!-- Verificar si existe Enunciado o no -->
   	<?php if($enunciado != null){ ?>	
@@ -30,7 +29,9 @@ else{
 		<div class="col-md-8 col-md-offset-2">
 			<?php 
 			echo $this->Form->create('Post', ['type' => 'file', 'id' => 'login_form']);
-			echo "<label class='labelInline'>Parámetros de la tarea </label><button type='button' class='btn btn-info btn-sm dropdown-toggle' id='botonVer' data-toggle='modal' data-target='#myModal'>Ver</button>";
+			?>
+			<label class='labelInline'><?= __('Parámetros de la tarea') ?></label><button type='button' class='btn btn-info btn-sm dropdown-toggle' id='botonVer' data-toggle='modal' data-target='#myModal'><?= __('Ver') ?></button>
+			<?php
 			echo "<br>";
 			echo $this->Form->input('comentarios', ['type' => 'textarea', 'label' => __('Comentarios'), 'rows' => '6', 'cols' => '5', 'class' => 'form-control']);
 			echo $this->Form->input('ficheroAsubir', ['type' => 'file', 'label' => __('Fichero a subir:'), 'class' => 'form-control']);

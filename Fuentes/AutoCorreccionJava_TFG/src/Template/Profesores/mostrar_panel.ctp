@@ -24,7 +24,7 @@
   <div class="col-xs-6 col-md-4">
     <h3><?= __('Estadísticas') ?></h3>
     <a href="http://localhost/AutoCorreccionJava_TFG/Profesores/descargarPracticasAlumnos" class="thumbnail">
-      <img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/1452907845_multimedia-24.png" alt="..." height="150" width="150">
+      <img src="http://localhost/AutoCorreccionJava_TFG/webroot/img/estadisticas.png" alt="..." height="150" width="150">
     </a>
   </div>
   

@@ -3,8 +3,8 @@
 
 <div class="jumbotron">
   <h3><?= __('Registro del profesor en la Aplicación') ?>
-     <img class="mensajeInfo iconos" data-content="<?= __('Tras rellenar el formulario se mostrarán los parámetros LTI
-     necesarios para poder crear una tarea de Moodle que enlace con la aplicación web.') ?>" data-placement="auto" title="<?= __('INFORMACIÓN') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
+     <img class="mensajeInfo iconos" data-content="<?= __('Tras el registro se le proporcionarán los parámetros LTI necesarios para poder crear una tarea de Moodle que enlace con la aplicación web.') ?>" 
+     	  data-placement="auto" title="<?= __('INFORMACIÓN') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
   </h3>
 </div>
 

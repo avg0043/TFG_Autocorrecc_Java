@@ -45,7 +45,7 @@
 		<div class="col-xs-12 col-md-10">
 		<br>
 		<?php 
-			echo $this->Form->input('field', ['options' => $alumnos_intentos, 'type' => 'select', 'empty' => '-- Selecciona el alumno --', 'label' => __('Mostrar gráficas alumno')]);
+			echo $this->Form->input('field', ['options' => $alumnos_intentos, 'type' => 'select', 'empty' => __('-- Selecciona el alumno --'), 'label' => __('Mostrar gráficas alumno')]);
 		?>
 		</div>
 		<div class="col-xs-6 col-md-4">

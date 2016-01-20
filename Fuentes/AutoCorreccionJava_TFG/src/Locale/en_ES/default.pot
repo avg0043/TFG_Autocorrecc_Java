@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-01-19 19:32+0000\n"
+"POT-Creation-Date: 2016-01-20 11:17+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -19,7 +19,7 @@ msgid "Primer acceso, has sido registrado"
 msgstr ""
 
 #: Controller/IntentosController.php:63
-#: Controller/TestsController.php:35
+#: Controller/TestsController.php:36
 msgid "El fichero debe tener extensión .zip"
 msgstr ""
 
@@ -87,19 +87,19 @@ msgstr ""
 msgid "No ha sido posible registrar la tarea."
 msgstr ""
 
-#: Controller/TestsController.php:24
+#: Controller/TestsController.php:25
 msgid "Debes de rellenar el enunciado o subir un test"
 msgstr ""
 
-#: Controller/TestsController.php:32
+#: Controller/TestsController.php:33
 msgid "Enunciado guardado correctamente"
 msgstr ""
 
-#: Controller/TestsController.php:54
+#: Controller/TestsController.php:55
 msgid "Test subido correctamente"
 msgstr ""
 
-#: Controller/TestsController.php:119
+#: Controller/TestsController.php:120
 msgid "No ha sido posible registrar el test"
 msgstr ""
 
@@ -137,11 +137,15 @@ msgstr ""
 msgid "Todavía no puede subir la práctica porque el profesor no ha subido test"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:17
-msgid "Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete.\n  \t Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java.\n  \t Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes."
+#: Template/Intentos/subir_practica.ctp:16
+msgid "SUBIDA DE PRÁCTICAS"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:19
+#: Template/Intentos/subir_practica.ctp:17
+msgid "Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete. Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java. Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes."
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:18
 #: Template/Profesores/mostrar_parametros_lti.ctp:7
 #: Template/Profesores/registrar_profesor.ctp:7
 #: Template/Tareas/configurar_parametros_tarea.ctp:8
@@ -149,82 +153,86 @@ msgstr ""
 msgid "INFORMACIÓN"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:23
+#: Template/Intentos/subir_practica.ctp:22
 msgid "ENUNCIADO DE LA PRÁCTICA"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:35
+#: Template/Intentos/subir_practica.ctp:33;59
+msgid "Parámetros de la tarea"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:33
+msgid "Ver"
+msgstr ""
+
+#: Template/Intentos/subir_practica.ctp:36
 #: Template/Profesores/descargar_practicas_alumnos.ctp:33
 msgid "Comentarios"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:36
+#: Template/Intentos/subir_practica.ctp:37
 #: Template/Tests/subir_test.ctp:19
 msgid "Fichero a subir:"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:40
+#: Template/Intentos/subir_practica.ctp:41
 #: Template/Tests/subir_test.ctp:23
 msgid "Subir"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:42
+#: Template/Intentos/subir_practica.ctp:43
 #: Template/Profesores/registrar_profesor.ctp:26
 #: Template/Tareas/configurar_parametros_tarea.ctp:28
 #: Template/Tests/subir_test.ctp:25
 msgid "Resetear campos"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:58
-msgid "Parámetros de la tarea"
-msgstr ""
-
-#: Template/Intentos/subir_practica.ctp:62
+#: Template/Intentos/subir_practica.ctp:63
 msgid "Nombre del paquete"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:63
+#: Template/Intentos/subir_practica.ctp:64
 msgid "Número máximo de intentos posibles"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:64
+#: Template/Intentos/subir_practica.ctp:65
 msgid "Fecha límite de entrega"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:65
+#: Template/Intentos/subir_practica.ctp:66
 msgid "Número de intentos realizados"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:66
+#: Template/Intentos/subir_practica.ctp:67
 msgid "Número de intentos restantes"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:70
+#: Template/Intentos/subir_practica.ctp:71
 msgid "Cerrar"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:86
+#: Template/Intentos/subir_practica.ctp:87
 msgid "Reportes del último intento realizado"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:101
+#: Template/Intentos/subir_practica.ctp:102
 msgid "Gráficas disponibles"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:103
+#: Template/Intentos/subir_practica.ctp:104
 #: Template/Profesores/generar_graficas.ctp:32;77
 msgid "Violaciones"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:104
+#: Template/Intentos/subir_practica.ctp:105
 msgid "Errores"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:106
+#: Template/Intentos/subir_practica.ctp:107
 msgid "Violaciones - Errores"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:109
+#: Template/Intentos/subir_practica.ctp:110
 msgid "Violaciones - Prioridades"
 msgstr ""
 
@@ -263,6 +271,14 @@ msgstr ""
 
 #: Template/Profesores/descargar_practicas_alumnos.ctp:35
 msgid "Práctica"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:57
+msgid "sí"
+msgstr ""
+
+#: Template/Profesores/descargar_practicas_alumnos.ctp:57
+msgid "no"
 msgstr ""
 
 #: Template/Profesores/descargar_practicas_alumnos.ctp:60
@@ -312,6 +328,10 @@ msgstr ""
 
 #: Template/Profesores/generar_graficas.ctp:42;83
 msgid "Alumnos test"
+msgstr ""
+
+#: Template/Profesores/generar_graficas.ctp:48
+msgid "-- Selecciona el alumno --"
 msgstr ""
 
 #: Template/Profesores/generar_graficas.ctp:48
@@ -380,7 +400,7 @@ msgid "Parámetros LTI"
 msgstr ""
 
 #: Template/Profesores/mostrar_parametros_lti.ctp:6
-msgid "Utiliza estos parámetros para poder crear desde Moodle una tarea de tipo 'herramienta externa'\n  que enlace con la aplicación web de Autocorrección de prácticas Java."
+msgid "Utiliza estos parámetros para poder crear desde Moodle una tarea de tipo 'herramienta externa' que enlace con la aplicación web de Autocorrección de prácticas Java."
 msgstr ""
 
 #: Template/Profesores/registrar_profesor.ctp:5
@@ -388,7 +408,7 @@ msgid "Registro del profesor en la Aplicación"
 msgstr ""
 
 #: Template/Profesores/registrar_profesor.ctp:6
-msgid "Tras rellenar el formulario se mostrarán los parámetros LTI\n     necesarios para poder crear una tarea de Moodle que enlace con la aplicación web."
+msgid "Tras el registro se le proporcionarán los parámetros LTI necesarios para poder crear una tarea de Moodle que enlace con la aplicación web."
 msgstr ""
 
 #: Template/Profesores/registrar_profesor.ctp:17
@@ -424,7 +444,7 @@ msgid "Configuración de los parámetros de la tarea"
 msgstr ""
 
 #: Template/Tareas/configurar_parametros_tarea.ctp:7
-msgid "El 'número máximo de intentos' debe de estar comprendido entre 1 y 20.\n     El 'paquete' únicamente podrá ser configurado la primera vez que el profesor accede a la aplicación web."
+msgid "El 'número máximo de intentos' debe de estar comprendido entre 1 y 20. El 'paquete' únicamente podrá ser configurado la primera vez que el profesor accede a la aplicación web."
 msgstr ""
 
 #: Template/Tareas/configurar_parametros_tarea.ctp:17
@@ -432,7 +452,7 @@ msgid "Número máximo de intentos"
 msgstr ""
 
 #: Template/Tareas/configurar_parametros_tarea.ctp:19;21
-msgid "paquete"
+msgid "Paquete"
 msgstr ""
 
 #: Template/Tareas/configurar_parametros_tarea.ctp:19
@@ -440,19 +460,19 @@ msgid "Separado por puntos en caso de ser varios"
 msgstr ""
 
 #: Template/Tareas/configurar_parametros_tarea.ctp:22
-msgid "fecha_limite"
+msgid "Fecha límite"
 msgstr ""
 
 #: Template/Tareas/configurar_parametros_tarea.ctp:26
 msgid "Guardar"
 msgstr ""
 
-#: Template/Tests/subir_test.ctp:6
+#: Template/Tests/subir_test.ctp:7
 msgid "Subida de Test"
 msgstr ""
 
-#: Template/Tests/subir_test.ctp:7
-msgid "Se deberá de subir un fichero .zip que contenga el test de extensión .java. Es importante que el test\n     pertenezca al paquete establecido en la configuración de parámetros de la tarea. Se podrá actualizar el enunciado aunque no se suban test."
+#: Template/Tests/subir_test.ctp:8
+msgid "Se deberá de subir un fichero .zip que contenga el test de extensión .java. Es importante que el test pertenezca al paquete establecido en la configuración de parámetros de la tarea. Se podrá actualizar el enunciado aunque no se suban test."
 msgstr ""
 
 #: Template/Tests/subir_test.ctp:18
