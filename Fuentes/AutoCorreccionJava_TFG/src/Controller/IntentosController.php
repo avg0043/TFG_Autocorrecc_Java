@@ -25,7 +25,7 @@ class IntentosController extends AppController{
 	 */
 	public function subirPractica(){
 	
-		session_start();	
+		//session_start();	
 		$finalizado = false;
 		$this->set("finalizado", $finalizado);	
 		

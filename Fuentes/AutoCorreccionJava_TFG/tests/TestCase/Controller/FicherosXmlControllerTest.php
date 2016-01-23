@@ -81,6 +81,21 @@ class FicherosXmlControllerTest extends IntegrationTestCase{
 		}
 	}
 	
+	public function testGuardarDatosXmlPluginFindbugsConLineas(){
+	
+		$this->ficherosXml_controller->guardarDatosXmlPluginFindbugs("ficheros_test/", 1, 2);
+		$query = $this->violaciones_tabla->find('all')->where(['intento_id' => 1]);
+	
+		foreach ($query as $violacion){
+			$this->assertEquals(1, $violacion->intento_id);
+			$this->assertEquals("Controller.java", $violacion->nombre_fichero);
+			$this->assertEquals("UUF_UNUSED_FIELD", $violacion->tipo);
+			$this->assertEquals(2, $violacion->prioridad);
+			$this->assertEquals(8, $violacion->linea_inicio);
+			$this->assertEquals(42, $violacion->linea_fin);
+		}
+	}
+	
 	public function testGuardarDatosXmlErrores(){
 		
 		$this->ficherosXml_controller->guardarDatosXmlErrores("ficheros_test/", 1, 1);

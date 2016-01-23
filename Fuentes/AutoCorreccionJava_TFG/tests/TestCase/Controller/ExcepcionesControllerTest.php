@@ -8,9 +8,6 @@ class ExcepcionesControllerTest extends IntegrationTestCase{
 	
 	public function testMostrarErrorAccesoLocal(){
 	
-		//$excepciones_controller = new ExcepcionesController();
-		//$excepciones_controller->mostrarErrorAccesoLocal();
-		//$this->get('/excepciones/mostrarErrorAccesoLocal');
 		$this->post('/excepciones/mostrarErrorAccesoLocal');
 		$this->assertResponseOk();
 		$this->assertNoRedirect();
@@ -22,6 +19,22 @@ class ExcepcionesControllerTest extends IntegrationTestCase{
 		$excepciones_controller = new ExcepcionesController();
 		$excepciones_controller->mostrarErrorConsumerKey("ck1");
 		$this->get('/excepciones/mostrarErrorConsumerKey/ck1');
+		$this->assertResponseOk();
+		$this->assertNoRedirect();
+	
+	}
+	
+	public function testMostrarErrorAccesoIncorrectoAlumno(){
+	
+		$this->post('/excepciones/mostrarErrorAccesoIncorrectoAlumno');
+		$this->assertResponseOk();
+		$this->assertNoRedirect();
+	
+	}
+	
+	public function testMostrarErrorAccesoIncorrectoProfesor(){
+	
+		$this->post('/excepciones/mostrarErrorAccesoIncorrectoProfesor');
 		$this->assertResponseOk();
 		$this->assertNoRedirect();
 	

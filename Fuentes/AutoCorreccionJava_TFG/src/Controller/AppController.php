@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\I18n\I18n;
 
 /**
  * Application Controller
@@ -44,6 +45,48 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         
+        if ($this->request->session()->check('Config.locale')) {
+        	I18n::locale($this->request->session()->read('Config.locale'));
+        	
+        	/*
+        	if($this->request->session()->read('Config.locale') == 'en_EN'){
+        		$_SESSION["idioma_a_cambiar"] = 'es_ES';
+        	}
+        	else{
+        		$_SESSION["idioma_a_cambiar"] = 'en_EN';
+        	}
+        	*/
+        }
+        
+        /*
+        session_start();
+        if(isset($_SESSION["Config.locale"])){
+       		I18n::locale($_SESSION["Config.locale"]);
+       		  		
+       		if($_SESSION["Config.locale"] == 'en_EN'){
+       			$_SESSION["idioma_a_cambiar"] = 'es_ES';
+       		}
+       		else{
+       			$_SESSION["idioma_a_cambiar"] = 'en_EN';
+       		}
+        }
+        */
+        
+    }
+    
+    public function changeLocale(){
+    
+    	$idioma = "en_EN" == $this->request->session()->read('Config.locale')?"en_ES":"en_EN";
+    	
+    	$this->request->session()->write('Config.locale', $idioma);
+    	return $this->redirect($this->referer());
+    	
+    	/*
+    	session_start();
+    	$_SESSION["Config.locale"] = $locale;
+    	return $this->redirect($this->referer());
+    	*/
+
     }
 
     /**
@@ -59,6 +102,7 @@ class AppController extends Controller
         ) {
             $this->set('_serialize', true);
         }
+        
     }
     
     /**

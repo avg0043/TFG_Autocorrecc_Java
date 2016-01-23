@@ -52,16 +52,31 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 	      <h1><a href=""><?= __('TFG - Autocorrección prácticas en Java') ?></a></h1>
 	    </li>
 	  </ul>
-	  <?php if(isset($_SESSION["lti_userId"]) && $_SESSION["lti_rol"] == "Instructor"){?>
+	  
 	  <section class="top-bar-section">
 	    <ul class="left">
-	      <li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel"><?= __('Panel Inicio') ?></a></li>
+	      <?php if(isset($_SESSION["lti_userId"]) && $this->name != "excepciones" && $_SESSION["lti_rol"] == "Instructor"){?>
+		      <li><a id="panelInicio" href="http://localhost/AutoCorreccionJava_TFG/profesores/mostrar-panel"><?= __('Panel Inicio') ?></a></li>
+		      <li><a href="http://localhost/AutoCorreccionJava_TFG/tareas/configurarParametrosTarea"><?= __('Configuración') ?></a></li>
+		      <li><a href="http://localhost/AutoCorreccionJava_TFG/tests/subirTest"><?= __('Subida') ?></a></li>
+		      <li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/descargarPracticasAlumnos"><?= __('Estadísticas') ?></a></li>
+		      <li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/generarGraficas"><?= __('Gráficas') ?></a></li>   
+		      <li><a href="http://localhost/AutoCorreccionJava_TFG/profesores/generarReportePlagiosPracticas"><?= __('Plagios') ?></a></li> 
+	      <?php 
+	      }
+	      ?>
+	      <li>
+	   	  <?php 
+	   	  	echo $this->Html->link('Cambiar Idioma', array('controller' => 'app', 'action' => 'change_locale'), array('id' => 'cambiarIdioma'));	   
+	   	  	//echo $this->Html->link($this->Html->image("enunciado_2.png", ["alt" => "Brownies"]), array('controller' => 'app', 'action' => 'change_locale'), array('id' => 'cambiarIdioma'),  ['escape' => false]);   
+	   	  ?>
+	   	  </li>
 	    </ul>
 	  </section>
-	  <?php }?>
 	  
 	</nav>
 	
+		
     <?= $this->Flash->render() ?>
     <section class="container clearfix">
         <?= $this->fetch('content') ?>
@@ -70,3 +85,5 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </footer>
 </body>
 </html>
+
+

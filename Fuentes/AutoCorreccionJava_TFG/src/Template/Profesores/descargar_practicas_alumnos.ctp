@@ -88,6 +88,7 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		<?php if($this->request->session()->read('Config.locale') != "en_EN"){?>
 	    $('#tablaAlumnos').DataTable( {
 	        "pagingType": "full_numbers",
 		    "language": {
@@ -104,6 +105,24 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 			    }
 		    }
 	    } );
+	    <?php }else{?>
+	    $('#tablaAlumnos').DataTable( {
+	        "pagingType": "full_numbers",
+		    "language": {
+		    	"lengthMenu": "Show _MENU_ attempts",
+		    	"search": "Search:",
+		    	"info": "Showing _START_ to _END_ of _TOTAL_ attempts",
+		    	"infoFiltered": "(filtered from _MAX_ total de attempts)",
+		    	"zeroRecords": "No matching attempts found",
+			    "paginate": {
+				    "first": "First",
+				    "previous": "Previous",
+				    "next": "Next",
+				    "last": "Last"
+			    }
+		    }
+	    } );
+	    <?php }?>
 	} );
 	
 	function btnFuncion(nombre_reporte) {
@@ -141,8 +160,12 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 		    url: 'http://localhost/AutoCorreccionJava_TFG/Profesores/compruebaExistenciaReportes',
 		    method: 'POST', 
 		    success: function(respuesta) {
+
+			    //console.log("HOLA" + respuesta);
 			    
 		    	var respuesta_reportes = $.parseJSON(respuesta);
+
+		    	//console.log(respuesta_reportes);
 		    	
 		    	// Los reportes JavanCSS y JDepend siempre están disponibles
 		    	$('#btn_javancss').prop('disabled', false);

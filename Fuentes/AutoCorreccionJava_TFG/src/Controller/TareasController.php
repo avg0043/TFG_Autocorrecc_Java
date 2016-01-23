@@ -11,8 +11,11 @@ class TareasController extends AppController{
 	 */
 	public function configurarParametrosTarea(){
 		
-		session_start();
-		$this->comprobarSesion();
+		//session_start();
+		//$this->comprobarSesion();
+		if(!isset($_SESSION["lti_userId"])){
+			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
+		}
 		$this->comprobarRolProfesor();
 		
 		$this->set("tarea_actual", $this->Tareas->find('all')->where(['id' => $_SESSION["lti_idTarea"]])->toArray());
@@ -34,11 +37,7 @@ class TareasController extends AppController{
 			if ($this->Tareas->save($nueva_tarea)) {
 				$this->Flash->success(__('La tarea ha sido configurada correctamente'));
 				$tarea_actual = $this->Tareas->find('all')->where(['id' => $_SESSION["lti_idTarea"]]);
-				if($tarea_actual->isEmpty()){
-					return $this->redirect(['controller' => 'Profesores', 'action' => 'mostrarPanel']);
-				}else{
-					return $this->redirect(['action' => 'configurarParametrosTarea']);
-				}
+				return $this->redirect(['action' => 'configurarParametrosTarea']);
 			}
 			
 			$this->Flash->error(__('No ha sido posible registrar la tarea.'));

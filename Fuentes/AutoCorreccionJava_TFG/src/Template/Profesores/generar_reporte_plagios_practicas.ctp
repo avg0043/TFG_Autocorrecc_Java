@@ -26,7 +26,7 @@
 		</div>
 		<?php
 		echo "<br>";
-		echo $this->Form->button(__('Generar Gráficas'), ['type' => 'submit', 'class' => 'btn btn-success']);
+		echo $this->Form->button(__('Comprobar Plagios'), ['type' => 'submit', 'class' => 'btn btn-success']);
 		echo $this->Form->end(); 
 		?>
 		</div>

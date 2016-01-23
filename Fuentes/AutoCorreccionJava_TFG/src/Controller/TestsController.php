@@ -11,8 +11,7 @@ class TestsController extends AppController{
 	
 	public function subirTest(){
 		
-		session_start();
-
+		//session_start();
 		$this->comprobarSesion();
 		$this->comprobarRolProfesor();
 		

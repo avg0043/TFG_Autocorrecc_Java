@@ -25,7 +25,7 @@ class TareasControllerTest extends IntegrationTestCase{
 	
 	}
 	
-	public function testConfigurarParametrosTarea(){
+	public function testConfigurarParametrosTareaCorrectamente(){
 		
 		$datos = [
 				'num_max_intentos' => 20,
@@ -55,6 +55,26 @@ class TareasControllerTest extends IntegrationTestCase{
 			$this->assertEquals($datos["paquete"], $tarea->paquete);
 			$this->assertEquals($datos["fecha_limite"], $tarea->fecha_limite);
 		}
+	
+	}
+	
+	public function testConfigurarParametrosTareaIncorrectamente(){
+	
+		$datos = [
+				'num_max_intentos' => -1,
+				'paquete' => "es.ubu",
+				'fecha_limite' => new \DateTime(date("Y-m-d H:i:s"))
+		];
+		$_SESSION['lti_userId'] = 1;
+		$_SESSION['lti_idTarea'] = 18;
+		$_SESSION['lti_idCurso'] = 9;
+		$_SESSION['lti_rol'] = "Instructor";
+		$_SESSION['lti_tituloTarea'] = "practica1";
+		$_SESSION['lti_correo'] = "li@ubu.es";
+	
+		$this->__crearProfesor(1, "Luis", "Izquierdo", "ck1", "s1", "li@ubu.es");
+		$this->post('/tareas/configurarParametrosTarea', $datos);
+		$this->assertNoRedirect();
 	
 	}
 	
