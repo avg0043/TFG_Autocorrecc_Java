@@ -67,7 +67,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 	      ?>
 	      <li>
 	   	  <?php 
-	   	  	echo $this->Html->link('Cambiar Idioma', array('controller' => 'app', 'action' => 'change_locale'), array('id' => 'cambiarIdioma'));	   
+	   	  	echo $this->Html->link(__('Cambiar Idioma'), array('controller' => 'app', 'action' => 'change_locale'), array('id' => 'cambiarIdioma'));	   
 	   	  	//echo $this->Html->link($this->Html->image("enunciado_2.png", ["alt" => "Brownies"]), array('controller' => 'app', 'action' => 'change_locale'), array('id' => 'cambiarIdioma'),  ['escape' => false]);   
 	   	  ?>
 	   	  </li>

@@ -1,25 +1,25 @@
 # LANGUAGE translation of CakePHP Application
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-01-27 16:56+0000\n"
-"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
-"Last-Translator: NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2016-01-27 18:19+0100\n"
+"PO-Revision-Date: 2016-01-27 18:21+0100\n"
+"Language-Team: EMAIL@ADDRESS\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.6\n"
+"Last-Translator: \n"
+"Language: es\n"
 
 #: Controller/AlumnosController.php:26
 msgid "Primer acceso, has sido registrado"
 msgstr ""
 
-#: Controller/IntentosController.php:63
-#: Controller/TestsController.php:35
+#: Controller/IntentosController.php:63 Controller/TestsController.php:35
 msgid "El fichero debe tener extensión .zip"
 msgstr ""
 
@@ -104,11 +104,15 @@ msgid "No ha sido posible registrar el test"
 msgstr ""
 
 #: Template/Excepciones/mostrar_error_acceso_incorrecto_alumno.ctp:1
-msgid "Por motivos de seguridad, no está permitido que un Alumno acceda al panel del Profesor"
+msgid ""
+"Por motivos de seguridad, no está permitido que un Alumno acceda al panel "
+"del Profesor"
 msgstr ""
 
 #: Template/Excepciones/mostrar_error_acceso_incorrecto_alumno.ctp:2
-msgid "Para acceder a la aplicación correctamente, deberá de acceder únicamente al panel del Alumno."
+msgid ""
+"Para acceder a la aplicación correctamente, deberá de acceder únicamente al "
+"panel del Alumno."
 msgstr ""
 
 #: Template/Excepciones/mostrar_error_acceso_incorrecto_alumno.ctp:3
@@ -118,19 +122,28 @@ msgid "Momento del acceso:"
 msgstr ""
 
 #: Template/Excepciones/mostrar_error_acceso_incorrecto_profesor.ctp:1
-msgid "Por motivos de seguridad, no está permitido que un Profesor acceda al panel del Alumno"
+msgid ""
+"Por motivos de seguridad, no está permitido que un Profesor acceda al panel "
+"del Alumno"
 msgstr ""
 
 #: Template/Excepciones/mostrar_error_acceso_incorrecto_profesor.ctp:2
-msgid "Para acceder a la aplicación correctamente, deberá de acceder únicamente al panel del Profesor."
+msgid ""
+"Para acceder a la aplicación correctamente, deberá de acceder únicamente al "
+"panel del Profesor."
 msgstr ""
 
 #: Template/Excepciones/mostrar_error_acceso_local.ctp:1
-msgid "Por motivos de seguridad, no está permitido acceder a la aplicación desde un acceso local."
+msgid ""
+"Por motivos de seguridad, no está permitido acceder a la aplicación desde un "
+"acceso local."
 msgstr ""
 
 #: Template/Excepciones/mostrar_error_acceso_local.ctp:2
-msgid "Para acceder a la aplicación correctamente, deberá de usar los enlaces de tareas\nexternas creadas en Moodle por el profesor."
+msgid ""
+"Para acceder a la aplicación correctamente, deberá de usar los enlaces de "
+"tareas\n"
+"externas creadas en Moodle por el profesor."
 msgstr ""
 
 #: Template/Intentos/subir_practica.ctp:9
@@ -142,7 +155,12 @@ msgid "SUBIDA DE PRÁCTICAS"
 msgstr ""
 
 #: Template/Intentos/subir_practica.ctp:17
-msgid "Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete. Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java. Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes."
+msgid ""
+"Sube la práctica en un fichero .zip que contenga la estructura de carpetas "
+"correcta correspondiente al paquete. Es decir: si el paquete es 'uni.ubu', "
+"la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java. Tras "
+"la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas "
+"correspondientes."
 msgstr ""
 
 #: Template/Intentos/subir_practica.ctp:18
@@ -170,13 +188,11 @@ msgstr ""
 msgid "Comentarios"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:37
-#: Template/Tests/subir_test.ctp:19
+#: Template/Intentos/subir_practica.ctp:37 Template/Tests/subir_test.ctp:19
 msgid "Fichero a subir:"
 msgstr ""
 
-#: Template/Intentos/subir_practica.ctp:41
-#: Template/Tests/subir_test.ctp:23
+#: Template/Intentos/subir_practica.ctp:41 Template/Tests/subir_test.ctp:23
 msgid "Subir"
 msgstr ""
 
@@ -244,29 +260,24 @@ msgstr ""
 msgid "Panel Inicio"
 msgstr ""
 
-#: Template/Layout/default.ctp:60
-#: Template/Profesores/mostrar_panel.ctp:11
+#: Template/Layout/default.ctp:60 Template/Profesores/mostrar_panel.ctp:11
 msgid "Configuración"
 msgstr ""
 
-#: Template/Layout/default.ctp:61
-#: Template/Profesores/mostrar_panel.ctp:18
+#: Template/Layout/default.ctp:61 Template/Profesores/mostrar_panel.ctp:18
 msgid "Subida"
 msgstr ""
 
-#: Template/Layout/default.ctp:62
-#: Template/Profesores/mostrar_panel.ctp:29
+#: Template/Layout/default.ctp:62 Template/Profesores/mostrar_panel.ctp:29
 msgid "Estadísticas"
 msgstr ""
 
-#: Template/Layout/default.ctp:63
-#: Template/Profesores/generar_graficas.ctp:7
+#: Template/Layout/default.ctp:63 Template/Profesores/generar_graficas.ctp:7
 #: Template/Profesores/mostrar_panel.ctp:36
 msgid "Gráficas"
 msgstr ""
 
-#: Template/Layout/default.ctp:64
-#: Template/Profesores/mostrar_panel.ctp:43
+#: Template/Layout/default.ctp:64 Template/Profesores/mostrar_panel.ctp:43
 msgid "Plagios"
 msgstr ""
 
@@ -275,7 +286,8 @@ msgid "Cambiar Idioma"
 msgstr ""
 
 #: Template/Profesores/descargar_practicas_alumnos.ctp:11
-msgid "Las estadísticas no están disponibles: ningún alumno ha subido su práctica."
+msgid ""
+"Las estadísticas no están disponibles: ningún alumno ha subido su práctica."
 msgstr ""
 
 #: Template/Profesores/descargar_practicas_alumnos.ctp:19
@@ -412,7 +424,10 @@ msgid "Parámetros LTI"
 msgstr ""
 
 #: Template/Profesores/mostrar_parametros_lti.ctp:6
-msgid "Utiliza estos parámetros para poder crear desde Moodle una tarea de tipo 'herramienta externa' que enlace con la aplicación web de Autocorrección de prácticas Java."
+msgid ""
+"Utiliza estos parámetros para poder crear desde Moodle una tarea de tipo "
+"'herramienta externa' que enlace con la aplicación web de Autocorrección de "
+"prácticas Java."
 msgstr ""
 
 #: Template/Profesores/registrar_profesor.ctp:5
@@ -420,7 +435,9 @@ msgid "Registro del profesor en la Aplicación"
 msgstr ""
 
 #: Template/Profesores/registrar_profesor.ctp:6
-msgid "Tras el registro se le proporcionarán los parámetros LTI necesarios para poder crear una tarea de Moodle que enlace con la aplicación web."
+msgid ""
+"Tras el registro se le proporcionarán los parámetros LTI necesarios para "
+"poder crear una tarea de Moodle que enlace con la aplicación web."
 msgstr ""
 
 #: Template/Profesores/registrar_profesor.ctp:17
@@ -456,7 +473,10 @@ msgid "Configuración de los parámetros de la tarea"
 msgstr ""
 
 #: Template/Tareas/configurar_parametros_tarea.ctp:7
-msgid "El 'número máximo de intentos' debe de estar comprendido entre 1 y 20. El 'paquete' únicamente podrá ser configurado la primera vez que el profesor accede a la aplicación web."
+msgid ""
+"El 'número máximo de intentos' debe de estar comprendido entre 1 y 20. El "
+"'paquete' únicamente podrá ser configurado la primera vez que el profesor "
+"accede a la aplicación web."
 msgstr ""
 
 #: Template/Tareas/configurar_parametros_tarea.ctp:17
@@ -484,15 +504,18 @@ msgid "Subida de Test"
 msgstr ""
 
 #: Template/Tests/subir_test.ctp:8
-msgid "Se deberá de subir un fichero .zip que contenga el test de extensión .java. Es importante que el test pertenezca al paquete establecido en la configuración de parámetros de la tarea. Se podrá actualizar el enunciado aunque no se suban test."
+msgid ""
+"Se deberá de subir un fichero .zip que contenga el test de extensión .java. "
+"Es importante que el test pertenezca al paquete establecido en la "
+"configuración de parámetros de la tarea. Se podrá actualizar el enunciado "
+"aunque no se suban test."
 msgstr ""
 
 #: Template/Tests/subir_test.ctp:18
 msgid "Enunciado de la práctica"
 msgstr ""
 
-#: Template/Error/error400.ctp:33
-#: Template/Error/error500.ctp:35
+#: Template/Error/error400.ctp:33 Template/Error/error500.ctp:35
 msgid "Error"
 msgstr ""
 
@@ -694,49 +717,48 @@ msgstr ""
 
 #: View/Widget/DateTimeWidget.php:530
 msgid "January"
-msgstr ""
+msgstr "Enero"
 
 #: View/Widget/DateTimeWidget.php:531
 msgid "February"
-msgstr ""
+msgstr "Febrero"
 
 #: View/Widget/DateTimeWidget.php:532
 msgid "March"
-msgstr ""
+msgstr "Marzo"
 
 #: View/Widget/DateTimeWidget.php:533
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #: View/Widget/DateTimeWidget.php:534
 msgid "May"
-msgstr ""
+msgstr "Mayo"
 
 #: View/Widget/DateTimeWidget.php:535
 msgid "June"
-msgstr ""
+msgstr "Junio"
 
 #: View/Widget/DateTimeWidget.php:536
 msgid "July"
-msgstr ""
+msgstr "Julio"
 
 #: View/Widget/DateTimeWidget.php:537
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #: View/Widget/DateTimeWidget.php:538
 msgid "September"
-msgstr ""
+msgstr "Septiembre"
 
 #: View/Widget/DateTimeWidget.php:539
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #: View/Widget/DateTimeWidget.php:540
 msgid "November"
-msgstr ""
+msgstr "Noviembre"
 
 #: View/Widget/DateTimeWidget.php:541
 msgid "December"
-msgstr ""
-
+msgstr "Diciembre"

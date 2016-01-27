@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-01-20 12:17+0100\n"
-"PO-Revision-Date: 2016-01-20 12:39+0100\n"
+"POT-Creation-Date: 2016-01-27 18:23+0100\n"
+"PO-Revision-Date: 2016-01-27 18:43+0100\n"
 "Language-Team: EMAIL@ADDRESS\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,9 +17,9 @@ msgstr ""
 
 #: Controller/AlumnosController.php:26
 msgid "Primer acceso, has sido registrado"
-msgstr ""
+msgstr "First access, you have been registered"
 
-#: Controller/IntentosController.php:63 Controller/TestsController.php:36
+#: Controller/IntentosController.php:63 Controller/TestsController.php:35
 msgid "El fichero debe tener extensión .zip"
 msgstr "The file must have .zip extension"
 
@@ -41,7 +41,7 @@ msgstr "The practice has compilation errors"
 
 #: Controller/IntentosController.php:278
 msgid "Hay bucles infinitos. Test no ejecutado."
-msgstr "There are infinitie loops.  Test not run."
+msgstr "There are infinite loops. Test not run."
 
 #: Controller/IntentosController.php:293
 msgid "La práctica ha pasado los test"
@@ -63,43 +63,43 @@ msgstr "Ascent practice. Attempt number made: {0}"
 msgid "No ha sido posible registrar al profesor."
 msgstr "It has not been possible to register the teacher."
 
-#: Controller/ProfesoresController.php:168
+#: Controller/ProfesoresController.php:170
 msgid "Debes de seleccionar una de las opciones"
 msgstr "You must select one of the options"
 
-#: Controller/ProfesoresController.php:227
+#: Controller/ProfesoresController.php:229
 msgid "Debes seleccionar al menos 2 alumnos o TODOS CON TODOS"
 msgstr "You must select at least 2 students or ALL WITH ALL"
 
-#: Controller/ProfesoresController.php:245
+#: Controller/ProfesoresController.php:247
 msgid "Debes de seleccionar al menos 2 alumnos"
 msgstr "You must select at least 2 students"
 
-#: Controller/ProfesoresController.php:282
+#: Controller/ProfesoresController.php:284
 msgid "El reporte de plagios ha sido generado"
 msgstr "The plagiarism report has been generated"
 
-#: Controller/TareasController.php:35
+#: Controller/TareasController.php:38
 msgid "La tarea ha sido configurada correctamente"
 msgstr "The task has been configured correctly"
 
-#: Controller/TareasController.php:44
+#: Controller/TareasController.php:43
 msgid "No ha sido posible registrar la tarea."
 msgstr "It has not been possible to register the task."
 
-#: Controller/TestsController.php:25
+#: Controller/TestsController.php:24
 msgid "Debes de rellenar el enunciado o subir un test"
 msgstr "You must fill up the statement or upload a test"
 
-#: Controller/TestsController.php:33
+#: Controller/TestsController.php:32
 msgid "Enunciado guardado correctamente"
 msgstr "Statement saved successfully"
 
-#: Controller/TestsController.php:55
+#: Controller/TestsController.php:54
 msgid "Test subido correctamente"
 msgstr "Test successfully uploaded"
 
-#: Controller/TestsController.php:120
+#: Controller/TestsController.php:119
 msgid "No ha sido posible registrar el test"
 msgstr "It has not been possible to register the test."
 
@@ -272,9 +272,34 @@ msgstr "Violations - Priority"
 msgid "TFG - Autocorrección prácticas en Java"
 msgstr "FP - Autocorrect Java practices"
 
-#: Template/Layout/default.ctp:58
+#: Template/Layout/default.ctp:59
 msgid "Panel Inicio"
 msgstr "Home Panel"
+
+#: Template/Layout/default.ctp:60 Template/Profesores/mostrar_panel.ctp:11
+msgid "Configuración"
+msgstr "Configuration"
+
+#: Template/Layout/default.ctp:61 Template/Profesores/mostrar_panel.ctp:18
+msgid "Subida"
+msgstr "Upload"
+
+#: Template/Layout/default.ctp:62 Template/Profesores/mostrar_panel.ctp:29
+msgid "Estadísticas"
+msgstr "Statistics"
+
+#: Template/Layout/default.ctp:63 Template/Profesores/generar_graficas.ctp:7
+#: Template/Profesores/mostrar_panel.ctp:36
+msgid "Gráficas"
+msgstr "Charts"
+
+#: Template/Layout/default.ctp:64 Template/Profesores/mostrar_panel.ctp:43
+msgid "Plagios"
+msgstr "Plagiarism"
+
+#: Template/Layout/default.ctp:70
+msgid "Cambiar Idioma"
+msgstr "Change locale"
 
 #: Template/Profesores/descargar_practicas_alumnos.ctp:11
 msgid ""
@@ -338,11 +363,6 @@ msgstr "FindBugs Report"
 msgid "Reporte Errores"
 msgstr "Errors Report"
 
-#: Template/Profesores/generar_graficas.ctp:7
-#: Template/Profesores/mostrar_panel.ctp:32
-msgid "Gráficas"
-msgstr "Charts"
-
 #: Template/Profesores/generar_graficas.ctp:17;68
 msgid "Medias Globales"
 msgstr "Global Average"
@@ -372,7 +392,6 @@ msgid "Mostrar gráficas alumno"
 msgstr "Show students charts"
 
 #: Template/Profesores/generar_graficas.ctp:54
-#: Template/Profesores/generar_reporte_plagios_practicas.ctp:29
 msgid "Generar Gráficas"
 msgstr "Show charts"
 
@@ -391,6 +410,10 @@ msgstr "Check plagiarism practices"
 #: Template/Profesores/generar_reporte_plagios_practicas.ctp:18
 msgid "TODOS CON TODOS"
 msgstr "ALL WITH ALL"
+
+#: Template/Profesores/generar_reporte_plagios_practicas.ctp:29
+msgid "Comprobar Plagios"
+msgstr "Check plagiarism"
 
 #: Template/Profesores/generar_reporte_plagios_practicas.ctp:40
 msgid "Reporte de plagios"
@@ -412,22 +435,6 @@ msgstr "See Report"
 msgid "PANEL DEL PROFESOR"
 msgstr "TEACHER PANEL"
 
-#: Template/Profesores/mostrar_panel.ctp:11
-msgid "Configuración"
-msgstr "Configuration"
-
-#: Template/Profesores/mostrar_panel.ctp:18
-msgid "Subida"
-msgstr "Upload"
-
-#: Template/Profesores/mostrar_panel.ctp:25
-msgid "Estadísticas"
-msgstr "Statistics"
-
-#: Template/Profesores/mostrar_panel.ctp:39
-msgid "Plagios"
-msgstr "Plagiarism"
-
 #: Template/Profesores/mostrar_parametros_lti.ctp:5
 msgid "Parámetros LTI"
 msgstr "LTI Parameters"
@@ -443,7 +450,7 @@ msgstr ""
 
 #: Template/Profesores/registrar_profesor.ctp:5
 msgid "Registro del profesor en la Aplicación"
-msgstr "Registration application teacher "
+msgstr "Teacher registration in the application"
 
 #: Template/Profesores/registrar_profesor.ctp:6
 msgid ""
@@ -527,7 +534,7 @@ msgid ""
 "aunque no se suban test."
 msgstr ""
 "You must upload a .zip file that contains the test with .java extensión. It "
-"is importat that the test belongs to the package. The statement can be "
+"is important that the test belongs to the package. The statement can be "
 "updated."
 
 #: Template/Tests/subir_test.ctp:18
@@ -544,4 +551,240 @@ msgstr ""
 
 #: Template/Error/error500.ctp:33
 msgid "An Internal Error Has Occurred"
+msgstr ""
+
+#: Controller/Component/AuthComponent.php:454
+msgid "You are not authorized to access that location."
+msgstr ""
+
+#: Controller/Component/CsrfComponent.php:152
+msgid "Missing CSRF token cookie"
+msgstr ""
+
+#: Controller/Component/CsrfComponent.php:156
+msgid "CSRF token mismatch."
+msgstr ""
+
+#: Error/ExceptionRenderer.php:233
+msgid "Not Found"
+msgstr ""
+
+#: Error/ExceptionRenderer.php:235
+msgid "An Internal Error Has Occurred."
+msgstr ""
+
+#: I18n/Number.php:89
+msgid "{0,number,#,###.##} KB"
+msgstr ""
+
+#: I18n/Number.php:91
+msgid "{0,number,#,###.##} MB"
+msgstr ""
+
+#: I18n/Number.php:93
+msgid "{0,number,#,###.##} GB"
+msgstr ""
+
+#: I18n/Number.php:95
+msgid "{0,number,#,###.##} TB"
+msgstr ""
+
+#: I18n/Number.php:87
+msgid "{0,number,integer} Byte"
+msgid_plural "{0,number,integer} Bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: I18n/Time.php:271
+msgid "%s ago"
+msgstr ""
+
+#: I18n/Time.php:272
+msgid "on %s"
+msgstr ""
+
+#: I18n/Time.php:312
+msgid "just now"
+msgstr ""
+
+#: I18n/Time.php:428
+msgid "about a second ago"
+msgstr ""
+
+#: I18n/Time.php:429
+msgid "about a minute ago"
+msgstr ""
+
+#: I18n/Time.php:430
+msgid "about an hour ago"
+msgstr ""
+
+#: I18n/Time.php:431
+msgid "about a day ago"
+msgstr ""
+
+#: I18n/Time.php:432
+msgid "about a week ago"
+msgstr ""
+
+#: I18n/Time.php:433
+msgid "about a year ago"
+msgstr ""
+
+#: I18n/Time.php:442
+msgid "in about a second"
+msgstr ""
+
+#: I18n/Time.php:443
+msgid "in about a minute"
+msgstr ""
+
+#: I18n/Time.php:444
+msgid "in about an hour"
+msgstr ""
+
+#: I18n/Time.php:445
+msgid "in about a day"
+msgstr ""
+
+#: I18n/Time.php:446
+msgid "in about a week"
+msgstr ""
+
+#: I18n/Time.php:447
+msgid "in about a year"
+msgstr ""
+
+#: I18n/Time.php:401
+msgid "{0} year"
+msgid_plural "{0} years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: I18n/Time.php:404
+msgid "{0} month"
+msgid_plural "{0} months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: I18n/Time.php:407
+msgid "{0} week"
+msgid_plural "{0} weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: I18n/Time.php:410
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: I18n/Time.php:413
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: I18n/Time.php:416
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: I18n/Time.php:419
+msgid "{0} second"
+msgid_plural "{0} seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Network/Response.php:1438
+msgid "The requested file was not found"
+msgstr ""
+
+#: ORM/RulesChecker.php:49
+msgid "This value is already in use"
+msgstr ""
+
+#: ORM/RulesChecker.php:83
+msgid "This value does not exist"
+msgstr ""
+
+#: Utility/Text.php:724
+msgid "and"
+msgstr ""
+
+#: Validation/Validator.php:102
+msgid "This field is required"
+msgstr ""
+
+#: Validation/Validator.php:103
+msgid "This field cannot be left empty"
+msgstr ""
+
+#: Validation/Validator.php:663
+msgid "The provided value is invalid"
+msgstr ""
+
+#: View/Helper/FormHelper.php:925
+msgid "New %s"
+msgstr ""
+
+#: View/Helper/FormHelper.php:928
+msgid "Edit %s"
+msgstr ""
+
+#: View/Helper/FormHelper.php:1724
+msgid "Submit"
+msgstr ""
+
+#: View/Helper/HtmlHelper.php:770
+msgid "Home"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:530
+msgid "January"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:531
+msgid "February"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:532
+msgid "March"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:533
+msgid "April"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:534
+msgid "May"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:535
+msgid "June"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:536
+msgid "July"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:537
+msgid "August"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:538
+msgid "September"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:539
+msgid "October"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:540
+msgid "November"
+msgstr ""
+
+#: View/Widget/DateTimeWidget.php:541
+msgid "December"
 msgstr ""
