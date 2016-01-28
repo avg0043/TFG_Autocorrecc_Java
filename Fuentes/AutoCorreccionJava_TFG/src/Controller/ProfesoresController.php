@@ -280,7 +280,7 @@ class ProfesoresController extends AppController{
 			endforeach;
 			
 			// Generación del reporte de plagios (Llamada al plugin JPlag)
-			exec('cd ../../plagios && java -jar ../AutoCorreccionJava_TFG/vendor/jplag-2.11.8-SNAPSHOT-jar-with-dependencies.jar -l java17 -r reporte/ -s practicas/');
+			exec('cd ../../plagios && java -Dfile.encoding=UTF-8 -jar ../AutoCorreccionJava_TFG/vendor/jplag-2.11.8-SNAPSHOT-jar-with-dependencies.jar -l java17 -r reporte/ -s practicas/');
 			$this->Flash->success(__('El reporte de plagios ha sido generado'));
 			$reporte_generado = true;
 			$this->set("reporte_generado", $reporte_generado);
