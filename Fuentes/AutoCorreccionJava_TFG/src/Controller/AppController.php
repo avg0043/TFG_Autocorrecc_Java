@@ -46,46 +46,24 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         
         if ($this->request->session()->check('Config.locale')) {
-        	I18n::locale($this->request->session()->read('Config.locale'));
-        	
-        	/*
-        	if($this->request->session()->read('Config.locale') == 'en_EN'){
-        		$_SESSION["idioma_a_cambiar"] = 'es_ES';
-        	}
-        	else{
-        		$_SESSION["idioma_a_cambiar"] = 'en_EN';
-        	}
-        	*/
+        	I18n::locale($this->request->session()->read('Config.locale'));	// cambio del idioma
         }
-        
-        /*
-        session_start();
-        if(isset($_SESSION["Config.locale"])){
-       		I18n::locale($_SESSION["Config.locale"]);
-       		  		
-       		if($_SESSION["Config.locale"] == 'en_EN'){
-       			$_SESSION["idioma_a_cambiar"] = 'es_ES';
-       		}
-       		else{
-       			$_SESSION["idioma_a_cambiar"] = 'en_EN';
-       		}
-        }
-        */
         
     }
     
+    /**
+     * Función encargada de establecer en la variabla de sesión
+     * el idioma al que va a ser cambiado la aplicación.
+     * Por último redirecciona a la vista actual.
+     * 
+     * @return $this->redirect	redirección a la vista actual.
+     */
     public function changeLocale(){
     
-    	$idioma = "en_EN" == $this->request->session()->read('Config.locale')?"en_ES":"en_EN";
-    	
+    	$idioma = "en_EN" == $this->request->session()->read('Config.locale')?"en_ES":"en_EN";  	
     	$this->request->session()->write('Config.locale', $idioma);
-    	return $this->redirect($this->referer());
     	
-    	/*
-    	session_start();
-    	$_SESSION["Config.locale"] = $locale;
     	return $this->redirect($this->referer());
-    	*/
 
     }
 
@@ -106,11 +84,11 @@ class AppController extends Controller
     }
     
     /**
-     * Comprueba si la sesión está vacía, mirando el id del usuario.
+     * Functión que comprueba si la sesión está vacía, mirando el id del usuario.
      * Garantiza que únicamente se pueda acceder a la aplicación
      * desde las tareas de Moodle, y nunca desde local.
+     * En caso de que no exista la sesión del id, redirecciona a la vista de error.
      * 
-     * @throws NotFoundException excepción.
      */
     public function comprobarSesion(){
     	
@@ -120,6 +98,12 @@ class AppController extends Controller
 
     }
     
+    /**
+     * Functión que comprueba que el usuario que ha accedido a la
+     * aplicación es un profesor. Si no es así, redirecciona
+     * a la vista de error.
+     * 
+     */
     public function comprobarRolProfesor(){
 	
     	if($_SESSION["lti_rol"] != "Instructor"){
@@ -128,6 +112,12 @@ class AppController extends Controller
     	
     }
     
+    /**
+     * Función que comprueba que el usuario que ha accedido a la
+     * aplicación es un alumno. Si no es así, redirecciona a la 
+     * vista de error.
+     * 
+     */
     public function comprobarRolAlumno(){
     
     	if($_SESSION["lti_rol"] != "Learner"){

@@ -2,8 +2,21 @@
 
 namespace App\Controller;
 
+/**
+ * Controlador encargado de trabajar con ficheros xml.
+ * 
+ * @author Álvaro Vázquez Gómez.
+ *
+ */
 class FicherosXmlController extends AppController{
 	
+	/**
+	 * Función encargada de editar el fichero pom.xml
+	 * del arquetipo Maven. Se encarga de añadir la
+	 * codificación y plugins necesarios.
+	 * 
+	 * @param string $ruta_carpeta_id	ruta a la carpeta del id del usuario.
+	 */
 	public function editarPomArquetipoMaven($ruta_carpeta_id){
 		
 		$pom_xml = simplexml_load_file($ruta_carpeta_id . 'arquetipo/pom.xml');
@@ -45,6 +58,15 @@ class FicherosXmlController extends AppController{
 		
 	}
 	
+	/**
+	 * Función encargada de leer el fichero xml del plugin PMD
+	 * y posteriormente de guardar sus datos en la correspondiente
+	 * tabla de la base de datos.
+	 * 
+	 * @param string $ruta_carpeta_id	ruta a la carpeta del id del alumno.
+	 * @param int $id_intento	id del intento de subida de práctica realizado.
+	 * @param int $intento_realizado	número del intento realizado.
+	 */
 	public function guardarDatosXmlPluginPmd($ruta_carpeta_id, $id_intento, $intento_realizado){
 		
 		$violaciones_controller = new ViolacionesController();
@@ -60,6 +82,15 @@ class FicherosXmlController extends AppController{
 		
 	}
 	
+	/**
+	 * Función encargada de leer el fichero xml del plugin FINDBUGS
+	 * y de guardar sus datos en la correspondiente tabla de la
+	 * base de datos.
+	 * 
+	 * @param string $ruta_carpeta_id	ruta a la carpeta id del alumno.
+	 * @param int $id_intento	id del intento de subida de práctica realizado.
+	 * @param int $intento_realizado	número del intento realizado.
+	 */
 	public function guardarDatosXmlPluginFindbugs($ruta_carpeta_id, $id_intento, $intento_realizado){
 		
 		$violaciones_controller = new ViolacionesController();
@@ -85,6 +116,15 @@ class FicherosXmlController extends AppController{
 		
 	}
 	
+	/**
+	 * Función encargada de leer el fichero xml del plugin surefire
+	 * y de guardar sus datos en la correspondiente tabla de la 
+	 * base de datos.
+	 * 
+	 * @param string $ruta_carpeta_id	ruta a la carpeta id del alumno.
+	 * @param int $id_intento	id del intento de subida de práctica realizado.
+	 * @param int $intento_realizado	número del intento realizado.
+	 */
 	public function guardarDatosXmlErrores($ruta_carpeta_id, $id_intento, $intento_realizado){
 		
 		$errores_controller = new ErroresController();

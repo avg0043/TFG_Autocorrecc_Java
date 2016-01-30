@@ -3,15 +3,42 @@
 namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
+
+/**
+ * Controlador encargado de los test subidos por el profesor.
+ * 
+ * @author Álvaro Vázquez Gómez.
+ *
+ */
 class TestsController extends AppController{
 	
+	/**
+	 * Id del profesor.
+	 * @var int
+	 */
 	private $id_profesor;
+	
+	/**
+	 * Ruta a la carpeta del id del profesor.
+	 * @var string
+	 */
 	private $ruta_carpeta_id;
+	
+	/**
+	 * Ruta del paquete de la tarea.
+	 * @var string
+	 */
 	private $paquete_ruta;
 	
+	
+	/**
+	 * Función asociada a una vista, que se encarga de 
+	 * recoger el test subido desde el formulario y de realizar
+	 * las acciones correspondientes.
+	 * 
+	 */
 	public function subirTest(){
 		
-		//session_start();
 		$this->comprobarSesion();
 		$this->comprobarRolProfesor();
 		
@@ -57,6 +84,11 @@ class TestsController extends AppController{
 		}
 	}
 	
+	/**
+	 * Función privada encargada de crear el arquetipo Maven,
+	 * el cual va a permitir corregir las prácticas de los alumnos.
+	 * 
+	 */
 	private function __crearArquetipoMaven(){
 		
 		// Obtención del nombre del paquete de la tarea
@@ -81,6 +113,11 @@ class TestsController extends AppController{
 		
 	}
 	
+	/**
+	 * Función privada encargada de extraer el zip del test subido
+	 * por el profesor en la correspondiente carpeta.
+	 * 
+	 */
 	private function __extraerTest(){
 		
 		// Extraer tests dentro de la correspondiente carpeta del arquetipo
@@ -107,6 +144,13 @@ class TestsController extends AppController{
 		
 	}
 
+	/**
+	 * Función encargada de guardar el test subido en base 
+	 * de datos.
+	 * 
+	 * @param int $id_tarea	id de la tarea.
+	 * @param string $nombre_test	nombre del test.
+	 */
 	public function guardarTest($id_tarea, $nombre_test){
 		
 		$nuevo_test = $this->Tests->newEntity();

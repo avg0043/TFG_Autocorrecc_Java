@@ -5,14 +5,24 @@ namespace App\Model\Table;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+/**
+ * Clase asociada a la tabla Tareas de la base de datos y 
+ * encargada de gestionarla.
+ * 
+ * @author Álvaro Vázquez Gómez.
+ *
+ */
 class TareasTable extends Table{
 	
+	/**
+	 * Función encargada de validar los datos correspondientes
+	 * a los campos del formulario de configuración de parámetros
+	 * de la tarea.
+	 * 
+	 * @param Validator $validator	objeto validador de los datos.
+	 */
 	public function validationDefault(Validator $validator){
-		/*
-		$validator->notEmpty('num_max_intentos')
-				  ->notEmpty('paquete')
-				  ->notEmpty('fecha_limite');
-		*/
+
 		$validator->add('num_max_intentos', 
 					    'valid', [
 					    	'rule' => ['range', 1, 20], 
@@ -21,17 +31,10 @@ class TareasTable extends Table{
 					)
 				  ->notEmpty('num_max_intentos')
 				  ->notEmpty('paquete')
-				  /*
-				  ->add('fecha_limite', 
-				  		'valid', [
-				  			'rule' => function ($value) {
-				            	return $value > date('Y-m-d'); },
-				            'message' => 'Invalid date.'
-				        ]
-				  )
-				  */
 				  ->notEmpty('fecha_limite');
+		
 		return $validator;
+		
 	}
 
 }

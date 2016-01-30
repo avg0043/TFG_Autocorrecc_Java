@@ -1,6 +1,8 @@
 
 <?= $this->Html->css('custom.css') ?>
 
+<!------------------------------ TITULO DEL PANEL ------------------------>
+
 <div class="jumbotron">
   <h3><?= __('Parámetros LTI') ?>
      <img class="mensajeInfo iconos" data-content="<?= __("Utiliza estos parámetros para poder crear desde Moodle una tarea de tipo 'herramienta externa' que enlace con la aplicación web de Autocorrección de prácticas Java.") ?>" 

@@ -2,10 +2,13 @@
  
 <?= $this->Html->css('custom.css') ?>
  
+<!----------------------- TITULO DEL PANEL ----------------------->
 
 <div class="jumbotron">
   <h3><?= __('Comprobación de Plagios de prácticas') ?></h3>
 </div>
+
+<!------------------------ FORMULARIO PARA LA COMPROBACION DE PLAGIOS  ----------->
 
 <div class="container">
 	<div class="row">

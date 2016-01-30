@@ -1,9 +1,13 @@
 
 <?= $this->Html->css('custom.css') ?>
 
+<!------------------------- TITULO DEL PANEL ----------------------------->
+
 <div class="jumbotron">
   <h3 class="panelProfesor"><?= __('PANEL DEL PROFESOR') ?></h3>
 </div>
+
+<!---------------------- OPCIONES DEL PANEL --------------------------->
 
 <div class="row">
 

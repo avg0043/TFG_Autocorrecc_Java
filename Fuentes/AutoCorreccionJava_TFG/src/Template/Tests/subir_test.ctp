@@ -2,6 +2,7 @@
 <?= $this->Html->css('custom.css') ?>
 <?= $this->Html->script('waitingDialog') ?> <!-- new -->
 
+<!------------------------------- TITULO DEL PANEL  --------------------------->
 
 <div class="jumbotron">
   <h3><?= __('Subida de Test') ?>
@@ -9,6 +10,8 @@
      	  data-placement="auto" title="<?= __('INFORMACIÓN') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
   </h3>
 </div>
+
+<!------------------------------- FORMLUARIO DE SUBIDA DE TEST  ---------------->
 
 <div class="container">
 	<div class="row">

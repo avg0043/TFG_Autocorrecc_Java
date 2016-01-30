@@ -2,10 +2,13 @@
  
 <?= $this->Html->css('custom.css') ?>
  
+<!---------------- TITULO DEL PANEL ---------------------------->
 
 <div class="jumbotron">
   <h3><?= __('Gráficas') ?></h3>
 </div>
+
+<!------------------- FORMULARIO DE SELECCION DE GRAFICAS  ------->
 
 <div class="jumbotron">
 	<div class="row">
@@ -86,6 +89,8 @@
 	    		<li><a data-toggle="tab" href="#alumno"><?= __('Alumno') ?>: <?= $alumnos_intentos[$id_alumno] ?></a></li>
 	    	<?php }?>
 		</ul>
+		
+		<!------------------------ GRAFICAS SELECCIONADAS ------------------>
 		
 		<div class="tab-content">
 		    <div id="mediasGlobales" class="divGraficas tab-pane fade">

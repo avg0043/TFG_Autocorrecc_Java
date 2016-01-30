@@ -14,6 +14,7 @@ if($intentos_todos->isEmpty()){
 else{
 ?>
 
+<!------------------------ TITULO DEL PANEL ----------------------->
 
 <div class="jumbotron">
   <h3><?= __('Estadísticas de las prácticas de los alumnos') ?></h3>
@@ -23,6 +24,9 @@ else{
 if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 	$intentos_controller = new IntentosController();
 ?>
+
+<!---------------------- TABLA CON LAS ESTADISTAS DE LAS PRACTICAS ------------>
+
 <table id="tablaAlumnos" class="display">
 	<thead>
 		<tr>
@@ -73,6 +77,8 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 	</tbody>
 </table>
 <?php }?>
+
+<!------------------------- BOTONES CON LOS REPORTES ----------------------->
 
 <div class="botonesReportes">
 	<button id="btn_javancss" class="btn btn-default btn-sm dropdown-toggle" disabled onclick="btnFuncion('javancss.html')"><?= __('Reporte JavanCSS') ?></button>
@@ -160,12 +166,8 @@ if(!$alumnos->isEmpty() && !$intentos->isEmpty()){
 		    url: 'http://localhost/AutoCorreccionJava_TFG/Profesores/compruebaExistenciaReportes',
 		    method: 'POST', 
 		    success: function(respuesta) {
-
-			    //console.log("HOLA" + respuesta);
 			    
 		    	var respuesta_reportes = $.parseJSON(respuesta);
-
-		    	//console.log(respuesta_reportes);
 		    	
 		    	// Los reportes JavanCSS y JDepend siempre están disponibles
 		    	$('#btn_javancss').prop('disabled', false);

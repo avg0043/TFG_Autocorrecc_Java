@@ -6,15 +6,20 @@ require('/../../vendor/ims/blti.php');
 use Lib\Ims;
 use Cake\ORM\TableRegistry;
 
+/**
+ * Controlador encargado de la conexión entre
+ * Moodle y la aplicación.
+ * 
+ * @author Álvaro Vázquez Gómez
+ *
+ */
 class ConexionesController extends AppController{
 	
 	/**
-	 * Función que establece la conexión entre Moodle y el servicio web
-	 * gracias al plugin LTI.
-	 * Los parámetros LTI son guardados y dependendiendo del rol del usuario
-	 * que ha accedido se le redirigirá a su correspondiente página.
+	 * Función encargada de establecer la conexión entre Moodle
+	 * y la aplicación. Para ello valida que el consumer_key
+	 * sea el correcto.
 	 * 
-	 * @throws NotFoundException
 	 */
 	public function establecerConexion(){
 		
@@ -43,8 +48,16 @@ class ConexionesController extends AppController{
 		else{
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorConsumerKey', $consumer_key]);
 		}
+		
 	}
 	
+	/**
+	 * Función privada encargada de crear el objeto LTI que
+	 * contiene los datos de Moodle. Al crear dicho objeto
+	 * se le pasa el secret. 
+	 * 
+	 * @param string $secret_encriptada secret encriptado.
+	 */
 	private function __guardarDatosMoodle($secret_encriptada){
 	
 		$context = new Ims\BLTI($secret_encriptada, true, false);	// Objeto conexión LTI
@@ -67,6 +80,12 @@ class ConexionesController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada encargada de redirigir a la correspondiente
+	 * vista en función del rol del usuario que ha accedido a la 
+	 * aplicación.
+	 * 
+	 */
 	private function __redirigirPaginaUsuario(){	
 		
 		if($_REQUEST['roles'] == 'Learner'){

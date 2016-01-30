@@ -1,6 +1,7 @@
 
 <?= $this->Html->css('custom.css') ?>
 
+<!----------------------- TITULO DEL PANEL ------------------------>
 
 <div class="jumbotron">
   <h3><?= __('Configuración de los parámetros de la tarea') ?>
@@ -8,6 +9,8 @@
      	  data-placement="auto" title="<?= __('INFORMACIÓN') ?>" src="http://localhost/AutoCorreccionJava_TFG/webroot/img/info_2.png"/>
   </h3>
 </div>
+
+<!----------------------- FORMULARIO CONFIGURACION DE PARAMETROS DE LA TAREA ------->
 
 <div class="container">
 	<div class="row">

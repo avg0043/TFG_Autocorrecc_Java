@@ -3,16 +3,24 @@
 namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
+
+/**
+ * Controlador encargado de las tareas, asociadas con los test
+ * subidos por el profesor y por las prácticas de los alumnos.
+ * 
+ * @author Álvaro Vázquez Gómez.
+ *
+ */
 class TareasController extends AppController{
 	
 	/**
-	 * Función que configura los parámetros que van a estar
-	 * asociados a la tarea.
+	 * Función asociada a una vista, que se encarga de
+	 * guardar en base de datos los datos de la tarea configurada
+	 * desde el correspondiente formulario de configuración.
+	 * 
 	 */
 	public function configurarParametrosTarea(){
 		
-		//session_start();
-		//$this->comprobarSesion();
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}

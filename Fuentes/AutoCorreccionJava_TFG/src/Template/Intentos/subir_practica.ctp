@@ -12,6 +12,8 @@ if(!$test_subido){
 else{
 ?>
 
+<!---------------------- TÍTULO DEL PANEL DEL ALUMNO ------------------------------>
+
 <div class="jumbotron">
   <h3><?= __('SUBIDA DE PRÁCTICAS') ?>   
   	<img class="mensajeInfo iconos" data-content="<?= __("Sube la práctica en un fichero .zip que contenga la estructura de carpetas correcta correspondiente al paquete. Es decir: si el paquete es 'uni.ubu', la estructura de carpetas a subir sería: uni/ubu/nombrePractica.java. Tras la subida se mostrarán los reportes y, si no lo estaban ya, las gráficas correspondientes.") ?>" 
@@ -23,6 +25,8 @@ else{
   	<?php }?>
   </h3>
 </div>
+
+<!------------------------- FORMULARIO DE SUBIDA DE PRACTICAS ----------------------->
 
 <div class="container">
 	<div class="row">
@@ -48,11 +52,11 @@ else{
 	</div>
 </div>
 
-<!-- Modal -->
+<!-- Ventana con los parámetros de la tarea -->
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
-    <!-- Modal content-->
+    <!-- Contenido -->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -84,6 +88,8 @@ else{
 					"/".$_SESSION['lti_userId']."/".$num_ultimo_intento."/site/";
 		?>
 		
+		<!--------------------------- REPORTES --------------------------------->
+		
 		<h4 class="page-header"><?= __('Reportes del último intento realizado') ?></h4>
 		<div class="div-reportes">
 			<a href=<?= $ruta."javancss.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">JAVANCSS</a>
@@ -98,6 +104,8 @@ else{
 				  	<a href=<?= $ruta."surefire-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">ERRORES UNITARIOS</a>
 			<?php } ?>
 		</div>
+		
+		<!-------------------------------- GRAFICAS ------------------------->
 		
 		<h4 class="page-header"><?= __('Gráficas disponibles') ?></h4>
 		<ul class="nav nav-tabs">
@@ -148,7 +156,7 @@ else{
 <script type="text/javascript">
 
 	$('#login_form').submit(function() {
-		waitingDialog.show("Subiendo práctica. El proceso podría durar varios segundos.");
+		waitingDialog.show("Analizando práctica. El proceso podría durar varios segundos.");
 	});
 
 	$('.mensajeInfo').popover({ trigger: "hover" });

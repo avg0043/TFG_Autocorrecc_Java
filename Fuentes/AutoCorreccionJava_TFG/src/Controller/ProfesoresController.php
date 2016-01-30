@@ -4,13 +4,19 @@ namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
 
+/**
+ * Contrlador encargado de los profesores.
+ * 
+ * @author Álvaro Vázquez Gómez
+ *
+ */
 class ProfesoresController extends AppController{
 	
 	/**
-	 * Función que registra al profesor en el servicio web.
-	 * Al registrarse obtendrá los parámetros LTI necesarios
-	 * para poder configurar la tarea de tipo herramienta externa
-	 * desde Moodle.
+	 * Función asociada a una vista, que se encarga de
+	 * registrar al profesor en base de datos tras rellenar
+	 * los campos del formulario de registro.
+	 * 
 	 */
 	public function registrarProfesor(){
 		
@@ -33,9 +39,10 @@ class ProfesoresController extends AppController{
 	}
 	
 	/**
-	 * Función que encripta y devuelve la cadena pasada por parámetro.
+	 * Función privada que encripta y devuelve la cadena pasada por parámetro.
 	 *
 	 * @param string $cadena	cadena a encriptar.
+	 * 
 	 */
 	private function __encriptarCadena($cadena){
 	
@@ -46,8 +53,9 @@ class ProfesoresController extends AppController{
 	}
 	
 	/**
-	 * Función que crea un consumer_key aleatoriamente, que se le va a entregar al
-	 * profesor al registrarse.
+	 * Función privada que crea un consumer_key aleatoriamente, 
+	 * que se le va a entregar al profesor al registrarse.
+	 * 
 	 */
 	private function __crearConsumerKey(){
 	
@@ -63,10 +71,11 @@ class ProfesoresController extends AppController{
 	}
 	
 	/**
-	 * Función que guarda en una variable los parámetros LTI del profesor
-	 * para que puedan ser mostrados desde su vista asociada.
-	 *
-	 * @param string $correo	correo del profesor
+	 * Función asociada a una vista, encargada de pasarle a la vista
+	 * los parámetros LTI del profesor para que posteriormente pueda
+	 * crear una tarea que enlace con la aplicación desde Moodle.
+	 * 
+	 * @param string $correo	correo del profesor registrado.
 	 */
 	public function mostrarParametrosLti($correo){
 	
@@ -74,19 +83,25 @@ class ProfesoresController extends AppController{
 	
 	}
 	
+	/**
+	 * Función asociada a una vista encargada mostrar
+	 * el panel principal del profesor.
+	 * 
+	 */
 	public function mostrarPanel(){
 	
-		//session_start();
 		$this->comprobarSesion();
 		$this->comprobarRolProfesor();
 		
 	}
 	
+	/**
+	 * Función asociada a una vista, que se encarga de pasarle
+	 * a la vista los datos necesarios de los intentos y alumnos.
+	 * 
+	 */
 	public function descargarPracticasAlumnos(){
 		
-		//session_start();
-		//$this->comprobarSesion();
-		//AppController::comprobarSesion();
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
@@ -101,11 +116,17 @@ class ProfesoresController extends AppController{
 		
 	}
 	
+	/**
+	 * Función asociada a una vista, que se encarga de llamar
+	 * a los métodos de generación de gráficas en función de las 
+	 * gráficas que hayan sido seleccionadas en el formulario de 
+	 * la vista.
+	 * 
+	 */
 	public function generarGraficas(){
 		
 		include('/../../vendor/libchart/libchart/classes/libchart.php');
 		
-		//session_start();
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}
@@ -173,9 +194,17 @@ class ProfesoresController extends AppController{
 		
 	}
 	
+	/**
+	 * Función encargada de comprobar la existencia de los reportes
+	 * de una práctica. Recibe como parámetros POST el id del alumno
+	 * y el número del intento de subida de práctica realizado.
+	 * Genera un array de boolean en el que se indican los reportes que
+	 * han sido generados, y por último se devuelve dicho array mediante
+	 * JSON.
+	 * 
+	 */
 	public function compruebaExistenciaReportes(){
 	
-		//session_start();
 		$this->autoRender = false;
 		$id_alumno = $_POST["id"];
 		$numero_intento = $_POST["num_intento"];
@@ -197,9 +226,14 @@ class ProfesoresController extends AppController{
 	
 	}
 	
+	/**
+	 * Función asociada a una vista, que se encarga de
+	 * generar el reporte de plagios entre los alumnos que han
+	 * sido seleccionados desde el formulario de la vista.
+	 * 
+	 */
 	public function generarReportePlagiosPracticas(){
 		
-		//session_start();
 		if(!isset($_SESSION["lti_userId"])){
 			return $this->redirect(['controller' => 'Excepciones', 'action' => 'mostrarErrorAccesoLocal']);
 		}

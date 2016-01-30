@@ -2,12 +2,18 @@
 
 namespace App\Controller;
 
+/**
+ * Controlador encargado de los Alumnos.
+ * 
+ * @author Álvaro Vázquez Gómez
+ *
+ */
 class AlumnosController extends AppController{
 	
 	/**
-	 * Función que comprueba si el alumno que ha accedido al servicio web
-	 * es la primera vez que lo hace, en cuyo caso se le registrará en base de datos.
-	 * Finalmente redirecciona al formulario de subida de ficheros.
+	 * Functión encargada de registrar al alumno en su primer
+	 * acceso en la aplicación. Tras el registro, redirecciona
+	 * a la vista del formulario de subida de prácticas.
 	 *
 	 * @return $this->redirect	redirección a la vista del formulario de subida de ficheros.
 	 */

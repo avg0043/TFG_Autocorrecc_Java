@@ -3,29 +3,92 @@
 namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
+
+/**
+ * Controlador encargado de los intentos de subida de práctica
+ * realizados por los alumnos.
+ * 
+ * @author Álvaro Vázquez Gómez
+ *
+ */
 class IntentosController extends AppController{
 
+	/**
+	 * Fecha actual en la que se ha realizado la subida de práctica.
+	 * @var DateTime
+	 */
 	private $fecha_actual;
-	private $fecha_limite;
-	private $total_intentos_realizados;
-	private $numero_maximo_intentos;
-	private $test_pasado = false;
-	private $id_profesor;
-	private $ruta_carpeta_id;
-	private $intento_realizado;
-	private $paquete;
-	private $nombre_practica_zip;
-	private $id_intento;
 	
 	/**
-	 * Función que se encarga de manejar los datos introducidos
-	 * en el formulario, el cual pertenece a su vista.
+	 * Fecha límite que tienen los alumnos para subir sus prácticas.
+	 * @var DateTime
+	 */
+	private $fecha_limite;
+	
+	/**
+	 * Número total de intentos se subida de prácticas realizados por el alumno.
+	 * @var int
+	 */
+	private $total_intentos_realizados;
+	
+	/**
+	 * Número máximo de intentos de subida de prácticas que puede realizar el
+	 * alumno.
+	 * @var int
+	 */
+	private $numero_maximo_intentos;
+	
+	/**
+	 * Indica si la práctica subida por el alumno ha pasado los test o no.
+	 * @var boolean
+	 */
+	private $test_pasado = false;
+	
+	/**
+	 * Id del profesor que ha creado la tarea.
+	 * @var id
+	 */
+	private $id_profesor;
+	
+	/**
+	 * Ruta a la carpeta id del alumno.
+	 * @var string
+	 */
+	private $ruta_carpeta_id;
+	
+	/**
+	 * Número del intento de subida de práctica realizado por el alumno.
+	 * @var int
+	 */
+	private $intento_realizado;
+	
+	/**
+	 * Paquete al que pertenece la práctica.
+	 * @var string
+	 */
+	private $paquete;
+	
+	/**
+	 * Nombre del fichero zip en el que ha subido la práctica.
+	 * @var string
+	 */
+	private $nombre_practica_zip;
+	
+	/**
+	 * Id del intento de la subida de práctica realizada.
+	 * @var int
+	 */
+	private $id_intento;
+	
+	
+	/**
+	 * Función asociada a una vista, encargada de realizar todas las
+	 * operaciones de análisis y guardado de la práctica subida por
+	 * el alumno en el correspondiente formulario.
 	 * 
-	 * @param string $tipo_usuario	puede ser profesor o alumno.
 	 */
 	public function subirPractica(){
 	
-		//session_start();	
 		$finalizado = false;
 		$this->set("finalizado", $finalizado);	
 		
@@ -86,6 +149,11 @@ class IntentosController extends AppController{
 		}
 	}
 	
+	/**
+	 * Función privada encargada de comprobar si el profesor
+	 * ha subido un test.
+	 * 
+	 */
 	private function __comprobarTestSubido(){
 
 		$tests_tabla = TableRegistry::get("Tests");
@@ -105,6 +173,11 @@ class IntentosController extends AppController{
 		
 	}
 	
+	/**
+	 * Función privada encargada de pasar los datos a la vista 
+	 * en la que van a mostrarse.
+	 * 
+	 */
 	private function __establecerDatosVista(){
 			
 		$tareas_tabla = TableRegistry::get("Tareas");
@@ -129,6 +202,11 @@ class IntentosController extends AppController{
 		
 	}
 	
+	/**
+	 * Función privada encargada de copiar el arquetipo maven
+	 * creado en la carpeta del profesor a la carpeta del alumno.
+	 * 
+	 */
 	private function __copiarArquetipoMaven(){
 		
 		if(!is_dir($this->ruta_carpeta_id)){
@@ -145,6 +223,11 @@ class IntentosController extends AppController{
 		
 	}
 	
+	/**
+	 * Función privada encargada de extraer la práctica subida
+	 * por el alumno.
+	 * 
+	 */
 	private function __extraerPractica(){
 	
 		$zip = new \ZipArchive();
@@ -160,6 +243,11 @@ class IntentosController extends AppController{
 		
 	}
 	
+	/**
+	 * Función privada encargada de comprobar que la práctica 
+	 * subida por el alumno pertenece al paquete correcto.
+	 * 
+	 */
 	private function __comprobarEstructuraCarpetasPractica(){
 		
 		$paquete_ruta = str_replace('.', '/', $this->paquete);
@@ -176,6 +264,10 @@ class IntentosController extends AppController{
 		
 	}
 	
+	/**
+	 * Función privada encargada de compilar la práctica.
+	 * 
+	 */
 	private function __compilarPractica(){
 		
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn compile', $salida);
@@ -207,6 +299,11 @@ class IntentosController extends AppController{
 		
 	}
 	
+	/**
+	 * Función privada encargada de guardar en base de datos
+	 * el intento de subida de práctica realizado por el alumno.
+	 * 
+	 */
 	private function __guardarIntento(){
 	
 		$nuevo_intento = $this->Intentos->newEntity();
@@ -227,6 +324,11 @@ class IntentosController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada encargada de generar los reportes de
+	 * los plugins.
+	 * 
+	 */
 	private function __generarReportes(){
 	
 		$_SESSION["pmd_generado"] = false;
@@ -250,6 +352,11 @@ class IntentosController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada encargada de llamar a los métodos
+	 * de guardado de datos xml de los plugins.
+	 * 
+	 */
 	private function __guardarDatosXML(){
 	
 		$ficherosXml_controller = new FicherosXmlController();
@@ -284,6 +391,10 @@ class IntentosController extends AppController{
 		
 	}
 	
+	/**
+	 * Función privada encargada de ejecutar los test.
+	 * 
+	 */
 	private function __ejecutarTests(){
 		
 		exec('cd ' . $this->ruta_carpeta_id . "/arquetipo" . ' && mvn test', $salida);
@@ -308,6 +419,13 @@ class IntentosController extends AppController{
 							
 	}
 	
+	/**
+	 * Función privada encargada de obtener el intento correspondiente.
+	 * 
+	 * @param int $id_tarea	id de la tarea.
+	 * @param int $id_alumno	id del alumno.
+	 * @param int $num_intento	número del intento realizado.
+	 */
 	private function __obtenerIntentoPorTareaAlumnoNumIntento($id_tarea, $id_alumno, $num_intento){
 	
 		return $this->Intentos->find('all')
@@ -316,6 +434,13 @@ class IntentosController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada encargada de actualizar el resultado (test pasado o no)
+	 * del intento de subida de práctica realizado.
+	 * 
+	 * @param int $id_intento	id del intento de subida de práctica realizado.
+	 * @param boolean $resultado	indica si ha pasado los test o no.
+	 */
 	private function __actualizarResultadoIntento($id_intento, $resultado){
 	
 		$this->Intentos->query()

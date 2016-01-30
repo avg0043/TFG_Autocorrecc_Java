@@ -5,8 +5,19 @@ namespace App\Controller;
 use Cake\ORM\TableRegistry;
 include('/../../vendor/libchart/libchart/classes/libchart.php');
 
+/**
+ * Controlador encargado de generar las gráficas.
+ * 
+ * @author Álvaro Vázquez Gómez.
+ *
+ */
 class GraficasController extends AppController{
 	
+	/**
+	 * Función que genera las gráficas de violaciones y errores
+	 * que van a mostrarse al alumno en su panel.
+	 * 
+	 */
 	public function generarGraficasViolacionesErroresAlumno(){
 	
 		$intentos_tabla = TableRegistry::get("Intentos");
@@ -95,6 +106,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función que genera las gráficas con las prioridades de las violaciones
+	 * de código cometidas. Van a mostrarse en el panel del alumno.
+	 * 
+	 * @param int $id_intento	id del intento de subida de práctica realizado.
+	 */
 	public function generarGraficaPrioridadesViolacionesIntentoRealizadoAlumno($id_intento){
 	
 		if(file_exists("img/".$_SESSION["lti_idTarea"]."-".$_SESSION["lti_userId"]."-prioridades_violaciones_ultimoIntento.png")){
@@ -139,6 +156,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función que genera las gráficas con el promedio de errores y
+	 * violaciones cometidas por los alumnos. Van a mostrarse en el
+	 * panel del profesor.
+	 * 
+	 */
 	public function generarGraficaLineaPromedioErroresUnitariosViolaciones(){
 	
 		$chart = new \LineChart(800, 350);
@@ -206,6 +229,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función que genera la gráfica con el promedio de los
+	 * errores cometidos por los alumnos. Va a mostrarse
+	 * en el panel del profesor.
+	 * 
+	 */
 	public function generarGraficaMediaErrores(){
 	
 		$chart = new \VerticalBarChart(800, 350);
@@ -277,6 +306,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función que genera la gráfica con el promedio de las violaciones
+	 * de código cometidas por los alumnos. Va a mostrarse en el panel
+	 * del profesor.
+	 * 
+	 */
 	public function generarGraficaVerticalAlumnosViolacionesCometidas(){
 	
 		$alumnos_tabla = TableRegistry::get("Alumnos");
@@ -317,6 +352,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada que añade los intervalos del eje X
+	 * en la gráfica de violaciones de código.
+	 * 
+	 * @param XYDataSet $dataSet	dataSet con los datos de la gráfica.
+	 */
 	private function __añadirIntervalosViolacionesEjeX($dataSet){
 	
 		$dataSet->addPoint(new \Point("[0]", 0));
@@ -332,6 +373,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada encargada de obtener el intervalo X
+	 * que se corresponde con el valor del eje Y pasado.
+	 * 
+	 * @param int $valor	valor del eje Y.
+	 */
 	private function __obtenerIntervaloViolacion($valor){
 	
 		switch($valor){
@@ -369,6 +416,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función que genera las gráficas de ls intentos realizados 
+	 * por los alumnos para pasar y no pasar los test. Se muestra
+	 * en el panel del profesor.
+	 * 
+	 */
 	public function generarGraficaVerticalAlumnosIntentos(){
 
 		$alumnos_tabla = TableRegistry::get("Alumnos");
@@ -430,6 +483,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada encargada de añadir los intervalos
+	 * del eje X de la gráfica de intentos.
+	 * 
+	 * @param XYDataSet $dataSet	dataSet con los datos de la gráfica.
+	 */
 	private function __añadirIntervalosIntentosEjeX($dataSet){
 	
 		$dataSet->addPoint(new \Point("[0]", 0));
@@ -445,6 +504,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada encargada de obtener el intervalo del
+	 * eje X que se corresponde al valor del eje Y pasado.
+	 * 
+	 * @param int $valor	valor del eje Y.
+	 */
 	private function __obtenerIntervaloIntento($valor){
 	
 		switch($valor){
@@ -482,6 +547,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función encargada de generar la gráfica con el porcentaje
+	 * de alumnos que pasan y no pasan los test. Se muestra
+	 * en el panel del profesor.
+	 * 
+	 */
 	public function generarGraficaAlumnosTest(){
 
 		$alumnos_tabla = TableRegistry::get("Alumnos");
@@ -516,6 +587,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función que genera las gráficas con las medias globales
+	 * de los intentos y violaciones. Se muestra en el panel
+	 * del profesor.
+	 * 
+	 */
 	public function generarGraficaMedias(){
 	
 		$chart = new \HorizontalBarChart(800, 350);
@@ -541,6 +618,12 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función privada encargada de calcular la media del 
+	 * número de intentos realizados por los alumnos para
+	 * pasar y no pasar los test.
+	 * 
+	 */
 	private function __calcularMediaIntentos(){
 	
 		$alumnos_tabla = TableRegistry::get("Alumnos");
@@ -594,6 +677,11 @@ class GraficasController extends AppController{
 	
 	}
 	
+	/**
+	 * Función encargada de calcular la media de las violaciones
+	 * de código que han cometido los alumnos.
+	 * 
+	 */
 	private function __calcularMediaViolaciones(){
 
 		$alumnos_tabla = TableRegistry::get("Alumnos");

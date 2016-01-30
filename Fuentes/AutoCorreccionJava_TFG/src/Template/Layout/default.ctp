@@ -30,14 +30,11 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->Html->css('bootstrap-theme.min') ?>
     <?= $this->Html->css('custom.css') ?>
     <?= $this->Html->css('base.css') ?>
-    <?= $this->Html->css('cake.css') ?>
+    <?= $this->Html->css('cake.css') ?>  
+    <?= $this->Html->css('jquery.dataTables.min.css') ?> 
     
-    <?= $this->Html->css('jquery.dataTables.min.css') ?> <!-- new -->
-    <?= $this->Html->script('jquery-1.11.3.min') ?> <!-- new -->
-    <?= $this->Html->script('jquery.dataTables.min') ?> <!-- new -->
-    
-
-	<!-- $this->Html->script('jquery-1.11.3') ->PROBAR A PONERLO EN LA VISTA EN VEZ DE AQUÍ -->
+    <?= $this->Html->script('jquery-1.11.3.min') ?> 
+    <?= $this->Html->script('jquery.dataTables.min') ?> 
 	<?= $this->Html->script('bootstrap.min') ?>
 
     <?= $this->fetch('meta') ?>
@@ -45,6 +42,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->fetch('script') ?>
 </head>
 <body>
+	
+	<!-------------------- BARRA DE NAVEGACION ------------------->
 	
 	<nav class="top-bar expanded" data-topbar role="navigation">
 	  <ul class="right title-area large-4 medium-4 columns">
@@ -68,7 +67,6 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 	      <li>
 	   	  <?php 
 	   	  	echo $this->Html->link(__('Cambiar Idioma'), array('controller' => 'app', 'action' => 'change_locale'), array('id' => 'cambiarIdioma'));	   
-	   	  	//echo $this->Html->link($this->Html->image("enunciado_2.png", ["alt" => "Brownies"]), array('controller' => 'app', 'action' => 'change_locale'), array('id' => 'cambiarIdioma'),  ['escape' => false]);   
 	   	  ?>
 	   	  </li>
 	    </ul>
