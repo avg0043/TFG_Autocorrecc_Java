@@ -24,9 +24,8 @@ class ProfesoresController extends AppController{
 		
 		if ($this->request->is('post')) {				
 			$consumer_key = $this->__crearConsumerKey();
-			$consumer_key_encriptada = $this->__encriptarCadena($consumer_key);
 			$secret_encriptada = $this->__encriptarCadena($this->request->data['contraseña']);
-			$nuevo_profesor->consumer_key = $consumer_key_encriptada;
+			$nuevo_profesor->consumer_key = $consumer_key;
 			$nuevo_profesor->secret = $secret_encriptada;		
 			$nuevo_profesor = $this->Profesores->patchEntity($nuevo_profesor, $this->request->data);
 			
@@ -48,7 +47,7 @@ class ProfesoresController extends AppController{
 	
 		$key='clave_codificacion';
 		$encriptada = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $cadena, MCRYPT_MODE_CBC, md5(md5($key))));
-		return $encriptada; //Devuelve el string encriptado
+		return $encriptada;
 	
 	}
 	

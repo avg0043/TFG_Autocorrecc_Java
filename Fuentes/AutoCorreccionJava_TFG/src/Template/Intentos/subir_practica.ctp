@@ -101,7 +101,7 @@ else{
 					<a href=<?= $ruta."findbugs.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">FINDBUGS</a>
 			<?php } 
 				  if(file_exists($ruta_local."surefire-report.html")){ ?>
-				  	<a href=<?= $ruta."surefire-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">ERRORES UNITARIOS</a>
+				  	<a href=<?= $ruta."surefire-report.html" ?> class="btn btn-default btn-lg" role="button" target="_blank">ERRORES</a>
 			<?php } ?>
 		</div>
 		
