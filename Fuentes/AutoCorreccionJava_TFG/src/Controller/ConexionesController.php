@@ -28,7 +28,7 @@ class ConexionesController extends AppController{
 		$profesores_tabla = TableRegistry::get("Profesores");
 		
 		// Comprobar consumer_key
-		if($_REQUEST['roles'] == "Learner"){
+		if(strpos($_REQUEST['roles'], 'Learner') !== false){
 			$query = $profesores_tabla->find('all')
 									  ->where(['consumer_key' => $consumer_key])
 									  ->toArray();
@@ -67,8 +67,8 @@ class ConexionesController extends AppController{
 		$_SESSION['lti_nombreCompleto'] = $context->info['lis_person_name_full'];
 		$_SESSION['lti_correo'] = $context->info['lis_person_contact_email_primary'];
 		
-		if($context->info['roles'] == "Learner"){
-			$_SESSION['lti_rol'] = $context->info['roles'];
+		if(strpos($context->info['roles'], 'Learner') !== false){
+			$_SESSION['lti_rol'] = "Learner";
 		}else{
 			$_SESSION['lti_rol'] = "Instructor";
 		}
@@ -88,7 +88,7 @@ class ConexionesController extends AppController{
 	 */
 	private function __redirigirPaginaUsuario(){	
 		
-		if($_REQUEST['roles'] == 'Learner'){
+		if(strpos($_REQUEST['roles'], 'Learner') !== false){
 			$alumnos_tabla = TableRegistry::get("Alumnos");
 			$query = $alumnos_tabla->find('all')
 								   ->where(['id' => $_SESSION['lti_userId']])
